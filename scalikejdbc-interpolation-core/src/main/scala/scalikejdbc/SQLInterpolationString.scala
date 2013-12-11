@@ -23,6 +23,13 @@ private object SQLInterpolationString {
 
   private val cache = new scala.collection.concurrent.TrieMap[String, SQLSyntax]()
 
+  private val toSeq: Any => Traversable[Any] = {
+    case s: String => s :: Nil
+    case t: Traversable[_] => t
+    case SQLSyntax(_, params) => params
+    case n => n :: Nil
+  }
+
 }
 
 /**
@@ -40,7 +47,7 @@ class SQLInterpolationString(val s: StringContext) extends AnyVal {
       val query: String = s.parts.zipAll(params, "", LastParameter).foldLeft("") {
         case (query, (previousQueryPart, param)) => query + previousQueryPart + getPlaceholders(param)
       }
-      SQLSyntax(query, params.flatMap(toSeq))
+      SQLSyntax(query, params.flatMap(SQLInterpolationString.toSeq))
     }
 
     if (s.parts.size == 1 && params.isEmpty) {
@@ -56,13 +63,6 @@ class SQLInterpolationString(val s: StringContext) extends AnyVal {
     case LastParameter => ""
     case SQLSyntax(s, _) => s
     case _ => "?"
-  }
-
-  private def toSeq(param: Any): Traversable[Any] = param match {
-    case s: String => Seq(s)
-    case t: Traversable[_] => t
-    case SQLSyntax(_, params) => params
-    case n => Seq(n)
   }
 
 }
