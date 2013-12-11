@@ -15,25 +15,39 @@
  */
 package scalikejdbc
 
+import scalikejdbc.interpolation.SQLSyntax
+
 private[scalikejdbc] object LastParameter
+
+private object SQLInterpolationString {
+
+  private val cache = new scala.collection.concurrent.TrieMap[String, SQLSyntax]()
+
+}
 
 /**
  * SQLInterpolation definition
  */
 class SQLInterpolationString(val s: StringContext) extends AnyVal {
 
-  import scalikejdbc.interpolation.SQLSyntax
-
   def sql[A](params: Any*) = {
     val syntax = sqls(params: _*)
     SQL[A](syntax.value).bind(syntax.parameters: _*)
   }
 
-  def sqls(params: Any*) = {
-    val query: String = s.parts.zipAll(params, "", LastParameter).foldLeft("") {
-      case (query, (previousQueryPart, param)) => query + previousQueryPart + getPlaceholders(param)
+  def sqls(params: Any*): SQLSyntax = {
+    def create = {
+      val query: String = s.parts.zipAll(params, "", LastParameter).foldLeft("") {
+        case (query, (previousQueryPart, param)) => query + previousQueryPart + getPlaceholders(param)
+      }
+      SQLSyntax(query, params.flatMap(toSeq))
     }
-    SQLSyntax(query, params.flatMap(toSeq))
+
+    if (s.parts.size == 1 && params.isEmpty) {
+      SQLInterpolationString.cache.getOrElseUpdate(s.parts.head, create)
+    } else {
+      create
+    }
   }
 
   private def getPlaceholders(param: Any): String = param match {
