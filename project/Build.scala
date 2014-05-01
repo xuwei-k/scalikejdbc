@@ -40,6 +40,7 @@ object ScalikeJDBCProjects extends Build {
     baseSettings: _*
   ).aggregate(
     scalikejdbcCore,
+    scalikejdbcLibrary,
     scalikejdbcConfig,
     scalikejdbcInterpolation,
     scalikejdbcMapperGeneratorCore,
