@@ -28,22 +28,19 @@ object SQLInterpolationMacro {
   def selectDynamic[E: c.WeakTypeTag](c: Context)(name: c.Expr[String]): c.Expr[SQLSyntax] = {
     import c.universe._
 
-    val nameOpt: Option[String] = name.tree match {
-      case Literal(Constant(value: String)) => Some(value)
-      case _ => None
-    }
-
-    // primary constructor args of type E
-    val expectedNames = c.weakTypeOf[E].declarations.collectFirst {
-      case m: MethodSymbol if m.isPrimaryConstructor => m
-    }.map { const =>
-      const.paramss.map { symbols: List[Symbol] => symbols.map(s => s.name.encoded.trim) }.flatten
-    }.getOrElse(Nil)
-
-    nameOpt.map { _name =>
-      if (!expectedNames.isEmpty && !expectedNames.contains(_name)) {
-        c.error(c.enclosingPosition, s"${c.weakTypeOf[E]}#${_name} not found. Expected fields are ${expectedNames.mkString("#", ", #", "")}.")
+    for {
+      _name <- name.tree match {
+        case Literal(Constant(value: String)) => Some(value)
+        case _ => None
       }
+      // primary constructor args of type E
+      expectedNames: Set[String] = c.weakTypeOf[E].declarations.collectFirst {
+        case m: MethodSymbol if m.isPrimaryConstructor =>
+          m.paramss.flatMap { _.map(_.name.encoded.trim) }(collection.breakOut): Set[String]
+      }.getOrElse(Set.empty)
+      if !expectedNames.isEmpty && !expectedNames.contains(_name)
+    } {
+      c.error(c.enclosingPosition, s"${c.weakTypeOf[E]}#${_name} not found. Expected fields are ${expectedNames.mkString("#", ", #", "")}.")
     }
 
     c.Expr[SQLSyntax](Apply(Select(c.prefix.tree, newTermName("field")), List(name.tree)))
