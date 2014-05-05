@@ -1,0 +1,83 @@
+> run
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="queryDsl", testTemplate ="ScalaTestFlatSpec")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> + test:compile
+-> isCaseClass
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> + test:compile
+-> isCaseClass
+
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2unit")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> + test:compile
+-> isCaseClass
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="queryDsl")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> + test:compile
+-> isCaseClass
+
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2acceptance")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> + test:compile
+-> isCaseClass
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> + test:compile
+-> isCaseClass
+
+
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(caseClassOnly = true)}
+
+
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="queryDsl", testTemplate ="ScalaTestFlatSpec")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> test:compile
+> isCaseClass
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> test:compile
+> isCaseClass
+
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2unit")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> test:compile
+> isCaseClass
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="queryDsl")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> test:compile
+> isCaseClass
+
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2acceptance")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> test:compile
+> isCaseClass
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
+> scalikejdbcGenEcho ManyFieldTable
+> scalikejdbcGenForce ManyFieldTable
+> test:compile
+> isCaseClass
