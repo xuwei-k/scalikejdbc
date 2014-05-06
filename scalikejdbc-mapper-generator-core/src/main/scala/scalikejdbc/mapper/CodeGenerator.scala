@@ -875,7 +875,7 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
           |
           |}
         """.stripMargin))
-    case GeneratorTestTemplate(name) => None
+    case _ => None
   }
 
   private def replaceVariablesForTestPart(code: String): String = {

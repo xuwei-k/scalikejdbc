@@ -18,25 +18,44 @@ package scalikejdbc.mapper
 case class GeneratorConfig(srcDir: String = "src/main/scala",
   testDir: String = "src/test/scala",
   packageName: String = "models",
-  template: GeneratorTemplate = GeneratorTemplate("queryDsl"),
-  testTemplate: GeneratorTestTemplate = GeneratorTestTemplate(""),
+  template: GeneratorTemplate = GeneratorTemplate.queryDsl,
+  testTemplate: GeneratorTestTemplate = GeneratorTestTemplate.Empty,
   lineBreak: LineBreak = LineBreak("\n"),
   caseClassOnly: Boolean = false,
   encoding: String = "UTF-8")
 
 object GeneratorTemplate {
-  val interpolation = GeneratorTemplate("interpolation")
-  val queryDsl = GeneratorTemplate("queryDsl")
+  object interpolation extends GeneratorTemplate("interpolation")
+  object queryDsl extends GeneratorTemplate("queryDsl")
+
+  def apply(name: String): GeneratorTemplate = name match {
+    case interpolation.name =>
+      interpolation
+    case queryDsl.name =>
+      queryDsl
+  }
 }
 
-case class GeneratorTemplate(name: String)
+sealed abstract class GeneratorTemplate private (private[GeneratorTemplate] val name: String)
 
 object GeneratorTestTemplate {
-  val ScalaTestFlatSpec = GeneratorTestTemplate("ScalaTestFlatSpec")
-  val specs2unit = GeneratorTestTemplate("specs2unit")
-  val specs2acceptance = GeneratorTestTemplate("specs2acceptance")
+  object ScalaTestFlatSpec extends GeneratorTestTemplate("ScalaTestFlatSpec")
+  object specs2unit extends GeneratorTestTemplate("specs2unit")
+  object specs2acceptance extends GeneratorTestTemplate("specs2acceptance")
+  object Empty extends GeneratorTestTemplate("")
+
+  def apply(name: String): GeneratorTestTemplate = name match {
+    case ScalaTestFlatSpec.name =>
+      ScalaTestFlatSpec
+    case specs2unit.name =>
+      specs2unit
+    case specs2acceptance.name =>
+      specs2acceptance
+    case _ =>
+      Empty
+  }
 }
-case class GeneratorTestTemplate(name: String)
+sealed abstract class GeneratorTestTemplate private (private[GeneratorTestTemplate] val name: String)
 
 object LineBreak {
   def value(name: String) = name match {
