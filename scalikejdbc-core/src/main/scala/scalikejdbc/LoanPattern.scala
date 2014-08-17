@@ -18,8 +18,48 @@ package scalikejdbc
 import scala.language.reflectiveCalls
 import util.control.Exception._
 import scala.concurrent.{ ExecutionContext, Future }
+import scala.language.experimental.macros
+import scala.reflect.macros.Context
 
-object LoanPattern extends LoanPattern
+object LoanPattern extends LoanPattern {
+
+  def usingM[R <: Closable, A](resource: R)(f: R => A): A = macro usingMacroImpl[R, A]
+
+  def usingMacroImpl[R: c.WeakTypeTag, A: c.WeakTypeTag](c: Context)(resource: c.Expr[R])(f: c.Expr[R => A]): c.Expr[A] = {
+    import c.universe._
+    def name(string: String) = newTermName(string)
+
+    val resource0 = name(c.fresh("resource"))
+    val inliner = new spire.macros.InlineUtil[c.type](c)
+
+    val ignoring = "scala.util.control.Exception.ignoring".split('.').map(name(_)).foldLeft(Ident(name("_root_")): Tree) {
+      (tree, name) => Select(tree, name)
+    }
+
+    val f0 = inliner.inlineAndReset(Apply(f.tree, Ident(resource0) :: Nil)).tree
+
+    val tree = Block(
+      ValDef(Modifiers(), resource0, TypeTree(weakTypeOf[R]), resource.tree) :: Nil,
+      Try(
+        f0,
+        Nil,
+        Apply(
+          Select(
+            Apply(
+              ignoring,
+              List(
+                TypeApply(
+                  Ident(name("classOf")),
+                  List(Ident(newTypeName("Throwable")))))),
+            name("apply")),
+          List(
+            Apply(Select(Ident(resource0),
+              name("close")), Nil)))))
+
+    println(tree)
+    c.Expr(tree)
+  }
+}
 
 /**
  * Loan pattern implementation
