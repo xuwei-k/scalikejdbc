@@ -9,6 +9,8 @@ class SQLInterpolationSpec extends FlatSpec with Matchers with DBSettings {
     def apply(s: SyntaxProvider[Issue])(rs: WrappedResultSet): Issue = autoConstruct(rs, s)
     def apply(r: ResultName[Issue])(rs: WrappedResultSet): Issue = autoConstruct(rs, r)
     //    def toParams(user: Issue): Seq[(SQLSyntax, Any)] = autoExtract(this, user)
+
+    def save(issue: Issue)(implicit session: DBSession): Issue = autoSave(issue, "id")
   }
 
   class Organization(val id: Long, val websiteUrl: String)

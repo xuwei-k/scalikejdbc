@@ -33,7 +33,7 @@ object autoConstruct {
     expr
   }
 
-  private[this] def constructorParams[A: c.WeakTypeTag](c: Context)(excludes: c.Expr[String]*) = {
+  def constructorParams[A: c.WeakTypeTag](c: Context)(excludes: c.Expr[String]*) = {
     import c.universe._
     val A = weakTypeTag[A].tpe
     val declarations = decls(c)(A)
