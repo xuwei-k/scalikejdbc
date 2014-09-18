@@ -78,6 +78,7 @@ object ScalikeJDBCProjects extends Build {
     resolvers ++= _resolvers,
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     incOptions := incOptions.value.withNameHashing(true),
+    updateOptions ~= {_.withConsolidatedResolution(true)},
     //scalaVersion := "2.11.1",
     scalacOptions ++= _scalacOptions,
     publishMavenStyle := true,
