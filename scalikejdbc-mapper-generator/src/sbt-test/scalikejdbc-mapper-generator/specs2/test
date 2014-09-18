@@ -1,0 +1,27 @@
+> run
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2unit")}
+> scalikejdbcGenEcho programmers
+> scalikejdbcGenForce programmers
+> + test:compile
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
+> scalikejdbcGenEcho programmers
+> scalikejdbcGenForce programmers
+> + test:compile
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="queryDsl")}
+> scalikejdbcGenEcho programmers
+> scalikejdbcGenForce programmers
+> + test:compile
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2acceptance")}
+> scalikejdbcGenEcho programmers
+> scalikejdbcGenForce programmers
+> + test:compile
+
+> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
+> scalikejdbcGenEcho programmers
+> scalikejdbcGenForce programmers
+> + test:compile
+
