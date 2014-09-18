@@ -14,34 +14,9 @@ $ exists src/test/scala/app/models/ProgrammersSpec.scala
 $ exists src/main/scala/app/models/Programmer.scala
 $ exists src/test/scala/app/models/ProgrammerSpec.scala
 
+$ sleep 1000
 > scalikejdbcGenForce programmers
-$ newer src/main/scala/app/models/Programmer.scala src/main/scala/app/models/Programmers.scala
-> + compile
-> + test:compile
-
-> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
-> scalikejdbcGenEcho programmers
-> scalikejdbcGenForce programmers
-> + test:compile
-
-> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2unit")}
-> scalikejdbcGenEcho programmers
-> scalikejdbcGenForce programmers
-> + test:compile
-> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="queryDsl")}
-> scalikejdbcGenEcho programmers
-> scalikejdbcGenForce programmers
-> + test:compile
-
-> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(testTemplate ="specs2acceptance")}
-> scalikejdbcGenEcho programmers
-> scalikejdbcGenForce programmers
-> + test:compile
-> set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(template ="interpolation")}
-> scalikejdbcGenEcho programmers
-> scalikejdbcGenForce programmers
-> + test:compile
-
+$ newer src/main/scala/app/models/Programmers.scala src/main/scala/app/models/Programmer.scala
 
 > set (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) ~= {_.copy(autoConstruct = true)}
 > scalikejdbcGenEcho programmers
