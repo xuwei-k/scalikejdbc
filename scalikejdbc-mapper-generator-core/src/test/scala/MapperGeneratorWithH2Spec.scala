@@ -75,7 +75,7 @@ class MapperGeneratorWithH2Spec extends FlatSpec with Matchers {
         val generator1 = new CodeGenerator(table)(GeneratorConfig(
           srcDir = srcDir,
           template = GeneratorTemplate.queryDsl,
-          testTemplate = GeneratorTestTemplate("specs2unit"),
+          testTemplate = Some(GeneratorTestTemplate.specs2unit),
           packageName = "com.example"
         ))
         generator1.specAll()
@@ -83,7 +83,7 @@ class MapperGeneratorWithH2Spec extends FlatSpec with Matchers {
         val generator2 = new CodeGenerator(table)(GeneratorConfig(
           srcDir = srcDir,
           template = GeneratorTemplate.queryDsl,
-          testTemplate = GeneratorTestTemplate("specs2acceptance"),
+          testTemplate = Some(GeneratorTestTemplate.specs2acceptance),
           packageName = "com.example.placeholder"
         ))
         generator2.specAll()
@@ -91,7 +91,7 @@ class MapperGeneratorWithH2Spec extends FlatSpec with Matchers {
         val generator3 = new CodeGenerator(table)(GeneratorConfig(
           srcDir = srcDir,
           template = GeneratorTemplate.queryDsl,
-          testTemplate = GeneratorTestTemplate("ScalaTestFlatSpec"),
+          testTemplate = Some(GeneratorTestTemplate.ScalaTestFlatSpec),
           packageName = "com.example.anorm"
         ))
         generator3.specAll()

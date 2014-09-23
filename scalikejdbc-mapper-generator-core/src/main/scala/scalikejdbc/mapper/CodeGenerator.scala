@@ -710,9 +710,9 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
     }
   }
 
-  def specAll(): Option[String] = config.testTemplate match {
+  def specAll(): Option[String] = config.testTemplate.map {
     case GeneratorTestTemplate.ScalaTestFlatSpec =>
-      Some(replaceVariablesForTestPart(
+      replaceVariablesForTestPart(
         """package %package%
           |
           |import org.scalatest._
@@ -764,9 +764,9 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
           |  }
           |
           |}
-        """.stripMargin))
+        """.stripMargin)
     case GeneratorTestTemplate.specs2unit =>
-      Some(replaceVariablesForTestPart(
+      replaceVariablesForTestPart(
         """package %package%
           |
           |import scalikejdbc.specs2.mutable.AutoRollback
@@ -820,9 +820,9 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
           |  }
           |
           |}
-        """.stripMargin))
+        """.stripMargin)
     case GeneratorTestTemplate.specs2acceptance =>
-      Some(replaceVariablesForTestPart(
+      replaceVariablesForTestPart(
         """package %package%
           |
           |import scalikejdbc.specs2.AutoRollback
@@ -886,8 +886,7 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
           |  }
           |
           |}
-        """.stripMargin))
-    case GeneratorTestTemplate(name) => None
+        """.stripMargin)
   }
 
   private def replaceVariablesForTestPart(code: String): String = {
