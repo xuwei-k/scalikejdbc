@@ -1,10 +1,19 @@
 language: scala
-scala:
-  - 2.10.4
-  - 2.11.2
-  - scripted-test
+
+env:
+  global:
+    - PUBLISH_ALL="++2.11.2 root211/publishLocal ++2.10.4 publishLocal"
+  matrix:
+    - TEST=$PUBLISH_ALL "scripted scalikejdbc-mapper-generator/gen"
+    - TEST=$PUBLISH_ALL "scripted scalikejdbc-mapper-generator/scalatest"
+    - TEST=$PUBLISH_ALL "scripted scalikejdbc-mapper-generator/specs2"
+    - TEST=$PUBLISH_ALL "scripted scalikejdbc-mapper-generator/twenty-three"
+    - TEST=++2.10.4 test
+    - TEST=++2.11.2 root211/test
+
+script:
+  - sbt $TEST
+
 jdk:
   - oraclejdk7
   - oraclejdk8
-script:
-  - ./travis.sh
