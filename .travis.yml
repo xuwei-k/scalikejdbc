@@ -1,7 +1,7 @@
 language: scala
 scala:
-  - 2.10.4
-  - 2.11.2
+  - \";++2.10.4; test:compile; test\"
+  - \";++2.11.2; project root211; test:compile; test\"
 jdk:
   - oraclejdk7
   - oraclejdk8
@@ -13,14 +13,16 @@ before_script:
   - mysql -e 'GRANT ALL ON *.* TO sa@"localhost"IDENTIFIED BY "sa";FLUSH PRIVILEGES;' -uroot
   - mysql -e "CREATE DATABASE scalikejdbc;" -usa -psa
 script:
-  - ./travis.sh
+  - rm scalikejdbc-core/src/test/resources/jdbc.properties
+  - cp -p scalikejdbc-core/src/test/resources/jdbc_$SCALIKEJDBC_DATABASE.properties scalikejdbc-core/src/test/resources/jdbc.properties
+  - sbt $TRAVIS_SCALA_VERSION$
 env:
   matrix:
-    - SCALIKEJDBC_DATABASE="mysql"
     - SCALIKEJDBC_DATABASE="postgresql"
+    - SCALIKEJDBC_DATABASE="mysql"
 
 matrix:
   include:
-    - scala: scripted-test
-      jdk: oraclejdk7
+    - jdk: oraclejdk7
       env: SCALIKEJDBC_DATABASE="mysql"
+      env: TRAVIS_SCALA_VERSION=\";++ 2.11.2; root211/publishLocal; ++ 2.10.4; publishLocal; mapper-generator/scripted\"
