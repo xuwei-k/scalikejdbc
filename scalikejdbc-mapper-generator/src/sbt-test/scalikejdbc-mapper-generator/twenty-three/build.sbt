@@ -1,5 +1,19 @@
 scalikejdbcSettings
 
+sLog := new AbstractLogger {
+  def getLevel: Level.Value = Level.Error
+  def setLevel(newLevel: Level.Value) {}
+  def getTrace = 0
+  def setTrace(flag: Int) {}
+  def successEnabled = false
+  def setSuccessEnabled(flag: Boolean) {}
+  def control(event: ControlEvent.Value, message: => String) {}
+  def logAll(events: Seq[LogEvent]) {}
+  def trace(t: => Throwable) {}
+  def success(message: => String) {}
+  def log(level: Level.Value, message: => String) {}
+}
+
 scalikejdbc.mapper.SbtKeys.scalikejdbcJDBCSettings in Compile := {
   val props = new java.util.Properties()
   IO.load(props, file("test.properties"))
