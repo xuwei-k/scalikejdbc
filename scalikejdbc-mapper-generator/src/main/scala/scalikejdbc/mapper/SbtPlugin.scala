@@ -17,6 +17,7 @@ package scalikejdbc.mapper
 
 import sbt._
 import sbt.Keys._
+import scalikejdbc.ConnectionPool
 import scala.language.reflectiveCalls
 import util.control.Exception._
 import java.io.FileNotFoundException
@@ -145,6 +146,7 @@ object SbtPlugin extends Plugin {
         g.writeModelIfNotExist()
         g.writeSpecIfNotExist(g.specAll())
       }
+      ConnectionPool.closeAll()
     },
     scalikejdbcGenForce := {
       val srcDir = (scalaSource in Compile).value
@@ -155,6 +157,7 @@ object SbtPlugin extends Plugin {
         g.writeModel()
         g.writeSpec(g.specAll())
       }
+      ConnectionPool.closeAll()
     },
     scalikejdbcGenAll := {
       val srcDir = (scalaSource in Compile).value
@@ -163,6 +166,7 @@ object SbtPlugin extends Plugin {
         g.writeModelIfNotExist()
         g.writeSpecIfNotExist(g.specAll())
       }
+      ConnectionPool.closeAll()
     },
     scalikejdbcGenAllForce := {
       val srcDir = (scalaSource in Compile).value
@@ -171,6 +175,7 @@ object SbtPlugin extends Plugin {
         g.writeModel()
         g.writeSpec(g.specAll())
       }
+      ConnectionPool.closeAll()
     },
     scalikejdbcGenEcho := {
       val srcDir = (scalaSource in Compile).value
@@ -179,6 +184,7 @@ object SbtPlugin extends Plugin {
       val gen = generator(tableName = args.table, className = args.clazz, srcDir = srcDir, testDir = testDir, jdbc = scalikejdbcJDBCSettings.value, generatorSettings = scalikejdbcGeneratorSettings.value)
       gen.foreach(g => println(g.modelAll()))
       gen.foreach(g => g.specAll().foreach(spec => println(spec)))
+      ConnectionPool.closeAll()
     },
     scalikejdbcJDBCSettings := loadPropertiesFromFile().fold(throw _, loadJDBCSettings),
     scalikejdbcGeneratorSettings := loadPropertiesFromFile().fold(throw _, loadGeneratorSettings)
