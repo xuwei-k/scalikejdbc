@@ -52,9 +52,9 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
 
   def arrayOpt(columnLabel: String): Option[java.sql.Array] = get[Option[java.sql.Array]](columnLabel)
 
-  def asciiStream(columnIndex: Int): java.io.InputStream = get[java.io.InputStream](columnIndex)(TypeBinder.asciiStream)
+  def asciiStream(columnIndex: Int): java.io.InputStream = get[java.io.InputStream](columnIndex)(TypeBinder.asciiStream, NotNothing.isNotNothing)
 
-  def asciiStream(columnLabel: String): java.io.InputStream = get[java.io.InputStream](columnLabel)(TypeBinder.asciiStream)
+  def asciiStream(columnLabel: String): java.io.InputStream = get[java.io.InputStream](columnLabel)(TypeBinder.asciiStream, NotNothing.isNotNothing)
 
   def asciiStreamOpt(columnIndex: Int): Option[java.io.InputStream] = {
     implicit val binder = TypeBinder.asciiStream
@@ -244,9 +244,9 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
     underlying.getMetaData
   }
 
-  def nCharacterStream(columnIndex: Int): java.io.Reader = get[java.io.Reader](columnIndex)(TypeBinder.nCharacterStream)
+  def nCharacterStream(columnIndex: Int): java.io.Reader = get[java.io.Reader](columnIndex)(TypeBinder.nCharacterStream, NotNothing.isNotNothing)
 
-  def nCharacterStream(columnLabel: String): java.io.Reader = get[java.io.Reader](columnLabel)(TypeBinder.nCharacterStream)
+  def nCharacterStream(columnLabel: String): java.io.Reader = get[java.io.Reader](columnLabel)(TypeBinder.nCharacterStream, NotNothing.isNotNothing)
 
   def nCharacterStreamOpt(columnIndex: Int): Option[java.io.Reader] = {
     implicit val binder = TypeBinder.nCharacterStream
@@ -266,9 +266,9 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
 
   def nClobOpt(columnLabel: String): Option[java.sql.NClob] = get[Option[java.sql.NClob]](columnLabel)
 
-  def nString(columnIndex: Int): String = get[String](columnIndex)(TypeBinder.nString)
+  def nString(columnIndex: Int): String = get[String](columnIndex)(TypeBinder.nString, NotNothing.isNotNothing)
 
-  def nString(columnLabel: String): String = get[String](columnLabel)(TypeBinder.nString)
+  def nString(columnLabel: String): String = get[String](columnLabel)(TypeBinder.nString, NotNothing.isNotNothing)
 
   def nStringOpt(columnIndex: Int): Option[String] = {
     implicit val binder = TypeBinder.nString
@@ -280,9 +280,9 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
     get[Option[String]](columnLabel)
   }
 
-  def any(columnIndex: Int): Any = get[Any](columnIndex)(TypeBinder.any)
+  def any(columnIndex: Int): Any = get[Any](columnIndex)(TypeBinder.any, NotNothing.isNotNothing)
 
-  def any(columnLabel: String): Any = get[Any](columnLabel)(TypeBinder.any)
+  def any(columnLabel: String): Any = get[Any](columnLabel)(TypeBinder.any, NotNothing.isNotNothing)
 
   def any(columnIndex: Int, map: Map[String, Class[_]]): Any = {
     implicit val binder: TypeBinder[Any] = TypeBinder((rs, i) => rs.getObject(i, map.asJava))((rs, l) => rs.getObject(l, map.asJava))
@@ -296,22 +296,22 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
 
   def anyOpt(columnIndex: Int): Option[Any] = {
     implicit val binder: TypeBinder[Any] = TypeBinder.any
-    get[Option[Any]](columnIndex)(TypeBinder.option(binder))
+    get[Option[Any]](columnIndex)(TypeBinder.option(binder), NotNothing.isNotNothing)
   }
 
   def anyOpt(columnLabel: String): Option[Any] = {
     implicit val binder: TypeBinder[Any] = TypeBinder.any
-    get[Option[Any]](columnLabel)(TypeBinder.option(binder))
+    get[Option[Any]](columnLabel)(TypeBinder.option(binder), NotNothing.isNotNothing)
   }
 
   def anyOpt(columnIndex: Int, map: Map[String, Class[_]]): Option[Any] = {
     implicit val binder: TypeBinder[Any] = TypeBinder((rs, i) => rs.getObject(i, map.asJava))((rs, l) => rs.getObject(l, map.asJava))
-    get[Option[Any]](columnIndex)(TypeBinder.option(binder))
+    get[Option[Any]](columnIndex)(TypeBinder.option(binder), NotNothing.isNotNothing)
   }
 
   def anyOpt(columnLabel: String, map: Map[String, Class[_]]): Option[Any] = {
     implicit val binder: TypeBinder[Any] = TypeBinder((rs, i) => rs.getObject(i, map.asJava))((rs, l) => rs.getObject(l, map.asJava))
-    get[Option[Any]](columnLabel)(TypeBinder.option(binder))
+    get[Option[Any]](columnLabel)(TypeBinder.option(binder), NotNothing.isNotNothing)
   }
 
   def ref(columnIndex: Int): java.sql.Ref = get[java.sql.Ref](columnIndex)
@@ -464,12 +464,12 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
 
   def toSymbolMap(): Map[Symbol, Any] = toMap().map { case (k, v) => Symbol(k) -> v }
 
-  def get[A: TypeBinder](columnIndex: Int): A = {
+  def get[A: TypeBinder: NotNothing](columnIndex: Int): A = {
     ensureCursor()
     wrapIfError(implicitly[TypeBinder[A]].apply(underlying, columnIndex))
   }
 
-  def get[A: TypeBinder](columnLabel: String): A = {
+  def get[A: TypeBinder: NotNothing](columnLabel: String): A = {
     ensureCursor()
     wrapIfError(implicitly[TypeBinder[A]].apply(underlying, columnLabel))
   }
