@@ -30,11 +30,11 @@ env:
 matrix:
   include:
     - scala: scripted-test
-      jdk: oraclejdk7
+      jdk: oraclejdk8
       env: SCALIKEJDBC_DATABASE="mysql"
     - scala: scripted-test
-      jdk: oraclejdk7
+      jdk: oraclejdk8
       env: SCALIKEJDBC_DATABASE="postgresql"
     - scala: scripted-test
-      jdk: oraclejdk7
+      jdk: oraclejdk8
       env: SCALIKEJDBC_DATABASE="h2"
