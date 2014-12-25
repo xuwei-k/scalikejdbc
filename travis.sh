@@ -12,6 +12,6 @@ if [[ ${TRAVIS_SCALA_VERSION} = "scripted-test" ]]; then
   sbt '++ 2.11.4' root211/publishLocal '++ 2.10.4' publishLocal checkScalariform mapper-generator/scripted
 else
   git add . --all &&
-  sbt ++${TRAVIS_SCALA_VERSION} "project root211" test:compile checkScalariform testSequential
+  sbt -Xms512M -Xmx1G ++${TRAVIS_SCALA_VERSION} "project root211" test:compile checkScalariform testSequential
 fi
 

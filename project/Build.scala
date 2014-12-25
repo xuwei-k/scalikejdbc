@@ -230,8 +230,9 @@ object ScalikeJDBCProjects extends Build {
       sbtPlugin := true,
       ScriptedPlugin.scriptedBufferLog := false,
       ScriptedPlugin.scriptedLaunchOpts ++= sys.process.javaVmArguments.filter(
-        a => Seq("-Xmx","-Xms","-XX").exists(a.startsWith)
+        a => Seq("-XX").exists(a.startsWith)
       ),
+      ScriptedPlugin.scriptedLaunchOpts ++= Seq("-Xms1G", "-Xmx3G", "-XX:ReservedCodeCacheSize=1G"),
       ScriptedPlugin.scriptedLaunchOpts ++= Seq(
         "-Dplugin.version=" + version.value,
         "-Dmysql.version=5.1.33",
