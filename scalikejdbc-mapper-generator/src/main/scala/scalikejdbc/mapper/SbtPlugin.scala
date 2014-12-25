@@ -106,7 +106,7 @@ object SbtPlugin extends Plugin {
     val config = generatorConfig(srcDir, testDir, generatorSettings)
     Class.forName(jdbc.driver) // load specified jdbc driver
     val model = Model(jdbc.url, jdbc.username, jdbc.password)
-    model.table(jdbc.schema, tableName)
+    val result = model.table(jdbc.schema, tableName)
       .orElse(model.table(jdbc.schema, tableName.toUpperCase(en)))
       .orElse(model.table(jdbc.schema, tableName.toLowerCase(en)))
       .map { table =>
@@ -115,6 +115,8 @@ object SbtPlugin extends Plugin {
         println("The table is not found.")
         None
       }
+    scalikejdbc.ConnectionPool.closeAll()
+    result
   }
 
   def allGenerators(srcDir: File, testDir: File, jdbc: JDBCSettings, generatorSettings: GeneratorSettings): Seq[CodeGenerator] = {
