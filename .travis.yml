@@ -28,7 +28,7 @@ before_script:
   - mysql -e "CREATE DATABASE scalikejdbc;" -usa -psa
 
 script:
-  - travis_retry ./travis.sh
+  - travis_retry ./travis.sh && psql -c "DROP DATABASE scalikejdbc;" -U postgres && mysql -e "DROP DATABASE scalikejdbc;" -usa -psa
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
