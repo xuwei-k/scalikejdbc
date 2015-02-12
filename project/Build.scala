@@ -99,7 +99,7 @@ object ScalikeJDBCProjects extends Build {
   val mimaSettings = MimaPlugin.mimaDefaultSettings ++ Seq(
     previousArtifact := Some(_organization % s"${name.value}_${scalaBinaryVersion.value}" % compatibleVersion),
     test in Test := {
-      reportBinaryIssues.value
+//      reportBinaryIssues.value
       (test in Test).value
     },
     binaryIssueFilters ++= mimaProblemFilters

@@ -1,8 +1,8 @@
 version: 1.0.{build}
 clone_depth: 3
-services: mssql2014
+services: mssql2012sp1
 build_script:
-- sqlcmd -S ".\SQL2014" -U sa -P Password12! -Q "create database scalikejdbc;"
+- sqlcmd -S ".\SQL2012SP1" -U sa -P Password12! -Q "create database scalikejdbc;"
 - del project\sbt-idea.sbt
 - del project\sbt-pgp.sbt
 - del project\sbt-updates.sbt
