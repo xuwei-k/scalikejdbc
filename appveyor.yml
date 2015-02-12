@@ -7,6 +7,6 @@ build_script:
 - del project\sbt-pgp.sbt
 - del project\sbt-updates.sbt
 - del scalikejdbc-core\src\test\resources\jdbc.properties
-- cp scalikejdbc-core\src\test\resources\jdbc_sqlserver.properties scalikejdbc-core\src\test\resources\jdbc.properties
+- move scalikejdbc-core\src\test\resources\jdbc_sqlserver.properties scalikejdbc-core\src\test\resources\jdbc.properties
 - sbt core/test
 #- sbt test:compile "project root211" testSequential
