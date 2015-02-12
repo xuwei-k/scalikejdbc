@@ -3,7 +3,9 @@ clone_depth: 3
 services: mssql2014
 build_script:
 - sqlcmd -S ".\SQL2014" -U sa -P Password12! -Q "create database scalikejdbc;"
-- sbt test:compile checkScalariform
+- del project\sbt-idea.sbt
+- del project\sbt-pgp.sbt
+- del project\sbt-updates.sbt
 - del scalikejdbc-core\src\test\resources\jdbc.properties
 - cp scalikejdbc-core\src\test\resources\jdbc_sqlserver.properties scalikejdbc-core\src\test\resources\jdbc.properties
-- sbt testSequential
+- sbt "project root211" test:compile testSequential
