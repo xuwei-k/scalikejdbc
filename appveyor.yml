@@ -8,4 +8,5 @@ build_script:
 - del project\sbt-updates.sbt
 - del scalikejdbc-core\src\test\resources\jdbc.properties
 - cp scalikejdbc-core\src\test\resources\jdbc_sqlserver.properties scalikejdbc-core\src\test\resources\jdbc.properties
-- sbt "project root211" test:compile testSequential
+- sbt core/test
+#- sbt test:compile "project root211" testSequential
