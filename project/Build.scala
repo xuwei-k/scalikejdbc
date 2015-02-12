@@ -360,14 +360,14 @@ object ScalikeJDBCProjects extends Build {
   lazy val specs2DependenciesInTestScope =
     Seq("org.specs2" %% "specs2-core" % _specs2Version % "test")
 
-  val jdbcDriverDependenciesInTestScope = Seq(
+  val jdbcDriverDependenciesInTestScope = Nil /* Seq(
     "com.h2database"    % "h2"                   % _h2Version        % "test",
     "org.apache.derby"  % "derby"                % "10.11.1.1"       % "test",
     "org.xerial"        % "sqlite-jdbc"          % "3.8.7"           % "test",
     "org.hsqldb"        % "hsqldb"               % "2.3.2"           % "test",
     "mysql"             % "mysql-connector-java" % "5.1.+"           % "test",
     "org.postgresql"    % "postgresql"           % "9.3-1102-jdbc41" % "test"
-  )
+  ) */
   //val _scalacOptions = Seq("-deprecation", "-unchecked", "-Ymacro-debug-lite", "-Xlog-free-terms", "Yshow-trees", "-feature")
   val _scalacOptions = Seq("-deprecation", "-unchecked", "-feature")
   val _pomExtra = <url>http://scalikejdbc.org/</url>
