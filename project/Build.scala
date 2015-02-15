@@ -146,6 +146,17 @@ object ScalikeJDBCProjects extends Build {
   ).settings(
     commands += Command.command("testSequential"){
       projects.map(_.id).filterNot(Set(root211Id, mapperGeneratorId)).map(_ + "/test").sorted ::: _
+    },
+    TaskKey[Unit]("cleanupTestDatabase") := {
+      val testDB = "scalikejdbc"
+      val drop = s"DROP DATABASE IF EXISTS $testDB;"
+      val create = s"CREATE DATABASE $testDB;"
+      PartialFunction.condOpt(sys.env.get("SCALIKEJDBC_DATABASE")){
+        case Some("mysql") =>
+          s"""mysql -e "$drop" -usa -psa && mysql -e "$create" -usa -psa"""
+        case Some("postgresql") =>
+          s"""psql -c "$drop" -U sa && psql -c "$create" -U sa"""
+      }.foreach(_.!)
     }
   ).copy(
     aggregate = projects.filterNot(p => Set(root211Id, mapperGeneratorId).contains(p.id)).map(p => p: ProjectReference)
