@@ -40,6 +40,7 @@ object ScalikeJDBCProjects extends Build {
     incOptions := incOptions.value.withNameHashing(true),
     //scalaVersion := "2.11.6",
     scalacOptions ++= _scalacOptions,
+    updateOptions ~= { _.withCachedResolution(true) },
     scalacOptions in (Compile, doc) ++= Seq(
       "-sourcepath", (baseDirectory in LocalRootProject).value.getAbsolutePath,
       "-doc-source-url", s"https://github.com/scalikejdbc/scalikejdbc/tree/${gitHash}€{FILE_PATH}.scala"

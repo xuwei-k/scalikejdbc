@@ -17,6 +17,7 @@ cache:
   directories:
     - $HOME/.ivy2/cache
     - $HOME/.sbt/boot
+    - $HOME/.sbt/0.13/dependency/
 
 before_script:
   - rm project/sbt-idea.sbt
