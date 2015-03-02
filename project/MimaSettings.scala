@@ -121,9 +121,7 @@ object MimaSettings {
       exclude[MissingTypesProblem]("scalikejdbc.SQLToTraversableImpl"),
       exclude[UpdateForwarderBodyProblem]("scalikejdbc.SQLToList.apply$default$2"),
       exclude[UpdateForwarderBodyProblem]("scalikejdbc.SQLToOption.apply$default$2"),
-      exclude[UpdateForwarderBodyProblem]("scalikejdbc.SQLToTraversable.apply$default$2"),
-      exclude[MissingMethodProblem]("scalikejdbc.AuthenticatedDataSourceConnectionPool.this"),
-      exclude[MissingMethodProblem]("scalikejdbc.DataSourceConnectionPool.this")
+      exclude[UpdateForwarderBodyProblem]("scalikejdbc.SQLToTraversable.apply$default$2")
     ) ++ (for{
       clazz <- Seq("OneToManies2SQLToList", "SQLToListImpl", "SQLToOptionImpl", "SQLToTraversableImpl")
       method <- Seq("first", "headOption", "list", "single", "toList", "toOption", "toTraversable", "traversable")

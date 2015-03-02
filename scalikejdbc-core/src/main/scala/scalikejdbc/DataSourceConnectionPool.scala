@@ -21,10 +21,18 @@ import java.sql.Connection
 /**
  * Connection Pool using external DataSource
  */
-class DataSourceConnectionPool(override val dataSource: DataSource, settings: DataSourceConnectionPoolSettings = DataSourceConnectionPoolSettings())
+class DataSourceConnectionPool(override val dataSource: DataSource, settings: DataSourceConnectionPoolSettings)
     extends ConnectionPool("<external-data-source>", "<external-data-source>", "<external-data-source>", ConnectionPoolSettings(driverName = settings.driverName)) {
 
+  def this(dataSource: DataSource) {
+    this(dataSource, DataSourceConnectionPoolSettings())
+  }
+
   override def borrow(): Connection = dataSource.getConnection()
+}
+
+object DataSourceConnectionPool {
+  def `<init>$default$2` = DataSourceConnectionPoolSettings()
 }
 
 /**
@@ -33,8 +41,16 @@ class DataSourceConnectionPool(override val dataSource: DataSource, settings: Da
  * Note: Commons-DBCP doesn't support this API.
  */
 class AuthenticatedDataSourceConnectionPool(
-  override val dataSource: DataSource, override val user: String, password: String, settings: DataSourceConnectionPoolSettings = DataSourceConnectionPoolSettings())
+  override val dataSource: DataSource, override val user: String, password: String, settings: DataSourceConnectionPoolSettings)
     extends ConnectionPool("<external-data-source>", user, password, ConnectionPoolSettings(driverName = settings.driverName)) {
 
+  def this(dataSource: DataSource, user: String, password: String) {
+    this(dataSource, user, password, DataSourceConnectionPoolSettings())
+  }
+
   override def borrow(): Connection = dataSource.getConnection(user, password)
+}
+
+object AuthenticatedDataSourceConnectionPool {
+  def `<init>$default$4` = DataSourceConnectionPoolSettings()
 }
