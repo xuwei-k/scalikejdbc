@@ -167,10 +167,19 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
 
   /**
    * Create directory to put the source code file if it does not exist yet.
+   * [[https://github.com/sbt/sbt/blob/v0.13.7/util/io/src/main/scala/sbt/IO.scala#L154-L167]]
    */
-  def mkdirRecursively(file: File): Unit = {
-    if (!file.getParentFile.exists) mkdirRecursively(file.getParentFile)
-    if (!file.exists) file.mkdir()
+  def mkdirRecursively(dir: File): Unit = {
+    def failBase = "Could not create directory " + dir
+    // Need a retry because mkdirs() has a race condition
+    var tryCount = 0
+    while (!dir.exists && !dir.mkdirs() && tryCount < 100) { tryCount += 1 }
+    if (dir.isDirectory)
+      ()
+    else if (dir.exists) {
+      sys.error(failBase + ": file exists and is not a directory.")
+    } else
+      sys.error(failBase)
   }
 
   implicit def convertColumnToColumnInScala(column: Column): ColumnInScala = ColumnInScala(column)
