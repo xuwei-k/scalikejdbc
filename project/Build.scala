@@ -35,6 +35,7 @@ object ScalikeJDBCProjects extends Build {
     publishTo <<= version { (v: String) => _publishTo(v) },
     publishMavenStyle := true,
     resolvers ++= _resolvers,
+    resolvers += "staging-2.10.5" at "https://oss.sonatype.org/content/repositories/orgscala-lang-1186/",
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     incOptions := incOptions.value.withNameHashing(true),
     //scalaVersion := "2.11.6",
