@@ -47,7 +47,6 @@ object ScalikeJDBCProjects extends Build {
     publishArtifact in Test := false,
     pomIncludeRepository := { x => false },
     logBuffered in Test := false,
-    parallelExecution in Test := false,
     pomExtra := _pomExtra
   )
 
