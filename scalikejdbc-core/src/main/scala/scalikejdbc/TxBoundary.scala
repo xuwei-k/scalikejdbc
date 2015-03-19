@@ -41,10 +41,15 @@ object TxBoundary {
     }
   }
 
+  sealed abstract class TxBoundaryAmbiguousImplicits {
+    implicit def ambiguousTxBoundary1[A]: TxBoundary[A] = sys.error("use ambiguousTxBoundary!")
+    implicit def ambiguousTxBoundary2[A]: TxBoundary[A] = sys.error("use ambiguousTxBoundary!")
+  }
+
   /**
    * Future TxBoundary type class instance.
    */
-  object Future {
+  object Future extends TxBoundaryAmbiguousImplicits {
 
     implicit def futureTxBoundary[A](implicit ec: ExecutionContext) = new TxBoundary[Future[A]] {
       def finishTx(result: Future[A], tx: Tx): Future[A] = {
