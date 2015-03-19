@@ -83,8 +83,17 @@ object ScalikeJDBCProjects extends Build {
   lazy val scalikejdbcCore = Project(
     id = "core",
     base = file("scalikejdbc-core"),
-    settings = baseSettings ++ mimaSettings ++ buildInfoSettings ++ Seq(
+    settings = baseSettings ++ mimaSettings ++ buildInfoSettings ++ ScriptedPlugin.scriptedSettings ++ Seq(
       name := "scalikejdbc-core",
+      resolvers += Resolver.url("Typesafe Ivy Releases", url("http://typesafe.artifactoryonline.com/typesafe/ivy-releases/"))(Resolver.ivyStylePatterns),
+      ScriptedPlugin.scriptedBufferLog := false,
+      ScriptedPlugin.scriptedLaunchOpts ++= sys.process.javaVmArguments.filter(
+        a => Seq("-XX", "-Xss", "-Xmx").exists(a.startsWith)
+      ),
+      ScriptedPlugin.scriptedLaunchOpts ++= Seq(
+        "-Dscalikejdbc.version=" + version.value,
+        "-Dscripted.scala.version=" + scalaVersion.value
+      ),
       sourceGenerators in Compile <+= buildInfo,
       buildInfoPackage := "scalikejdbc",
       buildInfoObject := "ScalikejdbcBuildInfo",

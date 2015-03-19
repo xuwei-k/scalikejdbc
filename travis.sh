@@ -13,6 +13,6 @@ if [[ ${TRAVIS_SCALA_VERSION} = "scripted-test" ]]; then
   sbt -J-XX:+CMSClassUnloadingEnabled -J-Xmx512M -J-Xms512M mapper-generator/scripted
 else
   git add . --all &&
-  sbt ++${TRAVIS_SCALA_VERSION} "project root211" test:compile checkScalariform testSequential
+  sbt ++${TRAVIS_SCALA_VERSION} "project root211" test:compile checkScalariform core/scripted testSequential
 fi
 

@@ -1,0 +1,8 @@
+package sample
+
+object Test {
+
+  import scalikejdbc.TxBoundary.Future._
+  scalikejdbc.DB.localTx(session => scala.concurrent.Future.successful(1))
+
+}

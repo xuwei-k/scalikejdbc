@@ -41,10 +41,15 @@ object TxBoundary {
     }
   }
 
+  sealed abstract class TxBoundaryMissingImplicits {
+    implicit def `You import TxBoundary.Future._, However any scala.concurrent.ExecutionContext instance could not found in implicit scope`[A]: TxBoundary[Future[A]] = ???
+    implicit def `You import TxBoundary.Future._, However any scala.concurrent.ExecutionContext instance could not found in implicit scope.`[A]: TxBoundary[Future[A]] = ???
+  }
+
   /**
    * Future TxBoundary type class instance.
    */
-  object Future {
+  object Future extends TxBoundaryMissingImplicits {
 
     implicit def futureTxBoundary[A](implicit ec: ExecutionContext) = new TxBoundary[Future[A]] {
       def finishTx(result: Future[A], tx: Tx): Future[A] = {
