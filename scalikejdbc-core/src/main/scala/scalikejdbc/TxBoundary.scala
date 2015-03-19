@@ -2,6 +2,8 @@ package scalikejdbc
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Try, Failure, Success }
+import scala.language.experimental.macros
+import scala.reflect.macros.blackbox.Context
 
 /**
  * This type class enable users to customize the behavior of transaction boundary(commit/rollback).
@@ -41,10 +43,22 @@ object TxBoundary {
     }
   }
 
+  sealed abstract class TxBoundaryMissingImplicits {
+    implicit def ambiguousTxBoundary[A]: TxBoundary[Future[A]] = macro TxBoundaryMissingImplicits.missingTxBoundary[A]
+  }
+  private object TxBoundaryMissingImplicits {
+
+    def missingTxBoundary[A: c.WeakTypeTag](c: Context): c.Expr[TxBoundary[Future[A]]] = {
+      import c.universe._
+      c.abort(c.enclosingPosition, s"You import TxBoundary.Future._, However any scala.concurrent.ExecutionContext instance could not found in implicit scope.")
+    }
+
+  }
+
   /**
    * Future TxBoundary type class instance.
    */
-  object Future {
+  object Future extends TxBoundaryMissingImplicits {
 
     implicit def futureTxBoundary[A](implicit ec: ExecutionContext) = new TxBoundary[Future[A]] {
       def finishTx(result: Future[A], tx: Tx): Future[A] = {

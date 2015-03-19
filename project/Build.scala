@@ -83,8 +83,17 @@ object ScalikeJDBCProjects extends Build {
   lazy val scalikejdbcCore = Project(
     id = "core",
     base = file("scalikejdbc-core"),
-    settings = baseSettings ++ mimaSettings ++ buildInfoSettings ++ Seq(
+    settings = baseSettings ++ mimaSettings ++ buildInfoSettings ++ ScriptedPlugin.scriptedSettings ++ Seq(
       name := "scalikejdbc-core",
+      resolvers += Resolver.url("Typesafe Ivy Releases", url("http://typesafe.artifactoryonline.com/typesafe/ivy-releases/"))(Resolver.ivyStylePatterns),
+      ScriptedPlugin.scriptedBufferLog := false,
+      ScriptedPlugin.scriptedLaunchOpts ++= sys.process.javaVmArguments.filter(
+        a => Seq("-XX", "-Xss", "-Xmx").exists(a.startsWith)
+      ),
+      ScriptedPlugin.scriptedLaunchOpts ++= Seq(
+        "-Dscalikejdbc.version=" + version.value,
+        "-Dscripted.scala.version=" + scalaVersion.value
+      ),
       sourceGenerators in Compile <+= buildInfo,
       buildInfoPackage := "scalikejdbc",
       buildInfoObject := "ScalikejdbcBuildInfo",
@@ -110,6 +119,7 @@ object ScalikeJDBCProjects extends Build {
           "org.slf4j"               %  "slf4j-api"       % _slf4jApiVersion  % "compile",
           "joda-time"               %  "joda-time"       % "2.7"             % "compile",
           "org.joda"                %  "joda-convert"    % "1.7"             % "compile",
+          "org.scala-lang"          %  "scala-reflect"   % scalaVersion      % "compile",
           // scope: provided
           // commons-dbcp2 will be the default CP implementation since ScalikeJDBC 2.1
           "org.apache.commons"      %  "commons-dbcp2"   % "2.0.+"           % "provided",
@@ -122,7 +132,11 @@ object ScalikeJDBCProjects extends Build {
         ) ++ (scalaVersion match {
           case v if v.startsWith("2.11.") => Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3" % "compile")
           case _ => Nil
-        }) ++ scalaTestDependenciesInTestScope ++ jdbcDriverDependenciesInTestScope
+        }) ++ scalaTestDependenciesInTestScope ++ jdbcDriverDependenciesInTestScope ++ macroDependenciesInCompileScope(scalaVersion)
+      },
+      unmanagedSourceDirectories in Compile <+= (scalaVersion, sourceDirectory in Compile){(v, dir) =>
+        if (v.startsWith("2.10")) dir / "scala2.10"
+        else dir / "scala2.11"
       }
     )
   )
@@ -259,10 +273,6 @@ object ScalikeJDBCProjects extends Build {
           "ch.qos.logback"  %  "logback-classic"  % _logbackVersion   % "test",
           "org.hibernate"   %  "hibernate-core"   % _hibernateVersion % "test"
         ) ++ scalaTestDependenciesInTestScope ++ jdbcDriverDependenciesInTestScope ++ macroDependenciesInCompileScope(scalaVersion)
-      },
-      unmanagedSourceDirectories in Compile <+= (scalaVersion, sourceDirectory in Compile){(v, dir) =>
-        if (v.startsWith("2.10")) dir / "scala2.10"
-        else dir / "scala2.11"
       }
     )
   ) dependsOn(scalikejdbcLibrary)
