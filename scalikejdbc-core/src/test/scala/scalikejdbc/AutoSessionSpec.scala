@@ -1,8 +1,6 @@
 package scalikejdbc
 
 import org.scalatest._
-import java.sql._
-import util.control.Exception._
 
 class AutoSessionSpec extends FlatSpec with Matchers {
 
