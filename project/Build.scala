@@ -31,6 +31,8 @@ object ScalikeJDBCProjects extends Build {
       "master"
   }
 
+  private[this] val unusedWarnings = Seq("-Ywarn-unused", "-Ywarn-unused-import")
+
   lazy val baseSettings = Seq(
     organization := _organization,
     version := _version,
@@ -55,6 +57,11 @@ object ScalikeJDBCProjects extends Build {
     },
     //scalaVersion := "2.11.8",
     scalacOptions ++= _scalacOptions,
+    scalacOptions in (Compile, compile) ++= {
+      if(scalaVersion.value startsWith "2.10") Nil
+      else unusedWarnings
+    },
+    scalacOptions in (Compile, console) ~= {_.filterNot(unusedWarnings.toSet)},
     scalacOptions in (Compile, doc) ++= Seq(
       "-sourcepath", (baseDirectory in LocalRootProject).value.getAbsolutePath,
       "-doc-source-url", s"https://github.com/scalikejdbc/scalikejdbc/tree/${gitHash}€{FILE_PATH}.scala"
