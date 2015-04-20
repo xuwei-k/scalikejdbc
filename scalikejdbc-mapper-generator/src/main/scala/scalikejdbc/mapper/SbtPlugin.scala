@@ -13,7 +13,7 @@ object SbtPlugin extends Plugin {
 
   import SbtKeys._
 
-  case class JDBCSettings(driver: String, url: String, username: String, password: String, schema: String)
+  case class JDBCSettings(driver: String, url: String, username: String, password: String, schema: String, driverClassLoader: Option[ClassLoader] = None)
 
   case class GeneratorSettings(
     packageName: String,
@@ -160,7 +160,12 @@ object SbtPlugin extends Plugin {
 
   private def generator(tableName: String, className: Option[String], srcDir: File, testDir: File, jdbc: JDBCSettings, generatorSettings: GeneratorSettings): Option[CodeGenerator] = {
     val config = generatorConfig(srcDir, testDir, generatorSettings)
-    Class.forName(jdbc.driver) // load specified jdbc driver
+    jdbc.driverClassLoader match {
+      case Some(loader) =>
+        loader.loadClass(jdbc.driver)
+      case None =>
+        Class.forName(jdbc.driver)
+    }
     val model = Model(jdbc.url, jdbc.username, jdbc.password)
     model.table(jdbc.schema, tableName)
       .orElse(model.table(jdbc.schema, tableName.toUpperCase(en)))
@@ -175,8 +180,13 @@ object SbtPlugin extends Plugin {
 
   def allGenerators(srcDir: File, testDir: File, jdbc: JDBCSettings, generatorSettings: GeneratorSettings): Seq[CodeGenerator] = {
     val config = generatorConfig(srcDir, testDir, generatorSettings)
+    jdbc.driverClassLoader match {
+      case Some(loader) =>
+        loader.loadClass(jdbc.driver)
+      case None =>
+        Class.forName(jdbc.driver)
+    }
     val className = None
-    Class.forName(jdbc.driver) // load specified jdbc driver
     val model = Model(jdbc.url, jdbc.username, jdbc.password)
     model.allTables(jdbc.schema).map { table =>
       new CodeGenerator(table, className)(config)

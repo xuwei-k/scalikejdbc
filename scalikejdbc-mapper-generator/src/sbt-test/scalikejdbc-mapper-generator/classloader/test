@@ -1,0 +1,5 @@
+> copyh2jar
+> reload
+-> scalikejdbcGenAll
+> setDriverClassLoader
+> scalikejdbcGenAll
