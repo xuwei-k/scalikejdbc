@@ -15,14 +15,15 @@ object SQLSyntaxSupportFactory {
     }
     c.Expr[SQLSyntaxSupportImpl[A]](q"""
       new SQLSyntaxSupportImpl[${weakTypeTag[A].tpe}] {
-        override lazy val tableName: String = {
-          SQLSyntaxProvider.toColumnName(
-            ${weakTypeOf[A].toString}.replaceFirst("\\$$$$", "").replaceFirst("^.+\\.", "").replaceFirst("^.+\\$$", ""),
-            nameConverters, useSnakeCaseColumnName)
-        }
+        override lazy val tableName: String = SQLSyntaxSupportFactory.camelToSnake(${weakTypeOf[A].toString})
         def apply(rn: ResultName[${weakTypeTag[A].tpe}])(rs: WrappedResultSet): ${weakTypeTag[A].tpe} = new ${weakTypeTag[A].tpe}(..$constParams)
       }
     """)
+  }
+
+  def camelToSnake(className: String): String = {
+    val clazz = className.replaceFirst("\\$$", "").replaceFirst("^.+\\.", "").replaceFirst("^.+\\$", "")
+    SQLSyntaxProvider.toColumnName(clazz, Map.empty, true)
   }
 
   def debug_impl[A: c.WeakTypeTag](c: Context)(excludes: c.Expr[String]*): c.Expr[SQLSyntaxSupportImpl[A]] = {
