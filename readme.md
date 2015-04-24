@@ -1,5 +1,6 @@
 # ScalikeJDBC
 
+
 ## Just write SQL and get things done!
 
 ScalikeJDBC is a tidy SQL-based DB access library for Scala developers. This library naturally wraps JDBC APIs and provides you easy-to-use APIs.
