@@ -67,7 +67,7 @@ case class StatementExecutor(
     for ((param, idx) <- paramsWithIndices; i = idx + 1) {
       param match {
         case null => underlying.setObject(i, null)
-        case binder: ParameterBinder[_] => binder.apply(underlying, i)
+        case binder: ParameterBinder => binder.apply(underlying, i)
         case p: java.sql.Array => underlying.setArray(i, p)
         case p: BigDecimal => underlying.setBigDecimal(i, p.bigDecimal)
         case p: BigInt => underlying.setBigDecimal(i, new java.math.BigDecimal(p.bigInteger))

@@ -125,7 +125,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
   }
 
   it should "have #in with empty" in {
-    val s = SQLSyntax.in(sqls"id", Seq())
+    val s = SQLSyntax.in(sqls"id", Seq[Int]())
     s.value should equal(" FALSE")
     s.parameters should equal(Seq())
   }
@@ -137,7 +137,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
   }
 
   it should "have #in for 2 columns with empty" in {
-    val s = SQLSyntax.in((sqls"id", sqls"name"), Seq())
+    val s = SQLSyntax.in((sqls"id", sqls"name"), Seq[(Int, String)]())
     s.value should equal(" FALSE")
     s.parameters should equal(Seq())
   }
@@ -148,7 +148,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
     s.parameters should equal(Seq(1, "Alice", 20, 2, "Bob", 23))
   }
   it should "have #in for 3 columns with empty" in {
-    val s = SQLSyntax.in((sqls"id", sqls"name", sqls"age"), Seq())
+    val s = SQLSyntax.in((sqls"id", sqls"name", sqls"age"), Seq[(Int, String, Int)]())
     s.value should equal(" FALSE")
     s.parameters should equal(Seq())
   }
@@ -158,7 +158,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
     s.parameters should equal(Seq(1, "Alice", 20, "bar", 2, "Bob", 23, "baz"))
   }
   it should "have #in for 4 columns with empty" in {
-    val s = SQLSyntax.in((sqls"id", sqls"name", sqls"age", sqls"foo"), Seq())
+    val s = SQLSyntax.in((sqls"id", sqls"name", sqls"age", sqls"foo"), Seq[(Int, String, Int, String)]())
     s.value should equal(" FALSE")
     s.parameters should equal(Seq())
   }
@@ -170,7 +170,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
   }
   it should "have #in for 5 columns with empty" in {
     val time = DateTime.now
-    val s = SQLSyntax.in((sqls"id", sqls"name", sqls"age", sqls"foo", sqls"created_at"), Seq())
+    val s = SQLSyntax.in((sqls"id", sqls"name", sqls"age", sqls"foo", sqls"created_at"), Seq[(Int, String, Int, String, DateTime)]())
     s.value should equal(" FALSE")
     s.parameters should equal(Seq())
   }
@@ -181,7 +181,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
     s.parameters should equal(Seq(1, 2, 3))
   }
   it should "have #notIn woth empty" in {
-    val s = SQLSyntax.notIn(sqls"id", Seq())
+    val s = SQLSyntax.notIn(sqls"id", Seq[Int]())
     s.value should equal(" TRUE")
     s.parameters should equal(Seq())
   }
@@ -192,7 +192,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
     s.parameters should equal(Seq(1, "Alice", 2, "Bob"))
   }
   it should "have #notIn for 2 columns with empty" in {
-    val s = SQLSyntax.notIn((sqls"id", sqls"name"), Seq())
+    val s = SQLSyntax.notIn((sqls"id", sqls"name"), Seq[(Int, String)]())
     s.value should equal(" TRUE")
     s.parameters should equal(Seq())
   }
@@ -202,7 +202,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
     s.parameters should equal(Seq(1, "Alice", 20, 2, "Bob", 23))
   }
   it should "have #notIn for 3 columns with empty" in {
-    val s = SQLSyntax.notIn((sqls"id", sqls"name", sqls"age"), Seq())
+    val s = SQLSyntax.notIn((sqls"id", sqls"name", sqls"age"), Seq[(Int, String, Int)]())
     s.value should equal(" TRUE")
     s.parameters should equal(Seq())
   }
@@ -212,7 +212,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
     s.parameters should equal(Seq(1, "Alice", 20, "bar", 2, "Bob", 23, "baz"))
   }
   it should "have #notIn for 4 columns with empty" in {
-    val s = SQLSyntax.notIn((sqls"id", sqls"name", sqls"age", sqls"foo"), Seq())
+    val s = SQLSyntax.notIn((sqls"id", sqls"name", sqls"age", sqls"foo"), Seq[(Int, String, Int, String)]())
     s.value should equal(" TRUE")
     s.parameters should equal(Seq())
   }
@@ -224,7 +224,7 @@ class SQLSyntaxSpec extends FlatSpec with Matchers {
   }
   it should "have #notIn for 5 columns with empty" in {
     val time = DateTime.now
-    val s = SQLSyntax.notIn((sqls"id", sqls"name", sqls"age", sqls"foo", sqls"created_at"), Seq())
+    val s = SQLSyntax.notIn((sqls"id", sqls"name", sqls"age", sqls"foo", sqls"created_at"), Seq[(Int, String, Int, String, DateTime)]())
     s.value should equal(" TRUE")
     s.parameters should equal(Seq())
   }

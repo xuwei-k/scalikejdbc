@@ -1035,8 +1035,7 @@ class DBSessionSpec extends FlatSpec with Matchers with BeforeAndAfter with Sett
           }
           val bytes = scala.Array[Byte](1, 2, 3, 4, 5, 6, 7)
           val in = new ByteArrayInputStream(bytes)
-          val v = ParameterBinder[InputStream](
-            value = in,
+          val v = ParameterBinder(
             binder = (stmt: PreparedStatement, idx: Int) => stmt.setBinaryStream(idx, in, bytes.length)
           )
           SQL("insert into dbsession_work_with_parameter_binder (data) values (?)").bind(v).update.apply()
@@ -1044,7 +1043,7 @@ class DBSessionSpec extends FlatSpec with Matchers with BeforeAndAfter with Sett
           try {
             SQL("drop table dbsession_work_with_parameter_binder").execute.apply()
           } catch {
-            case e: Exception => e.printStackTrace
+            case e: Exception => e.printStackTrace()
           }
         }
     }

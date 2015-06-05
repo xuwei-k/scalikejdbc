@@ -15,13 +15,7 @@ import java.sql.PreparedStatement
  * sql"insert into table (bin) values (${bin})".update.apply()
  * }}}
  */
-trait ParameterBinder[A] {
-
-  /**
-   * Parameter value.
-   */
-  @deprecated("This unused field will be removed", since = "2.2.4")
-  def value: A
+trait ParameterBinder {
 
   /**
    * Applies parameter to PreparedStatement.
@@ -38,12 +32,14 @@ object ParameterBinder {
   /**
    * Factory method for ParameterBinder.
    */
-  def apply[A](value: A, binder: (PreparedStatement, Int) => Unit): ParameterBinder[A] = {
-    val _v = value
-    new ParameterBinder[A] {
-      override def value: A = _v
+  def apply(binder: (PreparedStatement, Int) => Unit): ParameterBinder = {
+    new ParameterBinder {
       override def apply(stmt: PreparedStatement, idx: Int): Unit = binder.apply(stmt, idx)
     }
+  }
+
+  val NullParameterBinder = new ParameterBinder {
+    def apply(stmt: PreparedStatement, idx: Int): Unit = stmt.setObject(idx, null)
   }
 
 }

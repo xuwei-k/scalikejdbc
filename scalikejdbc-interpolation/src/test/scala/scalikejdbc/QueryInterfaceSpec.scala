@@ -329,7 +329,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         {
           val inClauseResults = withSQL {
             select.from(Order as o)
-              .where.in(o.id, Seq())
+              .where.in(o.id, Seq[Int]())
               .orderBy(o.id)
           }.map(Order(o)).list.apply()
           inClauseResults.map(_.id) should equal(List())
@@ -345,7 +345,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         {
           val notInClauseResults = withSQL {
             select.from(Order as o)
-              .where.notIn(o.id, Seq())
+              .where.notIn(o.id, Seq[Int]())
               .orderBy(o.id)
           }.map(Order(o)).list.apply()
           notInClauseResults.map(_.id) should equal(List(11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26))
@@ -353,7 +353,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         {
           val notInClauseResults = withSQL {
             select.from(Order as o)
-              .where.not.in(o.id, Seq())
+              .where.not.in(o.id, Seq[Int]())
               .orderBy(o.id)
           }.map(Order(o)).list.apply()
           notInClauseResults.map(_.id) should equal(List(11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26))
@@ -402,7 +402,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         {
           val inClauseResults = withSQL {
             select.from(Order as o)
-              .where.in((o.id, o.productId), Seq())
+              .where.in((o.id, o.productId), Seq[(Int, Int)]())
               .orderBy(o.id)
           }.map(Order(o)).list.apply()
           inClauseResults.map(_.id) should equal(List())
@@ -418,7 +418,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         {
           val notInClauseResults = withSQL {
             select.from(Order as o)
-              .where.notIn((o.id, o.productId), Seq())
+              .where.notIn((o.id, o.productId), Seq[(Int, Int)]())
               .orderBy(o.id)
           }.map(Order(o)).list.apply()
           notInClauseResults.map(_.id) should equal(List(11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26))
@@ -426,7 +426,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         {
           val notInClauseResults = withSQL {
             select.from(Order as o)
-              .where.not.in((o.id, o.productId), Seq())
+              .where.not.in((o.id, o.productId), Seq[(Int, Int)]())
               .orderBy(o.id)
           }.map(Order(o)).list.apply()
           notInClauseResults.map(_.id) should equal(List(11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26))

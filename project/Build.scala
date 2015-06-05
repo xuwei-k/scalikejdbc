@@ -121,6 +121,7 @@ object ScalikeJDBCProjects extends Build {
       libraryDependencies ++= {
         Seq(
           // scope: compile
+          "org.scala-lang"          %  "scala-reflect"   % scalaVersion.value,
           "org.apache.commons"      %  "commons-dbcp2"   % "2.1.1"           % "compile",
           "org.slf4j"               %  "slf4j-api"       % _slf4jApiVersion  % "compile",
           "joda-time"               %  "joda-time"       % "2.9.2"           % "compile",
