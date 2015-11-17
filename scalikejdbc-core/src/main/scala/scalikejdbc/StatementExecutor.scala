@@ -90,17 +90,16 @@ case class StatementExecutor(
           // Accessing JSR-310 APIs via Java reflection
           // because scalikejdbc-core should work on not only Java 8 but 6 & 7.
           import java.lang.reflect.Method
-          val className: String = param.getClass.getCanonicalName
-          val clazz: Class[_] = Class.forName(className)
-          className match {
+          import scala.language.reflectiveCalls
+          param.getClass.getCanonicalName match {
             case "java.time.ZonedDateTime" | "java.time.OffsetDateTime" =>
-              val instant = clazz.getMethod("toInstant").invoke(p) // java.time.Instant
+              val instant = p.asInstanceOf[{ def toInstant: AnyRef }].toInstant // java.time.Instant
               val dateClazz: Class[_] = Class.forName("java.util.Date") // java.util.Date
               val fromMethod: Method = dateClazz.getMethod("from", Class.forName("java.time.Instant"))
               val dateValue = fromMethod.invoke(null, instant).asInstanceOf[java.util.Date]
               underlying.setTimestamp(i, dateValue.toSqlTimestamp)
             case "java.time.Instant" =>
-              val millis = clazz.getMethod("toEpochMilli").invoke(p).asInstanceOf[java.lang.Long]
+              val millis = p.asInstanceOf[{ def toEpochMilli: Long }].toEpochMilli
               underlying.setTimestamp(i, new java.util.Date(millis).toSqlTimestamp)
             case "java.time.LocalDateTime" =>
               underlying.setTimestamp(i, org.joda.time.LocalDateTime.parse(p.toString).toDate.toSqlTimestamp)
