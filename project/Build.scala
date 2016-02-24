@@ -37,6 +37,7 @@ object ScalikeJDBCProjects extends Build {
     publishTo <<= version { (v: String) => _publishTo(v) },
     publishMavenStyle := true,
     resolvers ++= _resolvers,
+    resolvers in Global += "pr" at "https://scala-ci.typesafe.com/artifactory/scala-pr-validation-snapshots/",
     // https://github.com/sbt/sbt/issues/2217
     fullResolvers ~= { _.filterNot(_.name == "jcenter") },
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
@@ -136,7 +137,7 @@ object ScalikeJDBCProjects extends Build {
           "org.mockito"             %  "mockito-all"     % "1.10.+"          % "test"
         ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
           case Some((2, scalaMajor)) if scalaMajor >= 11 =>
-            Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4" % "compile")
+            Seq("org.scala-lang.modules" % "scala-parser-combinators_2.11" % "1.0.4" % "compile")
           case _ =>
             Nil
         }) ++ scalaTestDependenciesInTestScope(scalatestVersion.value) ++ jdbcDriverDependenciesInTestScope
@@ -242,8 +243,8 @@ object ScalikeJDBCProjects extends Build {
         Seq(
           "org.slf4j"      %  "slf4j-api"       % _slf4jApiVersion  % "compile",
           "ch.qos.logback" %  "logback-classic" % _logbackVersion   % "test",
-          "org.scalatest"  %% "scalatest"       % scalatestVersion.value % "provided",
-          "org.specs2"     %% "specs2-core"     % specs2Version.value % "provided"
+          "org.scalatest"  % "scalatest_2.11"       % scalatestVersion.value % "provided",
+          "org.specs2"     % "specs2-core_2.11"     % specs2Version.value % "provided"
         ) ++ jdbcDriverDependenciesInTestScope
       }
     )
@@ -286,7 +287,7 @@ object ScalikeJDBCProjects extends Build {
 
   def macroDependenciesInCompileScope(scalaVersion: String) = {
     if (scalaVersion.startsWith("2.10")) Seq(
-      "org.scalamacros" %% "quasiquotes" % "2.1.0" % "compile",
+      "org.scalamacros" % "quasiquotes_2.10" % "2.1.0" % "compile",
       compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
     ) else Seq()
   }
@@ -302,10 +303,10 @@ object ScalikeJDBCProjects extends Build {
     "sonatype snaphots" at "https://oss.sonatype.org/content/repositories/snapshots"
   )
   def scalaTestDependenciesInTestScope(v: String) =
-    Seq("org.scalatest" %% "scalatest" % v % "test")
+    Seq("org.scalatest" % "scalatest_2.11" % v % "test")
 
   def specs2DependenciesInTestScope(v: String) =
-    Seq("org.specs2" %% "specs2-core" % v % "test")
+    Seq("org.specs2" % "specs2-core_2.11" % v % "test")
 
   val jdbcDriverDependenciesInTestScope = Seq(
     "com.h2database"    % "h2"                   % _h2Version         % "test",
