@@ -138,9 +138,17 @@ object ScalikeJDBCProjects extends Build {
         ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
           case Some((2, scalaMajor)) if scalaMajor >= 11 =>
             Seq("org.scala-lang.modules" % "scala-parser-combinators_2.11" % "1.0.4" % "compile")
+          case Some((2, 10)) =>
+            libraryDependencies.value ++ Seq(
+              compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+              "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
           case _ =>
             Nil
         }) ++ scalaTestDependenciesInTestScope(scalatestVersion.value) ++ jdbcDriverDependenciesInTestScope
+      },
+      unmanagedSourceDirectories in Compile <+= (scalaVersion, sourceDirectory in Compile){(v, dir) =>
+        if (v.startsWith("2.10")) dir / "scala2.10"
+        else dir / "scala2.11"
       }
     )
   )
