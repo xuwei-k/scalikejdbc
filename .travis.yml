@@ -19,6 +19,7 @@ cache:
     - $HOME/.sbt/boot
 
 before_script:
+  - export TZ=Australia/Canberra
   - rm project/sbt-idea.sbt
   - rm project/sbt-pgp.sbt
   - rm project/sbt-updates.sbt
