@@ -28,7 +28,8 @@ object SbtPlugin extends Plugin {
     tableNameToClassName: String => String,
     columnNameToFieldName: String => String,
     returnCollectionType: ReturnCollectionType,
-    view: Boolean
+    view: Boolean,
+    typeMapping: (String, Column, DateTimeClass) => Option[String]
   )
 
   private[this] def getString(props: Properties, key: String): Option[String] =
@@ -107,7 +108,8 @@ object SbtPlugin extends Plugin {
       returnCollectionType = getString(props, RETURN_COLLECTION_TYPE).map { name =>
         ReturnCollectionType.map.getOrElse(name.toLowerCase(en), sys.error(s"does not support $name. support types are ${ReturnCollectionType.map.keys.mkString(", ")}"))
       }.getOrElse(defaultConfig.returnCollectionType),
-      view = getString(props, VIEW).map(_.toBoolean).getOrElse(defaultConfig.view)
+      view = getString(props, VIEW).map(_.toBoolean).getOrElse(defaultConfig.view),
+      typeMapping = defaultConfig.typeMapping
     )
   }
 

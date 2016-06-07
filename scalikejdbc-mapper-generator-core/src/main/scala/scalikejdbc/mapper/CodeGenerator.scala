@@ -7,7 +7,7 @@ import java.util.Locale.{ ENGLISH => en }
 /**
  * Active Record like template generator
  */
-class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(implicit config: GeneratorConfig = GeneratorConfig())
+class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(implicit config: GeneratorConfig)
     extends Generator with LoanPattern {
 
   import java.sql.{ Types => JavaSqlTypes }
@@ -22,27 +22,7 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
   private val comma = ","
   private val eol = config.lineBreak.value
 
-  object TypeName {
-    val Any = "Any"
-    val AnyArray = "Array[Any]"
-    val ByteArray = "Array[Byte]"
-    val Long = "Long"
-    val Boolean = "Boolean"
-    val DateTime = "DateTime"
-    val LocalDate = "LocalDate"
-    val LocalTime = "LocalTime"
-    val String = "String"
-    val Byte = "Byte"
-    val Int = "Int"
-    val Short = "Short"
-    val Float = "Float"
-    val Double = "Double"
-    val Blob = "Blob"
-    val Clob = "Clob"
-    val Ref = "Ref"
-    val Struct = "Struct"
-    val BigDecimal = "BigDecimal" // scala.math.BigDecimal
-  }
+  val TypeName = scalikejdbc.mapper.TypeName
 
   case class IndentGenerator(i: Int) {
     def indent: String = " " * i * 2
@@ -54,39 +34,8 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
 
     lazy val nameInScala: String = config.columnNameToFieldName(underlying.name)
 
-    lazy val rawTypeInScala: String = underlying.dataType match {
-      case JavaSqlTypes.ARRAY => TypeName.AnyArray
-      case JavaSqlTypes.BIGINT => TypeName.Long
-      case JavaSqlTypes.BINARY => TypeName.ByteArray
-      case JavaSqlTypes.BIT => TypeName.Boolean
-      case JavaSqlTypes.BLOB => TypeName.Blob
-      case JavaSqlTypes.BOOLEAN => TypeName.Boolean
-      case JavaSqlTypes.CHAR => TypeName.String
-      case JavaSqlTypes.CLOB => TypeName.Clob
-      case JavaSqlTypes.DATALINK => TypeName.Any
-      case JavaSqlTypes.DATE => TypeName.LocalDate
-      case JavaSqlTypes.DECIMAL => TypeName.BigDecimal
-      case JavaSqlTypes.DISTINCT => TypeName.Any
-      case JavaSqlTypes.DOUBLE => TypeName.Double
-      case JavaSqlTypes.FLOAT => TypeName.Float
-      case JavaSqlTypes.INTEGER => TypeName.Int
-      case JavaSqlTypes.JAVA_OBJECT => TypeName.Any
-      case JavaSqlTypes.LONGVARBINARY => TypeName.ByteArray
-      case JavaSqlTypes.LONGVARCHAR => TypeName.String
-      case JavaSqlTypes.NULL => TypeName.Any
-      case JavaSqlTypes.NUMERIC => TypeName.BigDecimal
-      case JavaSqlTypes.OTHER => TypeName.Any
-      case JavaSqlTypes.REAL => TypeName.Float
-      case JavaSqlTypes.REF => TypeName.Ref
-      case JavaSqlTypes.SMALLINT => TypeName.Short
-      case JavaSqlTypes.STRUCT => TypeName.Struct
-      case JavaSqlTypes.TIME => TypeName.LocalTime
-      case JavaSqlTypes.TIMESTAMP => config.dateTimeClass.simpleName
-      case JavaSqlTypes.TINYINT => TypeName.Byte
-      case JavaSqlTypes.VARBINARY => TypeName.ByteArray
-      case JavaSqlTypes.VARCHAR => TypeName.String
-      case _ => TypeName.Any
-    }
+    lazy val rawTypeInScala: String =
+      config.typeMapping(table.name, underlying, config.dateTimeClass).getOrElse(TypeName.Any)
 
     lazy val typeInScala: String = {
       if (underlying.isNotNull) rawTypeInScala

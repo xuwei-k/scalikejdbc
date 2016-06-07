@@ -1,5 +1,7 @@
 package scalikejdbc.mapper
 
+import java.sql.{ Types => JavaSqlTypes }
+
 case class GeneratorConfig(
   srcDir: String = "src/main/scala",
   testDir: String = "src/test/scala",
@@ -15,7 +17,8 @@ case class GeneratorConfig(
   tableNameToClassName: String => String = GeneratorConfig.toCamelCase,
   columnNameToFieldName: String => String = GeneratorConfig.lowerCamelCase andThen GeneratorConfig.quoteReservedWord,
   returnCollectionType: ReturnCollectionType = ReturnCollectionType.List,
-  view: Boolean = false
+  view: Boolean = false,
+  typeMapping: (String, Column, DateTimeClass) => Option[String] = GeneratorConfig.defaultTypeMapping
 )
 
 object GeneratorConfig {
@@ -51,4 +54,39 @@ object GeneratorConfig {
     GeneratorConfig.toCamelCase.andThen {
       camelCase => camelCase.head.toLower + camelCase.tail
     }
+
+  val defaultTypeMapping: (String, Column, DateTimeClass) => Option[String] = { (_, column, dateTimeClass) =>
+    PartialFunction.condOpt(column.dataType) {
+      case JavaSqlTypes.ARRAY => TypeName.AnyArray
+      case JavaSqlTypes.BIGINT => TypeName.Long
+      case JavaSqlTypes.BINARY => TypeName.ByteArray
+      case JavaSqlTypes.BIT => TypeName.Boolean
+      case JavaSqlTypes.BLOB => TypeName.Blob
+      case JavaSqlTypes.BOOLEAN => TypeName.Boolean
+      case JavaSqlTypes.CHAR => TypeName.String
+      case JavaSqlTypes.CLOB => TypeName.Clob
+      case JavaSqlTypes.DATALINK => TypeName.Any
+      case JavaSqlTypes.DATE => TypeName.LocalDate
+      case JavaSqlTypes.DECIMAL => TypeName.BigDecimal
+      case JavaSqlTypes.DISTINCT => TypeName.Any
+      case JavaSqlTypes.DOUBLE => TypeName.Double
+      case JavaSqlTypes.FLOAT => TypeName.Float
+      case JavaSqlTypes.INTEGER => TypeName.Int
+      case JavaSqlTypes.JAVA_OBJECT => TypeName.Any
+      case JavaSqlTypes.LONGVARBINARY => TypeName.ByteArray
+      case JavaSqlTypes.LONGVARCHAR => TypeName.String
+      case JavaSqlTypes.NULL => TypeName.Any
+      case JavaSqlTypes.NUMERIC => TypeName.BigDecimal
+      case JavaSqlTypes.OTHER => TypeName.Any
+      case JavaSqlTypes.REAL => TypeName.Float
+      case JavaSqlTypes.REF => TypeName.Ref
+      case JavaSqlTypes.SMALLINT => TypeName.Short
+      case JavaSqlTypes.STRUCT => TypeName.Struct
+      case JavaSqlTypes.TIME => TypeName.LocalTime
+      case JavaSqlTypes.TIMESTAMP => dateTimeClass.simpleName
+      case JavaSqlTypes.TINYINT => TypeName.Byte
+      case JavaSqlTypes.VARBINARY => TypeName.ByteArray
+      case JavaSqlTypes.VARCHAR => TypeName.String
+    }
+  }
 }

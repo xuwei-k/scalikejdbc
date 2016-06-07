@@ -1,5 +1,20 @@
 scalikejdbcSettings
 
+(scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile) := {
+  val s = (scalikejdbc.mapper.SbtKeys.scalikejdbcGeneratorSettings in Compile).value
+  s.copy(
+    typeMapping = {
+      (table, column, dateTimeClass) =>
+        (table, column.name) match {
+          case ("PROGRAMMERS", "ID") =>
+            Some("com.example.ProgrammerId")
+          case _ =>
+            s.typeMapping(table, column, dateTimeClass)
+        }
+    }
+  )
+}
+
 scalikejdbc.mapper.SbtKeys.scalikejdbcJDBCSettings in Compile := {
   val props = new java.util.Properties()
   IO.load(props, file("test.properties"))
@@ -62,7 +77,7 @@ TaskKey[Unit]("generateCodeForIssue339") := {
   )
   val all = key :: other
   val table = Table("Issue339table", all, all.filter(_.isAutoIncrement), key :: Nil)
-  val generator = new CodeGenerator(table)
+  val generator = new CodeGenerator(table)(scalikejdbc.mapper.GeneratorConfig())
   val code = generator.modelAll()
   println(code)
   assert(code.contains("rs.any("))

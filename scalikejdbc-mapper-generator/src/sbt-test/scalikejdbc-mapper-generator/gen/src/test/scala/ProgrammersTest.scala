@@ -1,5 +1,6 @@
 package app.models
 
+import com.example.ProgrammerId
 import org.joda.time.DateTime
 import org.scalatest._
 import scala.util.Random
@@ -21,7 +22,7 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
     programmers.foreach{ programmer =>
       Programmers.find(programmer.id) should equal(Some(programmer))
     }
-    val invalidId = Int.MinValue
+    val invalidId = ProgrammerId(Int.MinValue)
     Programmers.find(invalidId) should equal(None)
     Programmers.findAll().toSet should equal(programmers.toSet)
     Programmers.countAll() should equal(programmers.size)
