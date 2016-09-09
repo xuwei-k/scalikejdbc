@@ -1,11 +1,11 @@
 language: scala
 
 scala:
-  - 2.10.6
+  - 2.12.0-RC1
+  - 2.12.0-M5
   - 2.11.8
 
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 addons:
@@ -28,9 +28,7 @@ before_script:
   - mysql -e "CREATE DATABASE scalikejdbc;" -usa -psa
 
 script:
-  - bash -x ./travis_before.sh
-  - git add . --all
-  - travis_retry ./travis.sh
+  - sbt ++${TRAVIS_SCALA_VERSION} "project root211" test:compile
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
@@ -38,25 +36,3 @@ script:
 env:
   matrix:
     - SCALIKEJDBC_DATABASE="mysql"
-    - SCALIKEJDBC_DATABASE="postgresql"
-
-matrix:
-  include:
-    - scala: 2.12.0-M5
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="mysql"
-    - scala: scripted-test
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="mysql"
-    - scala: scripted-test
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="postgresql"
-    - scala: scripted-test
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.11.8
-      jdk: oraclejdk7
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.11.8
-      jdk: oraclejdk7
-      env: SCALIKEJDBC_DATABASE="hsqldb"

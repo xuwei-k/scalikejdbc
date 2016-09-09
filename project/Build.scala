@@ -23,7 +23,6 @@ object ScalikeJDBCProjects extends Build {
   // Hibernate 5.2 dropped JDK 7 support
   lazy val _hibernateVersion = "5.1.1.Final"
   lazy val scalatestVersion = SettingKey[String]("scalatestVersion")
-  lazy val specs2Version = SettingKey[String]("specs2Version")
 
   private def gitHash: String = try {
     sys.process.Process("git rev-parse HEAD").lines_!.head
@@ -44,12 +43,6 @@ object ScalikeJDBCProjects extends Build {
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     incOptions := incOptions.value.withNameHashing(true),
     scalatestVersion := "3.0.0",
-    specs2Version := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, v)) if v <= 11 => "2.5"
-        case _ => "3.8.4"
-      }
-    },
     //scalaVersion := "2.11.8",
     scalacOptions ++= _scalacOptions,
     scalacOptions in (Compile, doc) ++= Seq(
@@ -206,7 +199,6 @@ object ScalikeJDBCProjects extends Build {
       libraryDependencies ++= {
         Seq("org.slf4j"     %  "slf4j-api" % _slf4jApiVersion   % "compile") ++
           scalaTestDependenciesInTestScope(scalatestVersion.value) ++
-          specs2DependenciesInTestScope(specs2Version.value) ++
           jdbcDriverDependenciesInTestScope
       }
     )
@@ -228,14 +220,12 @@ object ScalikeJDBCProjects extends Build {
         "-Dmysql.version=" + _mysqlVersion,
         "-Dpostgresql.version=" + _postgresqlVersion,
         "-Dh2.version=" + _h2Version,
-        "-Dspecs2.version=" + specs2Version.value,
         "-Dscalatest.version=" + scalatestVersion.value
       ),
       name := "scalikejdbc-mapper-generator",
       libraryDependencies ++= {
         Seq("org.slf4j"     %  "slf4j-simple" % _slf4jApiVersion  % "compile") ++
           scalaTestDependenciesInTestScope(scalatestVersion.value) ++
-          specs2DependenciesInTestScope(specs2Version.value) ++
           jdbcDriverDependenciesInTestScope
       }
     )
@@ -251,10 +241,7 @@ object ScalikeJDBCProjects extends Build {
         Seq(
           "org.slf4j"      %  "slf4j-api"       % _slf4jApiVersion  % "compile",
           "ch.qos.logback" %  "logback-classic" % _logbackVersion   % "test",
-          "org.scalatest"  %% "scalatest"       % scalatestVersion.value % "provided",
-          "org.specs2"     %% "specs2-core"     % specs2Version.value % "provided" excludeAll(
-            ExclusionRule(organization = "org.spire-math")
-          )
+          "org.scalatest"  %% "scalatest"       % scalatestVersion.value % "provided"
         ) ++ jdbcDriverDependenciesInTestScope
       }
     )
