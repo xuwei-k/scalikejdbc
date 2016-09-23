@@ -1,11 +1,9 @@
 language: scala
 
 scala:
-  - 2.10.6
   - 2.11.8
 
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 addons:
@@ -28,6 +26,7 @@ before_script:
   - mysql -e "CREATE DATABASE scalikejdbc;" -usa -psa
 
 script:
+  - export TZ=${TIMEZONE}
   - bash -x ./travis_before.sh
   - git add . --all
   - travis_retry ./travis.sh
@@ -37,26 +36,15 @@ script:
 
 env:
   matrix:
-    - SCALIKEJDBC_DATABASE="mysql"
-    - SCALIKEJDBC_DATABASE="postgresql"
-
-matrix:
-  include:
-    - scala: 2.12.0-M5
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="mysql"
-    - scala: scripted-test
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="mysql"
-    - scala: scripted-test
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="postgresql"
-    - scala: scripted-test
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.11.8
-      jdk: oraclejdk7
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.11.8
-      jdk: oraclejdk7
-      env: SCALIKEJDBC_DATABASE="hsqldb"
+    - SCALIKEJDBC_DATABASE="mysql"        TIMEZONE="America/New_York"
+    - SCALIKEJDBC_DATABASE="postgresql"   TIMEZONE="America/New_York"
+    - SCALIKEJDBC_DATABASE="mysql"        TIMEZONE="Japan"
+    - SCALIKEJDBC_DATABASE="postgresql"   TIMEZONE="Japan"
+    - SCALIKEJDBC_DATABASE="mysql"        TIMEZONE="GMT"
+    - SCALIKEJDBC_DATABASE="postgresql"   TIMEZONE="GMT"
+    - SCALIKEJDBC_DATABASE="mysql"        TIMEZONE="Pacific/Honolulu"
+    - SCALIKEJDBC_DATABASE="postgresql"   TIMEZONE="Pacific/Honolulu"
+    - SCALIKEJDBC_DATABASE="mysql"        TIMEZONE="Asia/Shanghai"
+    - SCALIKEJDBC_DATABASE="postgresql"   TIMEZONE="Asia/Shanghai"
+    - SCALIKEJDBC_DATABASE="mysql"        TIMEZONE="Africa/Nairobi"
+    - SCALIKEJDBC_DATABASE="postgresql"   TIMEZONE="Africa/Nairobi"
