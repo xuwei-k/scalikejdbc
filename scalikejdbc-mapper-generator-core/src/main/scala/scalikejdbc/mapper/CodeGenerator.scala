@@ -673,7 +673,7 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
         batchInsertColumns.map(c => 4.indent + "'" + c.nameInScala.replace("`", "") + " -> entity." + c.nameInScala).mkString(comma + eol) +
         "))" + eol +
         4.indent + "SQL(\"\"\"insert into " + table.name + "(" + eol +
-        batchInsertColumns.map(c => 4.indent + c.name.replace("`", "")).mkString(comma + eol) + eol +
+        batchInsertColumns.map(c => 4.indent + c.name).mkString(comma + eol) + eol +
         3.indent + ")" + " values (" + eol +
         batchInsertColumns.map(c => 4.indent + "{" + c.nameInScala.replace("`", "") + "}").mkString(comma + eol) + eol +
         3.indent + ")\"\"\").batchByName(params: _*).apply()" + eol +
