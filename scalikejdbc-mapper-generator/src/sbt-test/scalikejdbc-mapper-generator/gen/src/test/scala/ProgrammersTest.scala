@@ -40,6 +40,7 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
     Programmers.countAll() should equal(0)
 
     Programmers.batchInsert(Nil).size should equal(0)
+    1 should equal(2)
 
     val res = Programmers.batchInsert(programmers)
     res.size should equal(programmers.size)
