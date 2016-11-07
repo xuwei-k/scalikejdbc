@@ -39,6 +39,8 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
     Programmers.findAll().toSet should equal(Set.empty[Programmers])
     Programmers.countAll() should equal(0)
 
+    Programmers.batchInsert(Nil).size should equal(0)
+
     val res = Programmers.batchInsert(programmers)
     res.size should equal(programmers.size)
   }
