@@ -44,8 +44,8 @@ class OneToManies2SQL[A, B1, B2, E <: WithExtractor, Z](
     extends SQL[Z, E](statement, rawParameters)(SQL.noExtractor[Z]("one-to-many extractor(one(RS => A).toMany(RS => Option[B])) is specified, use #map((A,B) =>Z) instead."))
     with AllOutputDecisionsUnsupported[Z, E] {
 
-  def map(zExtractor: (A, Seq[B1], Seq[B2]) => Z): OneToManies2SQL[A, B1, B2, HasExtractor, Z] = {
-    new OneToManies2SQL(statement, rawParameters)(one)(to1, to2)(zExtractor)
+  def map(extractor: (A, Seq[B1], Seq[B2]) => Z): OneToManies2SQL[A, B1, B2, HasExtractor, Z] = {
+    new OneToManies2SQL(statement, rawParameters)(one)(to1, to2)(extractor)
   }
   override def toTraversable(): OneToManies2SQLToTraversable[A, B1, B2, E, Z] = {
     new OneToManies2SQLToTraversable[A, B1, B2, E, Z](statement, rawParameters)(one)(to1, to2)(zExtractor)

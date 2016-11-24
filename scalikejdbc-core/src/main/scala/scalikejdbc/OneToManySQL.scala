@@ -21,9 +21,9 @@ private[scalikejdbc] trait OneToManyExtractor[A, B, E <: WithExtractor, Z]
     }
   }
 
-  private[scalikejdbc] def toTraversable(session: DBSession, sql: String, params: Seq[_], zExtractor: (A, Seq[B]) => Z): Traversable[Z] = {
+  private[scalikejdbc] def toTraversable(session: DBSession, sql: String, params: Seq[_], extractor: (A, Seq[B]) => Z): Traversable[Z] = {
     session.foldLeft(statement, rawParameters: _*)(LinkedHashMap[A, (Seq[B])]())(processResultSet).map {
-      case (one, (to)) => zExtractor(one, to)
+      case (one, (to)) => extractor(one, to)
     }
   }
 
@@ -35,8 +35,8 @@ class OneToManySQL[A, B, E <: WithExtractor, Z](
     extends SQL[Z, E](statement, rawParameters)(SQL.noExtractor[Z]("one-to-many extractor(one(RS => A).toMany(RS => Option[B])) is specified, use #map((A,B) =>Z) instead."))
     with AllOutputDecisionsUnsupported[Z, E] {
 
-  def map(zExtractor: (A, Seq[B]) => Z): OneToManySQL[A, B, HasExtractor, Z] = {
-    val q = new OneToManySQL[A, B, HasExtractor, Z](statement, rawParameters)(one)(toMany)(zExtractor)
+  def map(extractor: (A, Seq[B]) => Z): OneToManySQL[A, B, HasExtractor, Z] = {
+    val q = new OneToManySQL[A, B, HasExtractor, Z](statement, rawParameters)(one)(toMany)(extractor)
     q.queryTimeout(queryTimeout)
     q.fetchSize(fetchSize)
     q.tags(tags: _*)
