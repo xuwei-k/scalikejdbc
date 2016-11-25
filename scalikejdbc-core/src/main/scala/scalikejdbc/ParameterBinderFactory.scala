@@ -6,8 +6,6 @@ import java.sql.PreparedStatement
 import scalikejdbc.interpolation.SQLSyntax
 
 import scala.annotation.implicitNotFound
-import scala.language.experimental.macros
-import scala.reflect.macros.blackbox.Context
 
 @implicitNotFound(
   """
@@ -111,7 +109,7 @@ object ParameterBinderFactory extends LowPriorityImplicitsParameterBinderFactory
 
 }
 
-trait LowPriorityImplicitsParameterBinderFactory1 extends LowPriorityImplicitsParameterBinderFactory0 {
+trait LowPriorityImplicitsParameterBinderFactory1 {
 
   implicit def optionalParameterBinderFactory[A](implicit ev: ParameterBinderFactory[A]): ParameterBinderFactory[Option[A]] = new ParameterBinderFactory[Option[A]] {
     def apply(value: Option[A]): ParameterBinderWithValue = {
@@ -131,50 +129,4 @@ trait LowPriorityImplicitsParameterBinderFactory1 extends LowPriorityImplicitsPa
   val asisParameterBinderFactory: ParameterBinderFactory[Any] = new ParameterBinderFactory[Any] {
     def apply(value: Any): ParameterBinderWithValue = AsIsParameterBinder(value)
   }
-}
-
-trait LowPriorityImplicitsParameterBinderFactory0 {
-  implicit def anyParameterBinderFactory[A]: ParameterBinderFactory[A] = macro ParameterBinderFactoryMacro.any[A]
-}
-
-private[scalikejdbc] object ParameterBinderFactoryMacro {
-
-  def any[A: c.WeakTypeTag](c: Context): c.Expr[ParameterBinderFactory[A]] = {
-    import c.universe._
-    val A = weakTypeTag[A].tpe
-    val expr = A.toString match {
-      case "java.time.ZonedDateTime" | "java.time.OffsetDateTime" =>
-        q"scalikejdbc.ParameterBinderFactory[$A] { v => (ps, idx) => ps.setTimestamp(idx, java.sql.Timestamp.from(v.toInstant)) }"
-      case "java.time.LocalDateTime" =>
-        q"scalikejdbc.ParameterBinderFactory[$A] { v => (ps, idx) => ps.setTimestamp(idx, java.sql.Timestamp.valueOf(v)) }"
-      case "java.time.LocalDate" =>
-        q"scalikejdbc.ParameterBinderFactory[$A] { v => (ps, idx) => ps.setDate(idx, java.sql.Date.valueOf(v)) }"
-      case "java.time.LocalTime" =>
-        q"scalikejdbc.ParameterBinderFactory[$A] { v => (ps, idx) => ps.setTime(idx, java.sql.Time.valueOf(v)) }"
-      case _ =>
-        c.abort(c.enclosingPosition, s"""
-          |--------------------------------------------------------
-          | Implicit ParameterBinderFactory[$A] is missing.
-          | You need to define ParameterBinderFactory for the type or use AsIsParameterBinder.
-          |
-          |  (example1)
-          |    implicit val intParameterBinderFactory: ParameterBinderFactory[Int] = ParameterBinderFactory {
-          |       value => (stmt, idx) => stmt.setInt(idx, value)
-          |     }
-          |
-          |  (example2)
-          |    case class Price(value: Int)
-          |    object Price {
-          |      implicit val converter: Binders[Price] = Binders.int.xmap(Price.apply, _.value)
-          |    }
-          |
-          |  (example3)
-          |    val value: Any = 123
-          |    val key: SQLSyntax = sqls"column_name"
-          |    key -> AsIsParameterBinder(value)
-          |--------------------------------------------------------""".stripMargin)
-    }
-    c.Expr[ParameterBinderFactory[A]](expr)
-  }
-
 }
