@@ -9,7 +9,7 @@ abstract class StreamingAction[A, E <: WithExtractor] {
 
   protected[this] def createInvoker(): StreamingInvoker[A, E]
 
-  def emitStream(context: StreamingDB#StreamingActionContext, limit: Long, state: State): State = {
+  def emitStream(context: StreamingContext, limit: Long, state: State): State = {
     val bufferNext = context.bufferNext
     val iterator = if (state ne null) state else createInvoker().results()(context.session)
     var count = 0L
@@ -26,7 +26,7 @@ abstract class StreamingAction[A, E <: WithExtractor] {
     if (if (bufferNext) iterator.hasNext else count == limit) iterator else null
   }
 
-  def cancelStream(context: StreamingDB#StreamingActionContext, state: State): Unit = {
+  def cancelStream(context: StreamingContext, state: State): Unit = {
     if (state ne null) {
       state.close()
     }
