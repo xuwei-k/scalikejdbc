@@ -58,9 +58,8 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
     def clearAllLoadedColumns(): Unit = {
       SQLSyntaxSupportFeature.SQLSyntaxSupportLoadedColumns.clear()
 
-      SQLSyntaxSupportFeature.SQLSyntaxSupportCachedColumns.foreach {
-        case (_, caches) =>
-          caches.foreach { case (_, cache: TrieMap[String, SQLSyntax]) => cache.clear() }
+      SQLSyntaxSupportFeature.SQLSyntaxSupportCachedColumns.valuesIterator.foreach {
+        _.valuesIterator.foreach { _.clear() }
       }
     }
 
@@ -79,7 +78,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
         .foreach {
           case (cp, table) =>
             cachedColumns.get((cp, table)).foreach { caches =>
-              caches.foreach { case (_, cache: TrieMap[String, SQLSyntax]) => cache.clear() }
+              caches.valuesIterator.foreach { _.clear() }
             }
         }
     }
@@ -175,7 +174,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
         .find { case ((cp, tb), _) => cp == connectionPoolName && tb == tableNameWithSchema }
         .foreach {
           case (_, caches) =>
-            caches.foreach { case (_, cache: TrieMap[String, SQLSyntax]) => cache.clear() }
+            caches.valuesIterator.foreach { _.clear() }
         }
     }
 
