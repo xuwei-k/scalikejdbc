@@ -13,7 +13,7 @@ case class GeneratorConfig(
   defaultAutoSession: Boolean = true,
   dateTimeClass: DateTimeClass = DateTimeClass.JodaDateTime,
   tableNameToClassName: String => String = GeneratorConfig.toCamelCase,
-  columnNameToFieldName: String => String = GeneratorConfig.lowerCamelCase andThen GeneratorConfig.quoteReservedWord,
+  columnNameToFieldName: String => String = GeneratorConfig.lowerCamelCase andThen GeneratorConfig.quoteReservedWord andThen GeneratorConfig.addPrefixIfConflict("_"),
   returnCollectionType: ReturnCollectionType = ReturnCollectionType.List,
   view: Boolean = false
 )
@@ -44,6 +44,17 @@ object GeneratorConfig {
   val quoteReservedWord: String => String = {
     name =>
       if (reservedWords(name)) "`" + name + "`"
+      else name
+  }
+
+  val conflictMethods: Set[String] = Set(
+    "toString", "hashCode", "wait", "getClass", "notify", "notifyAll",
+    "productArity", "productIterator", "productPrefix"
+  )
+
+  def addPrefixIfConflict(prefix: String): String => String = {
+    name =>
+      if (conflictMethods(name)) prefix + name
       else name
   }
 
