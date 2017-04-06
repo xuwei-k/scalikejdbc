@@ -12,6 +12,7 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
   behavior of "Programmer"
 
   it should "be available" in { implicit session =>
+    try{
     Programmers.findAll().toSet should equal(Set.empty[Programmers])
     Programmers.countAll() should equal(0)
 
@@ -41,6 +42,11 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
 
     val res = Programmers.batchInsert(programmers)
     res.size should equal(programmers.size)
+    }catch{
+      case e =>
+        e.printStackTrace()
+        throw e
+    }
   }
 
 }

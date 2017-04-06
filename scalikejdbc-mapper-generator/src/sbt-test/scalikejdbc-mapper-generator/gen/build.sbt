@@ -37,7 +37,6 @@ val scalikejdbcVersion = System.getProperty("plugin.version")
 
 crossScalaVersions := List("2.12.1", "2.11.8", "2.10.6")
 
-scalacOptions ++= Seq("-Xlint", "-language:_", "-deprecation", "-unchecked", "-Xfatal-warnings")
 
 libraryDependencies ++= Seq(
   "org.scalikejdbc"     %% "scalikejdbc"                      % scalikejdbcVersion,
