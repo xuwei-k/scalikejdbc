@@ -1,9 +1,7 @@
 language: scala
 
 scala:
-  - 2.10.6
   - 2.11.8
-  - 2.12.1
 
 jdk:
   - oraclejdk8
@@ -29,7 +27,7 @@ before_script:
 script:
   - bash -x ./travis_before.sh
   - git add . --all
-  - travis_retry ./travis.sh
+  - ./travis.sh
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
@@ -37,7 +35,6 @@ script:
 env:
   matrix:
     - SCALIKEJDBC_DATABASE="mysql"
-    - SCALIKEJDBC_DATABASE="postgresql"
 
 matrix:
   include:
@@ -50,9 +47,3 @@ matrix:
     - scala: scripted-test
       jdk: oraclejdk8
       env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.12.1
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.12.1
-      jdk: oraclejdk8
-      env: SCALIKEJDBC_DATABASE="hsqldb"
