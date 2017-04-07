@@ -13,7 +13,7 @@ case class GeneratorConfig(
   defaultAutoSession: Boolean = true,
   dateTimeClass: DateTimeClass = DateTimeClass.JodaDateTime,
   tableNameToClassName: String => String = GeneratorConfig.toCamelCase,
-  columnNameToFieldName: String => String = GeneratorConfig.lowerCamelCase andThen GeneratorConfig.quoteReservedWord andThen GeneratorConfig.addSuffixIfConflict("Column"),
+  columnNameToFieldName: String => String = GeneratorConfig.columnNameToFieldNameBasic andThen GeneratorConfig.addSuffixIfConflict("Column"),
   returnCollectionType: ReturnCollectionType = ReturnCollectionType.List,
   view: Boolean = false
 )
@@ -62,4 +62,8 @@ object GeneratorConfig {
     GeneratorConfig.toCamelCase.andThen {
       camelCase => camelCase.head.toLower + camelCase.tail
     }
+
+  val columnNameToFieldNameBasic: String => String = {
+    GeneratorConfig.lowerCamelCase andThen GeneratorConfig.quoteReservedWord
+  }
 }
