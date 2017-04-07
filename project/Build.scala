@@ -221,6 +221,7 @@ object ScalikeJDBCProjects extends Build {
         a => Seq("-XX","-Xss").exists(a.startsWith)
       ) ++ Seq("-Xmx3G"),
       ScriptedPlugin.scriptedLaunchOpts ++= Seq(
+        "-Dh2.identifiersToUpper=false",
         "-Dplugin.version=" + version.value,
         "-Dslf4j.version=" + _slf4jApiVersion,
         "-Dmysql.version=" + _mysqlVersion,
