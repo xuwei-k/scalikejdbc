@@ -13,7 +13,7 @@ case class GeneratorConfig(
   defaultAutoSession: Boolean = true,
   dateTimeClass: DateTimeClass = DateTimeClass.JodaDateTime,
   tableNameToClassName: String => String = GeneratorConfig.toCamelCase,
-  columnNameToFieldName: String => String = GeneratorConfig.lowerCamelCase andThen GeneratorConfig.quoteReservedWord andThen GeneratorConfig.addPrefixIfConflict("_"),
+  columnNameToFieldName: String => String = GeneratorConfig.lowerCamelCase andThen GeneratorConfig.quoteReservedWord andThen GeneratorConfig.addSuffixIfConflict("Column"),
   returnCollectionType: ReturnCollectionType = ReturnCollectionType.List,
   view: Boolean = false
 )
@@ -52,9 +52,9 @@ object GeneratorConfig {
     "productArity", "productIterator", "productPrefix"
   )
 
-  def addPrefixIfConflict(prefix: String): String => String = {
+  def addSuffixIfConflict(suffix: String): String => String = {
     name =>
-      if (conflictMethods(name)) prefix + name
+      if (conflictMethods(name)) name + suffix
       else name
   }
 
