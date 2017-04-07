@@ -27,7 +27,7 @@ before_script:
 script:
   - bash -x ./travis_before.sh
   - git add . --all
-  - travis_retry ./travis.sh
+  - ./travis.sh
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
