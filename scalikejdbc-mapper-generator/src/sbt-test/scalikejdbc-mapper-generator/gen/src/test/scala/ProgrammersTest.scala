@@ -1,6 +1,6 @@
 package app.models
 
-import org.joda.time.DateTime
+import java.time._
 import org.scalatest._
 import scala.util.Random
 import scalikejdbc.scalatest.AutoRollback
@@ -29,8 +29,10 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
     Programmers.findAll().toSet should equal(Set.empty[Programmers])
     Programmers.countAll() should equal(0)
 
+    val zone = ZoneId.of("Asia/Tokyo")
+
     val programmers = Seq(Some("aaa"), Some("bbb"), None).map(name =>
-      Programmers.create(name = name, t1 = new DateTime(2014, 12, 31, 20, 0))
+      Programmers.create(name = name, t1 = ZonedDateTime.of(2014, 12, 31, 20, 0, zone))
     )
     programmers.foreach{ programmer =>
       Programmers.find(programmer.id) should equal(Some(programmer))
