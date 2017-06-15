@@ -32,7 +32,7 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
     val zone = ZoneId.of("Asia/Tokyo")
 
     val programmers = Seq(Some("aaa"), Some("bbb"), None).map(name =>
-      Programmers.create(name = name, t1 = ZonedDateTime.of(2014, 12, 31, 20, 0, zone))
+      Programmers.create(name = name, t1 = ZonedDateTime.of(2014, 12, 31, 20, 0, 0, 0, zone))
     )
     programmers.foreach{ programmer =>
       Programmers.find(programmer.id) should equal(Some(programmer))
