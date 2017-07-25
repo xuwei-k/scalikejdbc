@@ -1,5 +1,7 @@
 val root = project.in(file(".")).enablePlugins(ScalikejdbcPlugin)
 
+resolvers in Global += "staging" at "https://oss.sonatype.org/content/repositories/staging/"
+
 scalikejdbcJDBCSettings in Compile := {
   val props = new java.util.Properties()
   IO.load(props, file("test.properties"))

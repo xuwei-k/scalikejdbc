@@ -1,5 +1,7 @@
 val root = project.in(file(".")).enablePlugins(ScalikejdbcPlugin)
 
+resolvers in Global += "staging" at "https://oss.sonatype.org/content/repositories/staging/"
+
 scalikejdbcJDBCSettings in Compile := {
   val props = new java.util.Properties()
   IO.load(props, file("test.properties"))
@@ -37,7 +39,7 @@ testOptions in Test += {
 
 val scalikejdbcVersion = System.getProperty("plugin.version")
 
-crossScalaVersions := List("2.12.2", "2.11.11", "2.10.6")
+crossScalaVersions := List("2.12.3", "2.11.11", "2.10.6")
 
 scalacOptions ++= Seq("-Xlint", "-language:_", "-deprecation", "-unchecked")
 
