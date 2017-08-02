@@ -264,11 +264,11 @@ lazy val scalikejdbcTest = Project(
     libraryDependencies ++= {
       Seq(
         "org.slf4j"      %  "slf4j-api"       % _slf4jApiVersion  % "compile",
-        "ch.qos.logback" %  "logback-classic" % _logbackVersion   % "test",
-        "org.scalatest"  %% "scalatest"       % scalatestVersion.value % "provided",
-        "org.specs2"     %% "specs2-core"     % specs2Version.value % "provided" excludeAll(
-          ExclusionRule(organization = "org.spire-math")
-        )
+        "ch.qos.logback" %  "logback-classic" % _logbackVersion   % "test"
+//        "org.scalatest"  %% "scalatest"       % scalatestVersion.value % "provided",
+//        "org.specs2"     %% "specs2-core"     % specs2Version.value % "provided" excludeAll(
+//          ExclusionRule(organization = "org.spire-math")
+//        )
       ) ++ jdbcDriverDependenciesInTestScope
     }
   )
@@ -349,13 +349,13 @@ val _resolvers = Seq(
   "sonatype snaphots" at "https://oss.sonatype.org/content/repositories/snapshots"
 )
 def scalaTestDependenciesInTestScope(v: String) =
-  Seq("org.scalatest" %% "scalatest" % v % "test")
+  Nil //Seq("org.scalatest" %% "scalatest" % v % "test")
 
 def specs2DependenciesInTestScope(v: String) =
   Seq(
-    ("org.specs2" %% "specs2-core" % v % "test").excludeAll(
-      ExclusionRule(organization = "org.spire-math")
-    )
+    //("org.specs2" %% "specs2-core" % v % "test").excludeAll(
+    // ExclusionRule(organization = "org.spire-math")
+    //)
   )
 
 val jdbcDriverDependenciesInTestScope = Seq(
