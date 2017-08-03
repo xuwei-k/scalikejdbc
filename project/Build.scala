@@ -136,24 +136,6 @@ object ScalikeJDBCProjects extends Build {
     )
   ) dependsOn(scalikejdbc, scalikejdbcTest)
 
-  // mapper-generator sbt plugin
-  lazy val scalikejdbcMapperGenerator = Project(
-    id = "mapper-generator",
-    base = file("scalikejdbc-mapper-generator"),
-    settings = baseSettings ++ Seq(
-      sbtPlugin := true,
-      name := "scalikejdbc-mapper-generator",
-      libraryDependencies <++= (scalaVersion) { scalaVersion =>
-        // sbt 0.12.x uses Scala 2.9.2
-        Seq(
-          "org.slf4j"     %  "slf4j-simple" % _slf4jApiVersion       % "compile",
-          "org.scalatest" %% "scalatest"    % _scalatestVersion      % "test",
-          "org.specs2"    %% "specs2"       % _specs2Scala210Version % "test"
-         ) ++ jdbcDriverDependenciesInTestScope
-      }
-    )
-  ) dependsOn(scalikejdbc, scalikejdbcTest, scalikejdbcMapperGeneratorCore)
-
   // scalikejdbc-play-plugin
   // support: Play 2.1.x, 2.2.x, 2.3.x
   lazy val scalikejdbcPlayPlugin = Project(
