@@ -7,8 +7,6 @@ addSbtPlugin("com.github.seratch" % "xsbt-scalag-plugin" % "[0.2,)")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.2.1")
 
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "[0.6,)")
-
 libraryDependencies <+= (sbtVersion){ sv =>
   sv.split('.') match { case Array("0", a, b, _@_*) =>
     if (a.toInt <= 10 || a.toInt <= 11 && b.toInt <= 2) "org.scala-tools.sbt" %% "scripted-plugin" % sv
