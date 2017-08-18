@@ -181,7 +181,8 @@ object Sample {
 
   def countAll()(implicit
     session: DBSession = NamedAutoSession('CPContextWithAutoSessionSpec),
-    context: ConnectionPoolContext = NoConnectionPoolContext): Long = {
+    context: ConnectionPoolContext = NoConnectionPoolContext
+  ): Long = {
     SQL("select count(1) c from users").map(rs => rs.long("c")).single.apply.get
   }
 

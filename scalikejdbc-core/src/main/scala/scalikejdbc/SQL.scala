@@ -142,10 +142,10 @@ private[scalikejdbc] trait Extractor[A] {
  * @tparam A return type
  */
 abstract class SQL[A, E <: WithExtractor](
-  val statement: String,
-  private[scalikejdbc] val rawParameters: Seq[Any]
+    val statement: String,
+    private[scalikejdbc] val rawParameters: Seq[Any]
 )(f: WrappedResultSet => A)
-    extends Extractor[A] {
+  extends Extractor[A] {
 
   final lazy val parameters: Seq[Any] = rawParameters.map {
     case ParameterBinder(v) => v
@@ -763,12 +763,12 @@ trait SQLToTraversable[A, E <: WithExtractor] extends SQLToResult[A, E, Traversa
  * @tparam A return type
  */
 class SQLToTraversableImpl[A, E <: WithExtractor](
-  override val statement: String, override val rawParameters: Seq[Any]
+    override val statement: String, override val rawParameters: Seq[Any]
 )(
-  override val extractor: WrappedResultSet => A
+    override val extractor: WrappedResultSet => A
 )
-    extends SQL[A, E](statement, rawParameters)(extractor)
-    with SQLToTraversable[A, E] {
+  extends SQL[A, E](statement, rawParameters)(extractor)
+  with SQLToTraversable[A, E] {
 
   override protected def withParameters(params: Seq[Any]): SQLToResult[A, E, Traversable] = {
     new SQLToTraversableImpl[A, E](statement, params)(extractor)
@@ -816,12 +816,12 @@ trait SQLToCollection[A, E <: WithExtractor] extends SQL[A, E] with Extractor[A]
 }
 
 class SQLToCollectionImpl[A, E <: WithExtractor](
-  override val statement: String, override val rawParameters: Seq[Any]
+    override val statement: String, override val rawParameters: Seq[Any]
 )(
-  override val extractor: WrappedResultSet => A
+    override val extractor: WrappedResultSet => A
 )
-    extends SQL[A, E](statement, rawParameters)(extractor)
-    with SQLToCollection[A, E] {
+  extends SQL[A, E](statement, rawParameters)(extractor)
+  with SQLToCollection[A, E] {
 
   override protected def withParameters(params: Seq[Any]): SQLToCollection[A, E] = {
     new SQLToCollectionImpl[A, E](statement, params)(extractor)
@@ -866,12 +866,12 @@ trait SQLToList[A, E <: WithExtractor] extends SQLToResult[A, E, List] {
  * @tparam A return type
  */
 class SQLToListImpl[A, E <: WithExtractor](
-  override val statement: String, override val rawParameters: Seq[Any]
+    override val statement: String, override val rawParameters: Seq[Any]
 )(
-  override val extractor: WrappedResultSet => A
+    override val extractor: WrappedResultSet => A
 )
-    extends SQL[A, E](statement, rawParameters)(extractor)
-    with SQLToList[A, E] {
+  extends SQL[A, E](statement, rawParameters)(extractor)
+  with SQLToList[A, E] {
 
   override protected def withParameters(params: Seq[Any]): SQLToList[A, E] = {
     new SQLToListImpl[A, E](statement, params)(extractor)
@@ -922,12 +922,12 @@ trait SQLToOption[A, E <: WithExtractor] extends SQLToResult[A, E, Option] {
  * @tparam A return type
  */
 class SQLToOptionImpl[A, E <: WithExtractor](
-  override val statement: String, override val rawParameters: Seq[Any]
+    override val statement: String, override val rawParameters: Seq[Any]
 )(
-  override val extractor: WrappedResultSet => A
+    override val extractor: WrappedResultSet => A
 )(val isSingle: Boolean = true)
-    extends SQL[A, E](statement, rawParameters)(extractor)
-    with SQLToOption[A, E] {
+  extends SQL[A, E](statement, rawParameters)(extractor)
+  with SQLToOption[A, E] {
 
   override protected def withParameters(params: Seq[Any]): SQLToOption[A, E] = {
     new SQLToOptionImpl[A, E](statement, params)(extractor)(isSingle)

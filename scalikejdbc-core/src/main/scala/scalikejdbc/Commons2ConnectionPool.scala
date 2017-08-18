@@ -14,12 +14,12 @@ import org.apache.commons.pool2.impl.GenericObjectPool
  * @see [[http://commons.apache.org/dbcp/]]
  */
 class Commons2ConnectionPool(
-  override val url: String,
-  override val user: String,
-  password: String,
-  override val settings: ConnectionPoolSettings = ConnectionPoolSettings()
+    override val url: String,
+    override val user: String,
+    password: String,
+    override val settings: ConnectionPoolSettings = ConnectionPoolSettings()
 )
-    extends ConnectionPool(url, user, password, settings) {
+  extends ConnectionPool(url, user, password, settings) {
 
   private[this] val _poolFactory = new PoolableConnectionFactory(
     new DriverManagerConnectionFactory(url, user, password), null

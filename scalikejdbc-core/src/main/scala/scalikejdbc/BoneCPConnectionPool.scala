@@ -24,12 +24,12 @@ import java.sql.Connection
  * @see [[https://github.com/wwadge/bonecp]]
  */
 class BoneCPConnectionPool(
-  override val url: String,
-  override val user: String,
-  password: String,
-  override val settings: ConnectionPoolSettings = ConnectionPoolSettings()
+    override val url: String,
+    override val user: String,
+    password: String,
+    override val settings: ConnectionPoolSettings = ConnectionPoolSettings()
 )
-    extends ConnectionPool(url, user, password, settings) {
+  extends ConnectionPool(url, user, password, settings) {
 
   import com.jolbox.bonecp.BoneCPDataSource
 

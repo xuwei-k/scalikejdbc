@@ -9,7 +9,7 @@ import scala.concurrent.ExecutionContext
 import java.io.ByteArrayInputStream
 
 class DBSessionSpec extends FlatSpec with Matchers with BeforeAndAfter with Settings with LogSupport
-    with LoanPattern with UnixTimeInMillisConverterImplicits {
+  with LoanPattern with UnixTimeInMillisConverterImplicits {
 
   def opt[A](v: Any): Option[A] = Option(v.asInstanceOf[A])
 
@@ -793,8 +793,8 @@ class DBSessionSpec extends FlatSpec with Matchers with BeforeAndAfter with Sett
           ).updateAndReturnGeneratedKey.apply()
 
           case class Result(vBoolean: Option[Boolean], vByte: Option[Byte], vDouble: Option[Double],
-            vFloat: Option[Float], vInt: Option[Int], vLong: Option[Long], vShort: Option[Short],
-            vTimestamp: Option[DateTime])
+              vFloat: Option[Float], vInt: Option[Int], vLong: Option[Long], vShort: Option[Short],
+              vTimestamp: Option[DateTime])
 
           def assert(resultOpt: Option[Result]): Unit = {
             resultOpt.isDefined should be(true)

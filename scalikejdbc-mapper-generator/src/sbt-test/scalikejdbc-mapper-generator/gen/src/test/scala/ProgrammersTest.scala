@@ -30,9 +30,8 @@ class ProgrammersTest extends fixture.FlatSpec with Matchers with AutoRollback {
     Programmers.countAll() should equal(0)
 
     val programmers = Seq(Some("aaa"), Some("bbb"), None).map(name =>
-      Programmers.create(name = name, t1 = new DateTime(2014, 12, 31, 20, 0))
-    )
-    programmers.foreach{ programmer =>
+      Programmers.create(name = name, t1 = new DateTime(2014, 12, 31, 20, 0)))
+    programmers.foreach { programmer =>
       Programmers.find(programmer.id) should equal(Some(programmer))
     }
     val invalidId = Int.MinValue

@@ -566,7 +566,7 @@ class RelationalSQLSpec extends FlatSpec with Matchers with BeforeAndAfter with 
 
           case class GroupEntity(id: Int, ownerId: Int)
           case class Group(id: Int, ownerId: Int, owner: Owner,
-            events: Seq[Event] = Nil, members: Seq[Member] = Nil, sponsors: Seq[Sponsor] = Nil)
+              events: Seq[Event] = Nil, members: Seq[Member] = Nil, sponsors: Seq[Sponsor] = Nil)
           case class Owner(id: Int)
           case class Event(id: Int, groupId: Int)
           case class Member(id: Int, groupId: Int)
@@ -748,8 +748,8 @@ class RelationalSQLSpec extends FlatSpec with Matchers with BeforeAndAfter with 
 
       case class GroupEntity(id: Int, ownerId: Int)
       case class Group(id: Int, ownerId: Int, owner: Owner,
-        events: Seq[Event] = Nil, news: Seq[News] = Nil,
-        members: Seq[Member] = Nil, sponsors: Seq[Sponsor] = Nil)
+          events: Seq[Event] = Nil, news: Seq[News] = Nil,
+          members: Seq[Member] = Nil, sponsors: Seq[Sponsor] = Nil)
 
       class Owner(val id: Int) extends EntityEquality {
         override val entityIdentity = id

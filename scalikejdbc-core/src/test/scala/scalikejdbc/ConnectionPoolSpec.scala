@@ -95,12 +95,12 @@ class ConnectionPoolSpec extends FlatSpec with Matchers {
   it should "be acceptable external ConnectionPoolFactory" in {
 
     class MyConnectionPool(
-      url: String,
-      user: String,
-      password: String,
-      settings: ConnectionPoolSettings = ConnectionPoolSettings()
+        url: String,
+        user: String,
+        password: String,
+        settings: ConnectionPoolSettings = ConnectionPoolSettings()
     )
-        extends ConnectionPool(url, user, password, settings) {
+      extends ConnectionPool(url, user, password, settings) {
       def borrow(): Connection = null
       def dataSource: DataSource = null
     }

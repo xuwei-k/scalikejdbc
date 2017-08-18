@@ -58,11 +58,11 @@ import scala.concurrent.{ ExecutionContext, Future }
  * }}}
  */
 case class DB(
-  conn: Connection,
-  override val connectionAttributes: DBConnectionAttributes = DBConnectionAttributes(),
-  settingsProvider: SettingsProvider = SettingsProvider.default
+    conn: Connection,
+    override val connectionAttributes: DBConnectionAttributes = DBConnectionAttributes(),
+    settingsProvider: SettingsProvider = SettingsProvider.default
 )
-    extends DBConnection
+  extends DBConnection
 
 /**
  * Basic Database Accessor
@@ -432,5 +432,6 @@ object DB extends LoanPattern {
    */
   def connected(implicit
     conn: Connection,
-    settings: SettingsProvider = SettingsProvider.default): DB = DB(conn, DBConnectionAttributes(), settings)
+    settings: SettingsProvider = SettingsProvider.default
+  ): DB = DB(conn, DBConnectionAttributes(), settings)
 }

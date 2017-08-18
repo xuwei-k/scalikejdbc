@@ -43,22 +43,22 @@ object ScalikejdbcPlugin extends AutoPlugin {
     case class JDBCSettings(driver: String, url: String, username: String, password: String, schema: String)
 
     case class GeneratorSettings(
-      packageName: String,
-      template: String,
-      testTemplate: String,
-      lineBreak: String,
-      caseClassOnly: Boolean,
-      encoding: String,
-      autoConstruct: Boolean,
-      defaultAutoSession: Boolean,
-      dateTimeClass: DateTimeClass,
-      tableNameToClassName: String => String,
-      columnNameToFieldName: String => String,
-      returnCollectionType: ReturnCollectionType,
-      view: Boolean,
-      tableNamesToSkip: Seq[String],
-      baseTypes: Seq[String],
-      companionBaseTypes: Seq[String]
+        packageName: String,
+        template: String,
+        testTemplate: String,
+        lineBreak: String,
+        caseClassOnly: Boolean,
+        encoding: String,
+        autoConstruct: Boolean,
+        defaultAutoSession: Boolean,
+        dateTimeClass: DateTimeClass,
+        tableNameToClassName: String => String,
+        columnNameToFieldName: String => String,
+        returnCollectionType: ReturnCollectionType,
+        view: Boolean,
+        tableNamesToSkip: Seq[String],
+        baseTypes: Seq[String],
+        companionBaseTypes: Seq[String]
     )
 
     @deprecated("will be removed. add `enablePlugins(ScalikejdbcPlugin)` in your build.sbt", "")

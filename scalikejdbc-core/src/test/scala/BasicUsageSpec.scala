@@ -239,7 +239,7 @@ class BasicUsageSpec extends FlatSpec with Matchers with LoanPattern {
         val firstEmp: Option[Emp] = getFirstOf10Emp.apply()
         firstEmp.isDefined should be(true)
 
-        // expects single result or nothing, when mutiple results are returned, Exception will be thrown. 
+        // expects single result or nothing, when mutiple results are returned, Exception will be thrown.
         val single: Option[Emp] = SQL("select * from emp where id = ?").bind(1).map(empMapper).single.apply() // or #toOption
         single.isDefined should be(true)
 

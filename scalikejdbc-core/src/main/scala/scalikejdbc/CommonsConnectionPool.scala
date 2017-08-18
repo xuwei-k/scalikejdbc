@@ -9,12 +9,12 @@ import java.sql.Connection
  * @see [[http://commons.apache.org/dbcp/]]
  */
 class CommonsConnectionPool(
-  override val url: String,
-  override val user: String,
-  password: String,
-  override val settings: ConnectionPoolSettings = ConnectionPoolSettings()
+    override val url: String,
+    override val user: String,
+    password: String,
+    override val settings: ConnectionPoolSettings = ConnectionPoolSettings()
 )
-    extends ConnectionPool(url, user, password, settings) {
+  extends ConnectionPool(url, user, password, settings) {
 
   import org.apache.commons.pool.impl.GenericObjectPool
   import org.apache.commons.dbcp.{ PoolingDataSource, PoolableConnectionFactory, DriverManagerConnectionFactory }

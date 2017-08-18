@@ -144,7 +144,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
           assert(products === List(Product(1, Some("Cookie"), Price(120)), Product(2, Some("Tea"), Price(80))))
         }
 
-        // batch insert 
+        // batch insert
         val batchInsertQuery = withSQL {
           insert into Product columns (pc.id, pc.name, pc.price) values (sqls.?, sqls.?, sqls.?)
         }
@@ -525,7 +525,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         productCount should equal(2)
 
         // enabled wildcard count but it doesn't work with all the RDBMS
-        // HSQLDB: sytax error, H2: always treated as *, MySQL: syntax error 
+        // HSQLDB: sytax error, H2: always treated as *, MySQL: syntax error
         val wildCardCountSyntax = select(o.productId, count(p), count(a))
 
         val wildcardCounts = withSQL {
@@ -592,7 +592,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         }
 
         // intersect
-        // MySQL doesn't support intersect 
+        // MySQL doesn't support intersect
         if (!isMySQL) {
           val intersectResults = withSQL {
             select(sqls"${a.id} as id").from(Account as a).where.in(a.id, Seq(1, 2, 3))
@@ -601,7 +601,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
           intersectResults should equal(List(1, 2))
         }
 
-        // intersect all  
+        // intersect all
         // H2 and MySQL don't support intersect all
         if (!isH2 && !isMySQL) {
           val intersectAllResults = withSQL {
@@ -648,7 +648,7 @@ class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQL
         newName should equal(Some("Bob Marley"))
 
         // TODO compilation error since 2.10.1
-        // applyUpdate { delete.from(Order).where.isNull(Order.column.accountId) } 
+        // applyUpdate { delete.from(Order).where.isNull(Order.column.accountId) }
         withSQL { delete.from(Order).where.isNull(Order.column.accountId) }.update.apply()
 
         val noAccountIdOrderCount = withSQL {

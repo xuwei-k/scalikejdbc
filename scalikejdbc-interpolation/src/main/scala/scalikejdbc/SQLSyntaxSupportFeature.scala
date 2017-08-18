@@ -263,17 +263,17 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    * Table definition (which has alias name) part SQLSyntax
    */
   case class TableAsAliasSQLSyntax private[scalikejdbc] (
-    override val value: String,
-    override val rawParameters: Seq[Any] = Vector(),
-    resultAllProvider: Option[ResultAllProvider] = None
+      override val value: String,
+      override val rawParameters: Seq[Any] = Vector(),
+      resultAllProvider: Option[ResultAllProvider] = None
   ) extends SQLSyntax(value, rawParameters)
 
   /**
    * Table definition part SQLSyntax
    */
   case class TableDefSQLSyntax private[scalikejdbc] (
-    override val value: String,
-    override val rawParameters: Seq[Any] = Vector()
+      override val value: String,
+      override val rawParameters: Seq[Any] = Vector()
   ) extends SQLSyntax(value, rawParameters)
 
   /**
@@ -418,9 +418,9 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    * SQLSyntax provider for column names.
    */
   case class ColumnSQLSyntaxProvider[S <: SQLSyntaxSupport[A], A](
-    support: S
+      support: S
   ) extends SQLSyntaxProvider[A]
-      with AsteriskProvider {
+    with AsteriskProvider {
 
     val nameConverters: Map[String, String] = support.nameConverters
     val forceUpperCase: Boolean = support.forceUpperCase
@@ -479,11 +479,11 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    * SQLSyntax provider for query parts.
    */
   case class QuerySQLSyntaxProvider[S <: SQLSyntaxSupport[A], A](
-    support: S,
-    tableAliasName: String
+      support: S,
+      tableAliasName: String
   ) extends SQLSyntaxProviderCommonImpl[S, A](support, tableAliasName)
-      with ResultAllProvider
-      with AsteriskProvider {
+    with ResultAllProvider
+    with AsteriskProvider {
 
     val result: ResultSQLSyntaxProvider[S, A] = {
       val table = if (support.forceUpperCase) tableAliasName.toUpperCase(en) else tableAliasName
@@ -588,10 +588,10 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    * Basic Query SQLSyntax Provider for result.nameProviders.
    */
   case class BasicResultNameSQLSyntaxProvider[S <: SQLSyntaxSupport[A], A](
-    support: S,
-    tableAliasName: String
+      support: S,
+      tableAliasName: String
   ) extends SQLSyntaxProviderCommonImpl[S, A](support, tableAliasName)
-      with ResultNameSQLSyntaxProvider[S, A] {
+    with ResultNameSQLSyntaxProvider[S, A] {
 
     import SQLSyntaxProvider._
 
@@ -667,11 +667,11 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
   }
 
   case class SubQuerySQLSyntaxProvider(
-    aliasName: String,
-    delimiterForResultName: String,
-    resultNames: Seq[BasicResultNameSQLSyntaxProvider[_, _]]
+      aliasName: String,
+      delimiterForResultName: String,
+      resultNames: Seq[BasicResultNameSQLSyntaxProvider[_, _]]
   ) extends ResultAllProvider
-      with AsteriskProvider {
+    with AsteriskProvider {
 
     val result: SubQueryResultSQLSyntaxProvider = SubQueryResultSQLSyntaxProvider(aliasName, delimiterForResultName, resultNames)
     val resultName: SubQueryResultNameSQLSyntaxProvider = result.nameProvider
@@ -771,11 +771,11 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
   // partial subquery syntax providers
 
   case class PartialSubQuerySQLSyntaxProvider[S <: SQLSyntaxSupport[A], A](
-    aliasName: String,
-    override val delimiterForResultName: String,
-    underlying: BasicResultNameSQLSyntaxProvider[S, A]
+      aliasName: String,
+      override val delimiterForResultName: String,
+      underlying: BasicResultNameSQLSyntaxProvider[S, A]
   ) extends SQLSyntaxProviderCommonImpl[S, A](underlying.support, aliasName)
-      with AsteriskProvider {
+    with AsteriskProvider {
 
     val result: PartialSubQueryResultSQLSyntaxProvider[S, A] = {
       PartialSubQueryResultSQLSyntaxProvider(aliasName, delimiterForResultName, underlying)
@@ -842,11 +842,11 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
   }
 
   case class PartialSubQueryResultNameSQLSyntaxProvider[S <: SQLSyntaxSupport[A], A](
-    aliasName: String,
-    override val delimiterForResultName: String,
-    underlying: BasicResultNameSQLSyntaxProvider[S, A]
+      aliasName: String,
+      override val delimiterForResultName: String,
+      underlying: BasicResultNameSQLSyntaxProvider[S, A]
   ) extends SQLSyntaxProviderCommonImpl[S, A](underlying.support, aliasName)
-      with ResultNameSQLSyntaxProvider[S, A] {
+    with ResultNameSQLSyntaxProvider[S, A] {
     import SQLSyntaxProvider._
 
     lazy val * : SQLSyntax = SQLSyntax(underlying.namedColumns.map { c =>

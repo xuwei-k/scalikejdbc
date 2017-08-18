@@ -15,14 +15,14 @@ package scalikejdbc.metadata
  * @param filterCondition Filter condition, if any. (may be null)
  */
 case class Index(
-  name: String,
-  columnNames: List[String],
-  isUnique: Boolean,
-  qualifier: Option[String],
-  indexType: IndexType,
-  ordinalPosition: Option[Short],
-  ascOrDesc: Option[String],
-  cardinality: Option[Long],
-  pages: Option[Long],
-  filterCondition: Option[String]
+    name: String,
+    columnNames: List[String],
+    isUnique: Boolean,
+    qualifier: Option[String],
+    indexType: IndexType,
+    ordinalPosition: Option[Short],
+    ascOrDesc: Option[String],
+    cardinality: Option[Long],
+    pages: Option[Long],
+    filterCondition: Option[String]
 )

@@ -65,15 +65,15 @@ class OneToManies7SQLSpec extends FlatSpec with Matchers with BeforeAndAfter wit
 
           case class GroupEntity(id: Int, ownerId: Int)
           case class Group(
-            id: Int,
-            ownerId: Int,
-            owner: Owner,
-            events: Seq[Event] = Nil,
-            news: Seq[News] = Nil,
-            members: Seq[Member] = Nil,
-            sponsors: Seq[Sponsor] = Nil,
-            entity6: Seq[Entity6] = Nil,
-            entity7: Seq[Entity7] = Nil
+              id: Int,
+              ownerId: Int,
+              owner: Owner,
+              events: Seq[Event] = Nil,
+              news: Seq[News] = Nil,
+              members: Seq[Member] = Nil,
+              sponsors: Seq[Sponsor] = Nil,
+              entity6: Seq[Entity6] = Nil,
+              entity7: Seq[Entity7] = Nil
           )
 
           class Owner(val id: Int) extends EntityEquality {

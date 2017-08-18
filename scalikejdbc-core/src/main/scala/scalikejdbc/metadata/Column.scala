@@ -14,13 +14,13 @@ package scalikejdbc.metadata
  * @param defaultValue default value
  */
 case class Column(
-  name: String,
-  typeCode: Int,
-  typeName: String,
-  size: Int = 0,
-  isRequired: Boolean = false,
-  isPrimaryKey: Boolean = false,
-  isAutoIncrement: Boolean = false,
-  description: String = null,
-  defaultValue: String = null
+    name: String,
+    typeCode: Int,
+    typeName: String,
+    size: Int = 0,
+    isRequired: Boolean = false,
+    isPrimaryKey: Boolean = false,
+    isAutoIncrement: Boolean = false,
+    description: String = null,
+    defaultValue: String = null
 )

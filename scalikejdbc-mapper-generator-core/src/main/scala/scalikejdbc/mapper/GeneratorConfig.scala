@@ -1,24 +1,24 @@
 package scalikejdbc.mapper
 
 case class GeneratorConfig(
-  srcDir: String = "src/main/scala",
-  testDir: String = "src/test/scala",
-  packageName: String = "models",
-  template: GeneratorTemplate = GeneratorTemplate.queryDsl,
-  testTemplate: GeneratorTestTemplate = GeneratorTestTemplate(""),
-  lineBreak: LineBreak = LineBreak("\n"),
-  caseClassOnly: Boolean = false,
-  encoding: String = "UTF-8",
-  autoConstruct: Boolean = false,
-  defaultAutoSession: Boolean = true,
-  dateTimeClass: DateTimeClass = DateTimeClass.JodaDateTime,
-  tableNameToClassName: String => String = GeneratorConfig.toCamelCase,
-  columnNameToFieldName: String => String = GeneratorConfig.columnNameToFieldNameBasic andThen GeneratorConfig.addSuffixIfConflict("Column"),
-  returnCollectionType: ReturnCollectionType = ReturnCollectionType.List,
-  view: Boolean = false,
-  tableNamesToSkip: Seq[String] = List(),
-  tableNameToBaseTypes: String => Seq[String] = _ => Nil,
-  tableNameToCompanionBaseTypes: String => Seq[String] = _ => Nil
+    srcDir: String = "src/main/scala",
+    testDir: String = "src/test/scala",
+    packageName: String = "models",
+    template: GeneratorTemplate = GeneratorTemplate.queryDsl,
+    testTemplate: GeneratorTestTemplate = GeneratorTestTemplate(""),
+    lineBreak: LineBreak = LineBreak("\n"),
+    caseClassOnly: Boolean = false,
+    encoding: String = "UTF-8",
+    autoConstruct: Boolean = false,
+    defaultAutoSession: Boolean = true,
+    dateTimeClass: DateTimeClass = DateTimeClass.JodaDateTime,
+    tableNameToClassName: String => String = GeneratorConfig.toCamelCase,
+    columnNameToFieldName: String => String = GeneratorConfig.columnNameToFieldNameBasic andThen GeneratorConfig.addSuffixIfConflict("Column"),
+    returnCollectionType: ReturnCollectionType = ReturnCollectionType.List,
+    view: Boolean = false,
+    tableNamesToSkip: Seq[String] = List(),
+    tableNameToBaseTypes: String => Seq[String] = _ => Nil,
+    tableNameToCompanionBaseTypes: String => Seq[String] = _ => Nil
 )
 
 object GeneratorConfig {

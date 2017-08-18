@@ -43,7 +43,8 @@ package object streams {
     def readOnlyStream[A](sql: StreamReadySQL[A])(implicit
       executionContext: ExecutionContext,
       cpContext: DB.CPContext = DB.NoCPContext,
-      settings: SettingsProvider = SettingsProvider.default): DatabasePublisher[A] = {
+      settings: SettingsProvider = SettingsProvider.default
+    ): DatabasePublisher[A] = {
 
       createDatabasePublisher(sql)
     }
@@ -62,7 +63,8 @@ package object streams {
 
     def readOnlyStream[A, E <: WithExtractor](sql: StreamReadySQL[A])(implicit
       executionContext: ExecutionContext,
-      cpContext: DB.CPContext = DB.NoCPContext): DatabasePublisher[A] = {
+      cpContext: DB.CPContext = DB.NoCPContext
+    ): DatabasePublisher[A] = {
 
       createDatabasePublisher(sql, db.name)(executionContext, cpContext, db.settingsProvider)
     }

@@ -139,7 +139,7 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
   }
 
   // -----
-  // Query Interface SQLBuilder 
+  // Query Interface SQLBuilder
 
   /**
    * SQLBuilder
@@ -168,7 +168,7 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
   }
 
   trait GroupBySQLBuilder[A] extends SQLBuilder[A]
-      with PagingSQLBuilder[A] {
+    with PagingSQLBuilder[A] {
     def groupBy(columns: SQLSyntax*): GroupBySQLBuilder[A] = GroupBySQLBuilder[A](sqls"${sql} ${sqls.groupBy(columns: _*)}")
     def having(condition: SQLSyntax): GroupBySQLBuilder[A] = GroupBySQLBuilder[A](sqls"${sql} ${sqls.having(condition)}")
 
@@ -181,11 +181,11 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
   }
 
   trait PagingSQLBuilder[A] extends SQLBuilder[A]
-      with UnionQuerySQLBuilder[A]
-      with ExceptQuerySQLBuilder[A]
-      with IntersectQuerySQLBuilder[A]
-      with ForUpdateQuerySQLBuilder[A]
-      with SubQuerySQLBuilder[A] {
+    with UnionQuerySQLBuilder[A]
+    with ExceptQuerySQLBuilder[A]
+    with IntersectQuerySQLBuilder[A]
+    with ForUpdateQuerySQLBuilder[A]
+    with SubQuerySQLBuilder[A] {
     def orderBy(columns: SQLSyntax*): PagingSQLBuilder[A] = PagingSQLBuilder[A](sqls"${sql} ${sqls.orderBy(columns: _*)}")
     def asc: PagingSQLBuilder[A] = PagingSQLBuilder[A](sqls"${sql} asc")
     def desc: PagingSQLBuilder[A] = PagingSQLBuilder[A](sqls"${sql} desc")
@@ -201,8 +201,8 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
   }
 
   trait ConditionSQLBuilder[A] extends SQLBuilder[A]
-      with PagingSQLBuilder[A]
-      with GroupBySQLBuilder[A] {
+    with PagingSQLBuilder[A]
+    with GroupBySQLBuilder[A] {
 
     def and: ConditionSQLBuilder[A] = ConditionSQLBuilder[A](sql.and)
 
@@ -356,7 +356,7 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
    * SQLBuilder for select queries.
    */
   case class SelectSQLBuilder[A](override val sql: SQLSyntax, lazyColumns: Boolean = false, resultAllProviders: List[ResultAllProvider] = Nil, ignoreOnClause: Boolean = false)
-      extends SQLBuilder[A] with SubQuerySQLBuilder[A] {
+    extends SQLBuilder[A] with SubQuerySQLBuilder[A] {
 
     private def appendResultAllProvider(table: TableAsAliasSQLSyntax, providers: List[ResultAllProvider]) = {
       table.resultAllProvider.map(provider => provider :: resultAllProviders).getOrElse(resultAllProviders)
@@ -457,7 +457,7 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
     def intersectAll(anotherQuery: SQLBuilder[_]): PagingSQLBuilder[A] = intersectAll(anotherQuery.toSQLSyntax)
 
     // ---
-    // where 
+    // where
 
     def where: ConditionSQLBuilder[A] = ConditionSQLBuilder[A](sqls"${toSQLSyntax} ${sqls.where}")
 
@@ -535,7 +535,7 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
    * SQLBuilder for update queries.
    */
   case class UpdateSQLBuilder(override val sql: SQLSyntax) extends SQLBuilder[UpdateOperation]
-      with WhereSQLBuilder[UpdateOperation] {
+    with WhereSQLBuilder[UpdateOperation] {
 
     def set(sqlPart: SQLSyntax): UpdateSQLBuilder = this.copy(sql = sqls"${sql} set ${sqlPart}")
 
@@ -560,7 +560,7 @@ trait QueryDSLFeature { self: SQLInterpolationFeature with SQLSyntaxSupportFeatu
    * SQLBuilder for delete queries.
    */
   case class DeleteSQLBuilder(override val sql: SQLSyntax) extends SQLBuilder[UpdateOperation]
-      with WhereSQLBuilder[UpdateOperation] {
+    with WhereSQLBuilder[UpdateOperation] {
 
     override def append(part: SQLSyntax): DeleteSQLBuilder = this.copy(sql = sqls"${sql} ${part}")
   }
