@@ -1,10 +1,5 @@
 language: scala
 
-scala:
-  - 2.10.6
-  - 2.11.11
-  - 2.12.3
-
 jdk:
   - oraclejdk8
 
@@ -30,8 +25,10 @@ before_script:
   - bash -x ./travis_before.sh
 
 script:
-  - git add . --all
-  - travis_retry ./travis.sh
+  - sbt '++ 2.12.3' root211/publishLocal '++ 2.11.11' root211/publishLocal '++ 2.10.6' publishLocal
+  - find ./scalikejdbc-mapper-generator/src/sbt-test/ -name build.properties | xargs rm
+  - sbt '++ 2.12.3' "project mapper-generator" "^^ 1.0.2" compile scripted
+
 
 before_cache:
   - find $HOME/.sbt -name "*.lock" | xargs rm
@@ -42,24 +39,5 @@ env:
   matrix:
     - SCALIKEJDBC_DATABASE="mysql"
     - SCALIKEJDBC_DATABASE="postgresql"
-
-matrix:
-  include:
-    - scala: "scripted-test"
-      env: SCALIKEJDBC_DATABASE="mysql" SBT_1_BUILD=true
-      script:
-      # - sbt '++ 2.12.3' root211/publishLocal '++ 2.11.11' root211/publishLocal '++ 2.10.6' publishLocal
-      # - find ./scalikejdbc-mapper-generator/src/sbt-test/ -name build.properties | xargs rm
-      - sbt '++ 2.12.3' "project mapper-generator" "^^ 1.0.2" compile # scripted
-    - scala: scripted-test
-      env: SCALIKEJDBC_DATABASE="mysql"
-    - scala: scripted-test
-      env: SCALIKEJDBC_DATABASE="postgresql"
-    - scala: scripted-test
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.12.3
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.12.3
-      env: SCALIKEJDBC_DATABASE="hsqldb"
-    - scala: 2.13.0-M1
-      env: SCALIKEJDBC_DATABASE="mysql"
+    - SCALIKEJDBC_DATABASE="h2"
+    - SCALIKEJDBC_DATABASE="hsqldb"
