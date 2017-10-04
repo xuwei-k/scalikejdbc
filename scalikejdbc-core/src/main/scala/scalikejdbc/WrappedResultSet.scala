@@ -407,8 +407,8 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
     get[java.sql.Timestamp](columnLabel)
   }
 
-  def jodaDateTime(columnIndex: Int): DateTime = get[DateTime](columnIndex)
-  def jodaDateTime(columnLabel: String): DateTime = get[DateTime](columnLabel)
+  def jodaDateTime(columnIndex: Int): JodaDateTime = get[JodaDateTime](columnIndex)
+  def jodaDateTime(columnLabel: String): JodaDateTime = get[JodaDateTime](columnLabel)
 
   def jodaLocalDate(columnIndex: Int): JodaLocalDate = get[JodaLocalDate](columnIndex)
   def jodaLocalDate(columnLabel: String): JodaLocalDate = get[JodaLocalDate](columnLabel)
@@ -433,8 +433,8 @@ case class WrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, inde
     get[Option[java.sql.Timestamp]](columnLabel)
   }
 
-  def jodaDateTimeOpt(columnIndex: Int): Option[DateTime] = get[Option[DateTime]](columnIndex)
-  def jodaDateTimeOpt(columnLabel: String): Option[DateTime] = get[Option[DateTime]](columnLabel)
+  def jodaDateTimeOpt(columnIndex: Int): Option[JodaDateTime] = get[Option[JodaDateTime]](columnIndex)
+  def jodaDateTimeOpt(columnLabel: String): Option[JodaDateTime] = get[Option[JodaDateTime]](columnLabel)
 
   def jodaLocalDateOpt(columnIndex: Int): Option[JodaLocalDate] = get[Option[JodaLocalDate]](columnIndex)
   def jodaLocalDateOpt(columnLabel: String): Option[JodaLocalDate] = get[Option[JodaLocalDate]](columnLabel)
