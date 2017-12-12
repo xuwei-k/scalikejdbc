@@ -18,6 +18,7 @@ object StatementExecutor {
     override def apply[A](execute: () => A): A = execute()
   }
 
+  private val LocalDateEpoch = java.time.LocalDate.ofEpochDay(0)
 }
 
 /**
@@ -111,7 +112,8 @@ case class StatementExecutor(
       case p: java.time.LocalDate =>
         underlying.setDate(i, java.sql.Date.valueOf(p))
       case p: java.time.LocalTime =>
-        underlying.setObject(i, p)
+        val t = new java.sql.Time(p.atDate(StatementExecutor.LocalDateEpoch).toInstant(java.time.OffsetDateTime.now().getOffset()).toEpochMilli())
+        underlying.setTime(i, t)
       case p: java.io.InputStream => underlying.setBinaryStream(i, p)
       case p => {
         log.debug("The parameter(" + p + ") is bound as an Object.")
