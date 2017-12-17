@@ -102,6 +102,20 @@ lazy val root211 = Project(
   scala211projects.map(p => p: ProjectReference): _*
 )
 
+lazy val scalikejdbcJoda = Project(
+  id = "joda",
+  base = file("scalikejdbc-joda")
+).settings(
+  baseSettings,
+  mimaSettings,
+  name := "scalikejdbc-joda",
+  libraryDependencies ++= scalaTestDependenciesInTestScope(scalatestVersion.value),
+  libraryDependencies ++= Seq(
+    "joda-time" % "joda-time" % "2.9.9",
+    "org.joda" % "joda-convert" % "1.8.2"
+  )
+).dependsOn(scalikejdbcLibrary)
+
 // scalikejdbc library
 lazy val scalikejdbcLibrary = Project(
   id = "library",
@@ -145,8 +159,6 @@ lazy val scalikejdbcCore = Project(
       "org.scala-lang"          %  "scala-reflect"   % scalaVersion.value,
       "org.apache.commons"      %  "commons-dbcp2"   % "2.1.1"           % "compile",
       "org.slf4j"               %  "slf4j-api"       % _slf4jApiVersion  % "compile",
-      "joda-time"               %  "joda-time"       % "2.9.9"           % "compile",
-      "org.joda"                %  "joda-convert"    % "1.8.2"           % "compile",
       // scope: provided
       "commons-dbcp"            %  "commons-dbcp"    % "1.4"             % "provided",
       "com.jolbox"              %  "bonecp"          % "0.8.0.RELEASE"   % "provided",
