@@ -1,7 +1,6 @@
 package scalikejdbc
 package jodatime
 
-import java.io.InputStream
 import java.sql.PreparedStatement
 import org.mockito.Mockito._
 import org.scalatest.FlatSpec

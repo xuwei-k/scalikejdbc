@@ -3,7 +3,6 @@ package jodatime
 
 import org.scalatest._
 import org.scalatest.mockito.MockitoSugar
-import org.mockito.Mockito._
 import java.sql.ResultSet
 import org.joda.time._
 import scalikejdbc.jodatime.JodaTypeBinder._
