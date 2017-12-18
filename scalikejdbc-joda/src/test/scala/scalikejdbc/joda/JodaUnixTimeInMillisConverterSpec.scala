@@ -53,4 +53,8 @@ class JodaUnixTimeInMillisConverterSpec extends FlatSpec with Matchers with Joda
     d should not be null
   }
 
+  it should "have #toSqlTimestamp for LocalTime" in {
+    val d: java.sql.Timestamp = LocalTime.now.toSqlTimestamp
+    d should not be null
+  }
 }
