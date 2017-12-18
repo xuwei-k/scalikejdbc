@@ -1,5 +1,5 @@
 package scalikejdbc
-package joda
+package jodatime
 
 import org.joda.time.{ DateTime => JodaDateTime }
 import org.joda.time.{ LocalDate => JodaLocalDate }

@@ -1,5 +1,5 @@
 package scalikejdbc
-package joda
+package jodatime
 
 /**
  * Unix Time Converter to several types.

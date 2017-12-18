@@ -1,5 +1,5 @@
 package scalikejdbc
-package joda
+package jodatime
 
 import Binders._
 import JodaUnixTimeInMillisConverterImplicits._

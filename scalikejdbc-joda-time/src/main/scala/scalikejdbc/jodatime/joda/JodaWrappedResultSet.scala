@@ -1,5 +1,5 @@
 package scalikejdbc
-package joda
+package jodatime
 
 import java.sql.ResultSet
 import org.joda.time.{

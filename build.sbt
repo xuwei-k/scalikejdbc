@@ -103,13 +103,13 @@ lazy val root211 = Project(
   scala211projects.map(p => p: ProjectReference): _*
 )
 
-lazy val scalikejdbcJoda = Project(
-  id = "joda",
-  base = file("scalikejdbc-joda")
+lazy val scalikejdbcJodaTime = Project(
+  id = "joda-time",
+  base = file("scalikejdbc-joda-time")
 ).settings(
   baseSettings,
   mimaSettings,
-  name := "scalikejdbc-joda",
+  name := "scalikejdbc-joda-time",
   libraryDependencies ++= scalaTestDependenciesInTestScope(scalatestVersion.value),
   libraryDependencies ++= Seq(
     "org.mockito" % "mockito-core" % mockitoVersion % "test",
@@ -292,7 +292,7 @@ lazy val scalikejdbcTest = Project(
       )
     ) ++ jdbcDriverDependenciesInTestScope
   }
-).dependsOn(scalikejdbcLibrary, scalikejdbcJoda % "test")
+).dependsOn(scalikejdbcLibrary, scalikejdbcJodaTime % "test")
 
 // scalikejdbc-config
 lazy val scalikejdbcConfig = Project(

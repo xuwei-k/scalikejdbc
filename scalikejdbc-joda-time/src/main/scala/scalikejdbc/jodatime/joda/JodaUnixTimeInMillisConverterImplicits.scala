@@ -1,5 +1,5 @@
 package scalikejdbc
-package joda
+package jodatime
 
 import scala.language.implicitConversions
 import java.sql.{ Date => sqlDate, Time => sqlTime, Timestamp => sqlTimestamp }

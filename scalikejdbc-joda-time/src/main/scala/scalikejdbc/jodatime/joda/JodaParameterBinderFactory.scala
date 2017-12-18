@@ -1,5 +1,5 @@
 package scalikejdbc
-package joda
+package jodatime
 
 object JodaParameterBinderFactory {
 
