@@ -10,6 +10,7 @@ import org.joda.time.{
 }
 
 import JodaTypeBinder._
+import scala.language.implicitConversions
 
 /**
  * java.sql.ResultSet wrapper.

@@ -5,8 +5,6 @@ import scala.language.implicitConversions
 import java.sql.{ Date => sqlDate, Time => sqlTime, Timestamp => sqlTimestamp }
 import java.util.{ Date => utilDate }
 
-import scalikejdbc.jodatime.LocalTimeConverter
-
 /**
  * Implicit conversions for date time values.
  */
