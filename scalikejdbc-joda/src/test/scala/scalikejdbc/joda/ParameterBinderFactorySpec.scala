@@ -7,6 +7,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.mockito.MockitoSugar
 import scalikejdbc.UnixTimeInMillisConverterImplicits._
 import scalikejdbc.joda.JodaUnixTimeInMillisConverterImplicits._
+import scalikejdbc.joda.JodaParameterBinderFactory._
 
 class JodaParameterBinderFactorySpec extends FlatSpec with MockitoSugar {
 

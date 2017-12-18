@@ -6,9 +6,6 @@ import scalikejdbc.joda.JodaUnixTimeInMillisConverterImplicits._
 
 class SQLInterpolationSpec extends FlatSpec with Matchers with LogSupport with LoanPattern with UnixTimeInMillisConverterImplicits {
 
-  import scalikejdbc.interpolation._
-  import scalikejdbc.interpolation.Implicits._
-
   behavior of "SQLInterpolation"
 
   val props = new java.util.Properties

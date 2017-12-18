@@ -3,6 +3,7 @@ package scalikejdbc
 import org.scalatest._
 import org.joda.time._
 import scalikejdbc.joda.JodaWrappedResultSet._
+import scalikejdbc.joda.JodaParameterBinderFactory._
 
 class QueryInterfaceSpec extends FlatSpec with Matchers with DBSettings with SQLInterpolation {
 
