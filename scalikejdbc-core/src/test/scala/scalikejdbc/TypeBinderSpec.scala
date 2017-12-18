@@ -4,7 +4,7 @@ import org.scalatest._
 import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito._
 import java.sql.ResultSet
-import java.time.LocalDateTime
+import java.time._
 
 class TypeBinderSpec extends FlatSpec with Matchers with MockitoSugar with UnixTimeInMillisConverterImplicits {
 
@@ -50,7 +50,7 @@ class TypeBinderSpec extends FlatSpec with Matchers with MockitoSugar with UnixT
 
     implicitly[TypeBinder[java.sql.Timestamp]].apply(rs, "time") should not be (null)
     implicitly[TypeBinder[LocalDateTime]].apply(rs, "time") should not be (null)
-    implicitly[TypeBinder[LocalDateTime]].apply(rs, "date") should not be (null)
+    implicitly[TypeBinder[LocalDate]].apply(rs, "date") should not be (null)
 
     //implicitly[TypeBinder[java.util.Date]].apply(rs, "time") should not be (null)
     implicitly[TypeBinder[java.sql.Timestamp]].apply(rs, "time").toJavaUtilDate should not be (null)
