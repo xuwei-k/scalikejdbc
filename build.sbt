@@ -116,7 +116,11 @@ lazy val scalikejdbcJoda = Project(
     "joda-time" % "joda-time" % "2.9.9",
     "org.joda" % "joda-convert" % "1.8.2"
   )
-).dependsOn(scalikejdbcLibrary, scalikejdbcCore % "test->test")
+).dependsOn(
+  scalikejdbcLibrary,
+  scalikejdbcCore % "test->test",
+  scalikejdbcInterpolation % "test->test"
+)
 
 // scalikejdbc library
 lazy val scalikejdbcLibrary = Project(

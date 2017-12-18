@@ -70,3 +70,7 @@ case class JodaWrappedResultSet(underlying: ResultSet, cursor: ResultSetCursor, 
 
 }
 
+object JodaWrappedResultSet {
+  implicit def fromWrappedResultSetToJodaWrappedResultSet(rs: WrappedResultSet): JodaWrappedResultSet =
+    new JodaWrappedResultSet(rs.underlying, rs.cursor, rs.index)
+}
