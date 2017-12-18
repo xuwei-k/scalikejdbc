@@ -80,6 +80,7 @@ lazy val baseSettings = Seq(
 )
 
 lazy val scala211projects = List(
+  scalikejdbcJodaTime,
   scalikejdbcCore,
   scalikejdbcLibrary,
   scalikejdbcInterpolationMacro,
