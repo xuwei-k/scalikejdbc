@@ -1,4 +1,5 @@
 package scalikejdbc
+package joda
 
 import org.scalatest._
 import org.joda.time._
