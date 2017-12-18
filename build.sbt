@@ -18,6 +18,7 @@ lazy val _postgresqlVersion = "9.4.1212"
 lazy val _hibernateVersion = "5.2.12.Final"
 lazy val scalatestVersion = SettingKey[String]("scalatestVersion")
 lazy val specs2Version = SettingKey[String]("specs2Version")
+lazy val mockitoVersion = "2.7.21"
 
 def gitHash: String = try {
   sys.process.Process("git rev-parse HEAD").lines_!.head
@@ -111,6 +112,7 @@ lazy val scalikejdbcJoda = Project(
   name := "scalikejdbc-joda",
   libraryDependencies ++= scalaTestDependenciesInTestScope(scalatestVersion.value),
   libraryDependencies ++= Seq(
+    "org.mockito" % "mockito-core" % mockitoVersion % "test",
     "joda-time" % "joda-time" % "2.9.9",
     "org.joda" % "joda-convert" % "1.8.2"
   )
@@ -166,7 +168,7 @@ lazy val scalikejdbcCore = Project(
       "com.zaxxer"              %  "HikariCP"        % "2.6.3"           % "test",
       "ch.qos.logback"          %  "logback-classic" % _logbackVersion   % "test",
       "org.hibernate"           %  "hibernate-core"  % _hibernateVersion % "test",
-      "org.mockito"             %  "mockito-core"    % "2.7.21"          % "test"
+      "org.mockito"             %  "mockito-core"    % mockitoVersion    % "test"
     ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, scalaMajor)) if scalaMajor >= 11 =>
         Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6" % "compile")
@@ -286,7 +288,7 @@ lazy val scalikejdbcTest = Project(
       )
     ) ++ jdbcDriverDependenciesInTestScope
   }
-).dependsOn(scalikejdbcLibrary)
+).dependsOn(scalikejdbcLibrary, scalikejdbcJoda % "test")
 
 // scalikejdbc-config
 lazy val scalikejdbcConfig = Project(
