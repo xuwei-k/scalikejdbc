@@ -2,7 +2,7 @@ package scalikejdbc
 
 import org.scalatest._
 import org.joda.time._
-import scalikejdbc.joda.JodaUnixTimeInMillisConverterImplicits._
+import scalikejdbc.jodatime.JodaUnixTimeInMillisConverterImplicits._
 
 class SQLInterpolationSpec extends FlatSpec with Matchers with LogSupport with LoanPattern with UnixTimeInMillisConverterImplicits {
 

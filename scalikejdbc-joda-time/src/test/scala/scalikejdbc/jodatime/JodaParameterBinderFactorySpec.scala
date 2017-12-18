@@ -1,4 +1,5 @@
 package scalikejdbc
+package jodatime
 
 import java.io.InputStream
 import java.sql.PreparedStatement
@@ -6,8 +7,8 @@ import org.mockito.Mockito._
 import org.scalatest.FlatSpec
 import org.scalatest.mockito.MockitoSugar
 import scalikejdbc.UnixTimeInMillisConverterImplicits._
-import scalikejdbc.joda.JodaUnixTimeInMillisConverterImplicits._
-import scalikejdbc.joda.JodaParameterBinderFactory._
+import scalikejdbc.jodatime.JodaUnixTimeInMillisConverterImplicits._
+import scalikejdbc.jodatime.JodaParameterBinderFactory._
 
 class JodaParameterBinderFactorySpec extends FlatSpec with MockitoSugar {
 

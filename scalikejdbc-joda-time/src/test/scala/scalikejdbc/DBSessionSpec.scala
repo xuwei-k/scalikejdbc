@@ -1,7 +1,7 @@
 package scalikejdbc
 
-import scalikejdbc.joda.JodaUnixTimeInMillisConverterImplicits._
-import scalikejdbc.joda.JodaWrappedResultSet._
+import scalikejdbc.jodatime.JodaUnixTimeInMillisConverterImplicits._
+import scalikejdbc.jodatime.JodaWrappedResultSet._
 import scala.util.control.Exception._
 import org.scalatest._
 import org.scalatest.BeforeAndAfter
