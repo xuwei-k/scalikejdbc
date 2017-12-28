@@ -84,8 +84,8 @@ object TypeBinder extends LowPriorityTypeBinderImplicits {
   implicit val javaUtilCalendar: TypeBinder[java.util.Calendar] = Binders.javaUtilCalendar
 
   implicit val javaTimeInstant: TypeBinder[Instant] = Binders.javaTimeInstant
-  implicit val javaTimeZonedDateTime: TypeBinder[ZonedDateTime] = Binders.javaTimeZonedDateTime
-  implicit val javaTimeOffsetDateTime: TypeBinder[OffsetDateTime] = Binders.javaTimeOffsetDateTime
+  implicit val javaTimeZonedDateTime: TypeBinder[ZonedDateTime] = Binders.javaTimeZonedDateTime(ZoneIdProvider.default)
+  implicit val javaTimeOffsetDateTime: TypeBinder[OffsetDateTime] = Binders.javaTimeOffsetDateTime(ZoneIdProvider.default)
   implicit val javaTimeLocalDate: TypeBinder[LocalDate] = Binders.javaTimeLocalDate
   implicit val javaTimeLocalTime: TypeBinder[LocalTime] = Binders.javaTimeLocalTime
   implicit val javaTimeLocalDateTime: TypeBinder[LocalDateTime] = Binders.javaTimeLocalDateTime
