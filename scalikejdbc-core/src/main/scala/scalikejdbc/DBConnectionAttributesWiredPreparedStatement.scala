@@ -18,7 +18,7 @@ private[scalikejdbc] class DBConnectionAttributesWiredPreparedStatement(
    */
   private[this] def convertTimeZoneIfNeeded(timestamp: java.sql.Timestamp): java.sql.Timestamp =
     if (connAttributes.timeZoneSettings.conversionEnabled) {
-      val clientTimeZone = java.util.TimeZone.getDefault
+      val clientTimeZone = GlobalSettings.timeZone
       val serverTimeZone = connAttributes.timeZoneSettings.serverTimeZone
       TimeZoneConverter.from(clientTimeZone).to(serverTimeZone).convert(timestamp)
     } else {

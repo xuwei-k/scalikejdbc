@@ -1,5 +1,8 @@
 package scalikejdbc
 
+import java.time.ZoneId
+import java.util.TimeZone
+
 /**
  * GlobalSettings for this library
  */
@@ -72,4 +75,7 @@ object GlobalSettings {
     (statement: String, params: Seq[Any], e: Throwable, tags: Seq[String]) => ()
   }
 
+  var timeZone: TimeZone = TimeZone.getDefault
+
+  def zoneId: ZoneId = timeZone.toZoneId
 }

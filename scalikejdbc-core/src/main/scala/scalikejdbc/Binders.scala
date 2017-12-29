@@ -163,7 +163,7 @@ object Binders {
   val javaTimeInstant: Binders[java.time.Instant] = utilDate.xmap(nullThrough(_.toInstant), java.util.Date.from)
   val javaTimeZonedDateTime: Binders[java.time.ZonedDateTime] = utilDate.xmap(nullThrough(_.toZonedDateTime), v => java.util.Date.from(v.toInstant))
   val javaTimeOffsetDateTime: Binders[java.time.OffsetDateTime] = utilDate.xmap(nullThrough(_.toOffsetDateTime), v => java.util.Date.from(v.toInstant))
-  val javaTimeLocalDateTime: Binders[java.time.LocalDateTime] = utilDate.xmap(nullThrough(_.toLocalDateTime), v => java.util.Date.from(v.atZone(java.time.ZoneId.systemDefault()).toInstant))
+  val javaTimeLocalDateTime: Binders[java.time.LocalDateTime] = utilDate.xmap(nullThrough(_.toLocalDateTime), v => java.util.Date.from(v.atZone(GlobalSettings.zoneId).toInstant))
   val javaTimeLocalDate: Binders[java.time.LocalDate] = sqlDate.xmap(nullThrough(_.toLocalDate), java.sql.Date.valueOf)
   val javaTimeLocalTime: Binders[java.time.LocalTime] = sqlTime.xmap(nullThrough(v => {
     // java.sql.Time#toLocalTime drops its millisecond value

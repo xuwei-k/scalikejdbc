@@ -7,4 +7,4 @@ import java.util.TimeZone
  */
 case class TimeZoneSettings(
   conversionEnabled: Boolean = false,
-  serverTimeZone: TimeZone = TimeZone.getDefault)
+  serverTimeZone: TimeZone = GlobalSettings.timeZone)

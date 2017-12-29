@@ -19,7 +19,7 @@ class UnixTimeInMillisConverter(val millis: Long) extends AnyVal {
   // java.time
   // --------------------
 
-  private def defaultZoneId: java.time.ZoneId = java.time.ZoneId.systemDefault()
+  private def defaultZoneId: java.time.ZoneId = GlobalSettings.zoneId
 
   def toInstant: java.time.Instant = java.time.Instant.ofEpochMilli(millis)
 
