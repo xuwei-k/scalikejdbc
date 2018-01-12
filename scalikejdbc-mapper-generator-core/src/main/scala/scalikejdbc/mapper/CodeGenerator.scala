@@ -655,20 +655,15 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
     /**
      * {{{
      * def batchInsert(entities: Seq[Member])(implicit session: DBSession = autoSession): Seq[Int] = {
-     *   val params: Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
+     *   val params: Seq[Seq[Any]] = entities.map(entity =>
      *     Seq(
-     *       'id -> entity.id,
-     *       'name -> entity.name,
-     *       'birthday -> entity.birthday))
-     *   SQL("""insert into member (
-     *     id,
-     *     name,
-     *     birthday
-     *   ) values (
-     *     {id},
-     *     {name},
-     *     {birthday}
-     *   )""").batchByName(params: _*).apply()
+     *       entity.id,
+     *       entity.name,
+     *       entity.birthday))
+     *   new SQLBatch(
+     *     statement = """insert into member(id,name,birthday) values (?,?,?)""",
+     *     parameters = params
+     *   ).apply()
      * }
      * }}}
      */
@@ -691,15 +686,16 @@ class CodeGenerator(table: Table, specifiedClassName: Option[String] = None)(imp
 
       // def batchInsert=(
       1.indent + s"def batchInsert${typeParam}(entities: Seq[" + className + "])(implicit session: DBSession" + defaultAutoSession + canBuildFrom + s"): $returnType[Int] = {" + eol +
-        2.indent + "val params: Seq[Seq[(Symbol, Any)]] = entities.map(entity =>" + eol +
+        2.indent + "val params: Seq[Seq[Any]] = entities.map(entity =>" + eol +
         3.indent + "Seq(" + eol +
-        batchInsertColumns.map(c => 4.indent + "'" + c.nameInScala.replace("`", "") + " -> entity." + c.nameInScala).mkString(comma + eol) +
+        batchInsertColumns.map(c => 4.indent + "entity." + c.nameInScala).mkString(comma + eol) +
         "))" + eol +
-        2.indent + "SQL(\"\"\"insert into " + table.name + "(" + eol +
-        batchInsertColumns.map(c => 3.indent + c.name.replace("`", "")).mkString(comma + eol) + eol +
-        2.indent + ")" + " values (" + eol +
-        batchInsertColumns.map(c => 3.indent + "{" + c.nameInScala.replace("`", "") + "}").mkString(comma + eol) + eol +
-        2.indent + ")\"\"\").batchByName(params: _*).apply[" + returnType + "]()" + eol +
+        2.indent + "new SQLBatch(" + eol +
+        3.indent + "statement = " + "\"\"\"insert into " + table.name + "(" +
+        batchInsertColumns.map(_.name.replace("`", "")).mkString(comma) +
+        ")" + " values " + batchInsertColumns.map(_ => "?").mkString("(", comma, ")") + "\"\"\"," + eol +
+        3.indent + "parameters = params" + eol +
+        2.indent + ").apply[" + returnType + "]()" + eol +
         1.indent + "}" + eol
     }
 
