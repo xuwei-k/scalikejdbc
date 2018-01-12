@@ -3,7 +3,6 @@ val root = project.in(file(".")).enablePlugins(ScalikejdbcPlugin)
 scalikejdbcGeneratorSettings in Compile ~= { setting =>
   setting.copy(tableNameToSyntaxName = { tableName =>
     setting.tableNameToSyntaxName(tableName) match {
-      case "as" => "as_"
       case syntaxName => syntaxName
     }
   })
