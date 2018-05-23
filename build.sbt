@@ -174,7 +174,7 @@ lazy val scalikejdbcCore = Project(
       "ch.qos.logback"          %  "logback-classic" % _logbackVersion   % "test",
       "org.hibernate"           %  "hibernate-core"  % _hibernateVersion % "test",
       "org.mockito"             %  "mockito-core"    % mockitoVersion    % "test"
-    ) ++ scalaTestDependenciesInTestScope(scalatestVersion.value) ++ jdbcDriverDependenciesInTestScope
+    ) //++ scalaTestDependenciesInTestScope(scalatestVersion.value) ++ jdbcDriverDependenciesInTestScope
   }
 ).enablePlugins(BuildInfoPlugin).disablePlugins(ScriptedPlugin)
 
