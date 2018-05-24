@@ -46,7 +46,7 @@ lazy val baseSettings = Seq(
   },
   specs2Version := "4.2.0",
   parserCombinatorsVersion := "1.1.0",
-  //scalaVersion := "2.11.12",
+  scalaVersion := "2.13.0-M4",
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-encoding", "UTF-8", "-Xlint:-options"),
   javacOptions in doc := Seq("-source", "1.8"),
   scalacOptions ++= _scalacOptions,
@@ -371,7 +371,7 @@ val jdbcDriverDependenciesInTestScope = Seq(
   "org.postgresql"    % "postgresql"           % _postgresqlVersion % "test"
 )
 
-val _scalacOptions = Seq("-deprecation", "-unchecked", "-feature", "-Xfuture")
+val _scalacOptions = Nil //Seq("-deprecation", "-unchecked", "-feature", "-Xfuture")
 val _pomExtra = <url>http://scalikejdbc.org/</url>
     <licenses>
       <license>
