@@ -17,7 +17,7 @@ private[scalikejdbc] trait OneToManyExtractor[A, B, E <: WithExtractor, Z]
     if (oneToMany.contains(o)) {
       extractTo(rs).map(many => oneToMany += (o -> (oneToMany.apply(o) :+ many))).getOrElse(oneToMany)
     } else {
-      oneToMany += (o -> extractTo(rs).map(many => Vector(many)).getOrElse(Nil))
+      oneToMany += (o -> extractTo(rs).map(_ :: Nil).getOrElse(Nil))
     }
   }
 
