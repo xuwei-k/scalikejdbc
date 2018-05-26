@@ -35,7 +35,7 @@ s"""/*
 package scalikejdbc
 
 import scala.collection.mutable.LinkedHashMap
-import scala.collection.generic.CanBuildFrom
+import scala.collection.compat._
 import scala.language.higherKinds
 
 private[scalikejdbc] trait OneToManies${n}Extractor[$A, $bs, E <: WithExtractor, Z]
@@ -154,8 +154,8 @@ final class OneToManies${n}SQLToCollection[A, $bs, E <: WithExtractor, Z] privat
 
   import GeneralizedTypeConstraintsForWithExtractor._
 
-  override def apply[C[_]]()(implicit session: DBSession, context: ConnectionPoolContext = NoConnectionPoolContext, hasExtractor: ThisSQL =:= SQLWithExtractor, cbf: CanBuildFrom[Nothing, Z, C[Z]]): C[Z] = {
-    executeQuery(session, (session: DBSession) => toTraversable(session, statement, rawParameters, zExtractor).to[C])
+  override def apply[C[_]]()(implicit session: DBSession, context: ConnectionPoolContext = NoConnectionPoolContext, hasExtractor: ThisSQL =:= SQLWithExtractor, f: Factory[Z, C[Z]]): C[Z] = {
+    executeQuery(session, (session: DBSession) => f.fromSpecific(toTraversable(session, statement, rawParameters, zExtractor)))
   }
 
 $extractOne

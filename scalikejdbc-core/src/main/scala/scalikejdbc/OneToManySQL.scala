@@ -1,7 +1,7 @@
 package scalikejdbc
 
 import scala.collection.mutable.LinkedHashMap
-import scala.collection.generic.CanBuildFrom
+import scala.collection.compat._
 import scala.language.higherKinds
 
 private[scalikejdbc] trait OneToManyExtractor[A, B, E <: WithExtractor, Z]
@@ -23,7 +23,7 @@ private[scalikejdbc] trait OneToManyExtractor[A, B, E <: WithExtractor, Z]
 
   private[scalikejdbc] def toTraversable(session: DBSession, sql: String, params: scala.collection.Seq[_], zExtractor: (A, scala.collection.Seq[B]) => Z): Traversable[Z] = {
     val attributesSwitcher = createDBSessionAttributesSwitcher()
-    DBSessionWrapper(session, attributesSwitcher).foldLeft(statement, rawParameters: _*)(LinkedHashMap[A, (Seq[B])]())(processResultSet).map {
+    DBSessionWrapper(session, attributesSwitcher).foldLeft(statement, rawParameters.toSeq: _*)(LinkedHashMap[A, (scala.collection.Seq[B])]())(processResultSet).map {
       case (one, (to)) => zExtractor(one, to)
     }
   }
@@ -39,7 +39,7 @@ class OneToManySQL[A, B, E <: WithExtractor, Z](
     val q = new OneToManySQL[A, B, HasExtractor, Z](statement, rawParameters)(one)(toMany)(zExtractor)
     q.queryTimeout(queryTimeout)
     q.fetchSize(fetchSize)
-    q.tags(tags: _*)
+    q.tags(tags.toSeq: _*)
     q
   }
 
@@ -47,7 +47,7 @@ class OneToManySQL[A, B, E <: WithExtractor, Z](
     val q = new OneToManySQLToTraversable[A, B, E, Z](statement, rawParameters)(one)(toMany)(zExtractor)
     q.queryTimeout(queryTimeout)
     q.fetchSize(fetchSize)
-    q.tags(tags: _*)
+    q.tags(tags.toSeq: _*)
     q
   }
 
@@ -55,7 +55,7 @@ class OneToManySQL[A, B, E <: WithExtractor, Z](
     val q = new OneToManySQLToList[A, B, E, Z](statement, rawParameters)(one)(toMany)(zExtractor)
     q.queryTimeout(queryTimeout)
     q.fetchSize(fetchSize)
-    q.tags(tags: _*)
+    q.tags(tags.toSeq: _*)
     q
   }
 
@@ -63,7 +63,7 @@ class OneToManySQL[A, B, E <: WithExtractor, Z](
     val q = new OneToManySQLToOption[A, B, E, Z](statement, rawParameters)(one)(toMany)(zExtractor)(true)
     q.queryTimeout(queryTimeout)
     q.fetchSize(fetchSize)
-    q.tags(tags: _*)
+    q.tags(tags.toSeq: _*)
     q
   }
 
@@ -71,7 +71,7 @@ class OneToManySQL[A, B, E <: WithExtractor, Z](
     val q = new OneToManySQLToOption[A, B, E, Z](statement, rawParameters)(one)(toMany)(zExtractor)(false)
     q.queryTimeout(queryTimeout)
     q.fetchSize(fetchSize)
-    q.tags(tags: _*)
+    q.tags(tags.toSeq: _*)
     q
   }
 
@@ -79,7 +79,7 @@ class OneToManySQL[A, B, E <: WithExtractor, Z](
     val q = new OneToManySQLToCollection[A, B, E, Z](statement, rawParameters)(one)(toMany)(zExtractor)
     q.queryTimeout(queryTimeout)
     q.fetchSize(fetchSize)
-    q.tags(tags: _*)
+    q.tags(tags.toSeq: _*)
     q
   }
 
@@ -154,8 +154,8 @@ class OneToManySQLToCollection[A, B, E <: WithExtractor, Z](
 
   import GeneralizedTypeConstraintsForWithExtractor._
 
-  override def apply[C[_]]()(implicit session: DBSession, context: ConnectionPoolContext = NoConnectionPoolContext, hasExtractor: ThisSQL =:= SQLWithExtractor, cbf: CanBuildFrom[Nothing, Z, C[Z]]): C[Z] = {
-    executeQuery(session, (session: DBSession) => toTraversable(session, statement, rawParameters, zExtractor).to[C])
+  override def apply[C[_]]()(implicit session: DBSession, context: ConnectionPoolContext = NoConnectionPoolContext, hasExtractor: ThisSQL =:= SQLWithExtractor, f: Factory[Z, C[Z]]): C[Z] = {
+    executeQuery(session, (session: DBSession) => f.fromSpecific(toTraversable(session, statement, rawParameters, zExtractor)))
   }
 
   private[scalikejdbc] def extractOne: WrappedResultSet => A = one
