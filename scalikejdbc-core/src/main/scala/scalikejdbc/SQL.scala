@@ -338,7 +338,7 @@ abstract class SQL[A, E <: WithExtractor](
   def foreach(op: WrappedResultSet => Unit)(implicit session: DBSession): Unit = {
     val attributesSwitcher = createDBSessionAttributesSwitcher()
     val f: DBSession => Unit =
-      DBSessionWrapper(_, attributesSwitcher).foreach(statement, rawParameters: _*)(op)
+      DBSessionWrapper(_, attributesSwitcher).foreach(statement, rawParameters.toSeq: _*)(op)
     // format: OFF
     session match {
       case AutoSession                       => DB.autoCommit(f)
@@ -359,7 +359,7 @@ abstract class SQL[A, E <: WithExtractor](
   def foldLeft[A](z: A)(op: (A, WrappedResultSet) => A)(implicit session: DBSession): A = {
     val attributesSwitcher = createDBSessionAttributesSwitcher()
     val f: DBSession => A =
-      DBSessionWrapper(_, attributesSwitcher).foldLeft(statement, rawParameters: _*)(z)(op)
+      DBSessionWrapper(_, attributesSwitcher).foldLeft(statement, rawParameters.toSeq: _*)(z)(op)
     // format: OFF
     session match {
       case AutoSession                       => DB.autoCommit(f)
@@ -587,7 +587,7 @@ class SQLBatch(val statement: String, val parameters: scala.collection.Seq[scala
 
   def apply[C[_]]()(implicit session: DBSession, cbf: CanBuildFrom[Nothing, Int, C[Int]]): C[Int] = {
     val attributesSwitcher = new DBSessionAttributesSwitcher(SQL("").tags(tags.toSeq: _*))
-    val f: DBSession => C[Int] = DBSessionWrapper(_, attributesSwitcher).batch(statement, parameters: _*)
+    val f: DBSession => C[Int] = DBSessionWrapper(_, attributesSwitcher).batch(statement, parameters.toSeq: _*)
     // format: OFF
     session match {
       case AutoSession                       => DB.autoCommit(f)
@@ -616,7 +616,7 @@ object SQLBatch {
 class SQLLargeBatch private[scalikejdbc] (statement: String, parameters: scala.collection.Seq[scala.collection.Seq[Any]], tags: scala.collection.Seq[String]) {
   def apply[C[_]]()(implicit session: DBSession, cbf: CanBuildFrom[Nothing, Long, C[Long]]): C[Long] = {
     val attributesSwitcher = new DBSessionAttributesSwitcher(SQL("").tags(tags.toSeq: _*))
-    val f: DBSession => C[Long] = DBSessionWrapper(_, attributesSwitcher).largeBatch(statement, parameters: _*)
+    val f: DBSession => C[Long] = DBSessionWrapper(_, attributesSwitcher).largeBatch(statement, parameters.toSeq: _*)
     session match {
       case AutoSession =>
         DB.autoCommit(f)
@@ -638,8 +638,8 @@ class SQLBatchWithGeneratedKey(val statement: String, val parameters: scala.coll
     val attributesSwitcher = new DBSessionAttributesSwitcher(SQL("").tags(tags.toSeq: _*))
     val f: DBSession => C[Long] = (session) => {
       key match {
-        case Some(k) => DBSessionWrapper(session, attributesSwitcher).batchAndReturnSpecifiedGeneratedKey(statement, k, parameters: _*)
-        case _ => DBSessionWrapper(session, attributesSwitcher).batchAndReturnGeneratedKey(statement, parameters: _*)
+        case Some(k) => DBSessionWrapper(session, attributesSwitcher).batchAndReturnSpecifiedGeneratedKey(statement, k, parameters.toSeq: _*)
+        case _ => DBSessionWrapper(session, attributesSwitcher).batchAndReturnGeneratedKey(statement, parameters.toSeq: _*)
       }
     }
     // format: OFF
@@ -675,7 +675,7 @@ class SQLExecution(val statement: String, val parameters: scala.collection.Seq[A
 
   def apply()(implicit session: DBSession): Boolean = {
     val attributesSwitcher = new DBSessionAttributesSwitcher(SQL("").tags(tags.toSeq: _*))
-    val f: DBSession => Boolean = DBSessionWrapper(_, attributesSwitcher).executeWithFilters(before, after, statement, parameters: _*)
+    val f: DBSession => Boolean = DBSessionWrapper(_, attributesSwitcher).executeWithFilters(before, after, statement, parameters.toSeq: _*)
     // format: OFF
     session match {
       case AutoSession                       => DB.autoCommit(f)
@@ -711,15 +711,15 @@ class SQLUpdate(val statement: String, val parameters: scala.collection.Seq[Any]
     val attributesSwitcher = new DBSessionAttributesSwitcher(SQL("").tags(tags.toSeq: _*))
     session match {
       case AutoSession =>
-        DB.autoCommit(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters: _*))
+        DB.autoCommit(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters.toSeq: _*))
       case NamedAutoSession(name, _) =>
-        NamedDB(name, session.settings).autoCommit(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters: _*))
+        NamedDB(name, session.settings).autoCommit(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters.toSeq: _*))
       case ReadOnlyAutoSession =>
-        DB.readOnly(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters: _*))
+        DB.readOnly(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters.toSeq: _*))
       case ReadOnlyNamedAutoSession(name, _) =>
-        NamedDB(name, session.settings).readOnly(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters: _*))
+        NamedDB(name, session.settings).readOnly(DBSessionWrapper(_, attributesSwitcher).updateWithFilters(before, after, statement, parameters.toSeq: _*))
       case _ =>
-        DBSessionWrapper(session, attributesSwitcher).updateWithFilters(before, after, statement, parameters: _*)
+        DBSessionWrapper(session, attributesSwitcher).updateWithFilters(before, after, statement, parameters.toSeq: _*)
     }
   }
 
@@ -747,15 +747,15 @@ class SQLLargeUpdate private[scalikejdbc] (statement: String, parameters: scala.
     val attributesSwitcher = new DBSessionAttributesSwitcher(SQL("").tags(tags.toSeq: _*))
     session match {
       case AutoSession =>
-        DB.autoCommit(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters: _*))
+        DB.autoCommit(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters.toSeq: _*))
       case NamedAutoSession(name, _) =>
-        NamedDB(name, session.settings).autoCommit(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters: _*))
+        NamedDB(name, session.settings).autoCommit(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters.toSeq: _*))
       case ReadOnlyAutoSession =>
-        DB.readOnly(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters: _*))
+        DB.readOnly(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters.toSeq: _*))
       case ReadOnlyNamedAutoSession(name, _) =>
-        NamedDB(name, session.settings).readOnly(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters: _*))
+        NamedDB(name, session.settings).readOnly(DBSessionWrapper(_, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters.toSeq: _*))
       case _ =>
-        DBSessionWrapper(session, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters: _*)
+        DBSessionWrapper(session, attributesSwitcher).largeUpdateWithFilters(before, after, statement, parameters.toSeq: _*)
     }
   }
 }
@@ -770,7 +770,7 @@ class SQLUpdateWithGeneratedKey(val statement: String, val parameters: scala.col
 
   def apply()(implicit session: DBSession): Long = {
     val attributesSwitcher = new DBSessionAttributesSwitcher(SQL("").tags(tags.toSeq: _*))
-    val f: DBSession => Long = DBSessionWrapper(_, attributesSwitcher).updateAndReturnSpecifiedGeneratedKey(statement, parameters: _*)(key)
+    val f: DBSession => Long = DBSessionWrapper(_, attributesSwitcher).updateAndReturnSpecifiedGeneratedKey(statement, parameters.toSeq: _*)(key)
     // format: OFF
     session match {
       case AutoSession                       => DB.autoCommit(f)
@@ -823,7 +823,7 @@ trait SQLToResult[A, E <: WithExtractor, C[_]] extends SQL[A, E] with Extractor[
 trait SQLToTraversable[A, E <: WithExtractor] extends SQLToResult[A, E, Traversable] {
 
   def result[AA](f: WrappedResultSet => AA, session: DBSession): Traversable[AA] = {
-    session.traversable[AA](statement, rawParameters: _*)(f)
+    session.traversable[AA](statement, rawParameters.toSeq: _*)(f)
   }
 
 }
@@ -874,7 +874,7 @@ trait SQLToCollection[A, E <: WithExtractor] extends SQL[A, E] with Extractor[A]
   private[scalikejdbc] val rawParameters: scala.collection.Seq[Any]
   def apply[C[_]]()(implicit session: DBSession, context: ConnectionPoolContext = NoConnectionPoolContext, hasExtractor: ThisSQL =:= SQLWithExtractor, cbf: CanBuildFrom[Nothing, A, C[A]]): C[A] = {
     val attributesSwitcher = createDBSessionAttributesSwitcher()
-    val f: DBSession => C[A] = DBSessionWrapper(_, attributesSwitcher).collection[A, C](statement, rawParameters: _*)(extractor)
+    val f: DBSession => C[A] = DBSessionWrapper(_, attributesSwitcher).collection[A, C](statement, rawParameters.toSeq: _*)(extractor)
     // format: OFF
     session match {
       case AutoSession | ReadOnlyAutoSession => DB.readOnly(f)
@@ -922,7 +922,7 @@ object SQLToCollectionImpl {
 trait SQLToList[A, E <: WithExtractor] extends SQLToResult[A, E, List] {
 
   def result[AA](f: WrappedResultSet => AA, session: DBSession): List[AA] = {
-    session.list[AA](statement, rawParameters: _*)(f)
+    session.list[AA](statement, rawParameters.toSeq: _*)(f)
   }
 
 }
@@ -973,9 +973,9 @@ trait SQLToOption[A, E <: WithExtractor] extends SQLToResult[A, E, Option] {
 
   def result[AA](f: WrappedResultSet => AA, session: DBSession): Option[AA] = {
     if (isSingle) {
-      session.single[AA](statement, rawParameters: _*)(f)
+      session.single[AA](statement, rawParameters.toSeq: _*)(f)
     } else {
-      session.first[AA](statement, rawParameters: _*)(f)
+      session.first[AA](statement, rawParameters.toSeq: _*)(f)
     }
   }
 

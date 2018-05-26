@@ -3,7 +3,6 @@ package scalikejdbc
 import java.sql._
 import util.control.Exception._
 import scala.collection.generic.CanBuildFrom
-import scala.collection.breakOut
 import scala.language.higherKinds
 
 /**
@@ -693,7 +692,7 @@ trait DBSession extends LogSupport with LoanPattern with AutoCloseable {
 
   private[this] def batchInternal[C[_], A](
     template: String,
-    paramsList: scala.collection.Seq[Seq[Any]],
+    paramsList: scala.collection.Seq[scala.collection.Seq[Any]],
     execute: StatementExecutor => scala.Array[A])(implicit cbf: CanBuildFrom[Nothing, A, C[A]]): C[A] = {
     ensureNotReadOnlySession(template)
     paramsList match {
