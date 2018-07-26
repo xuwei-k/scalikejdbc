@@ -364,14 +364,9 @@ lazy val scalaTestDependenciesInTestScope = Def.setting {
 }
 
 lazy val specs2DependenciesInTestScope = Def.setting{
-  if (scalaVersion.value == "2.13.0-M4") {
-    // TODO specs2 for Scala 2.13
-    Nil
-  } else {
-    Seq(
-      "org.specs2" %% "specs2-core" % specs2Version.value % "test"
-    )
-  }
+  Seq(
+    "org.specs2" %% "specs2-core" % specs2Version.value % "test"
+  )
 }
 
 val jdbcDriverDependenciesInTestScope = Seq(
