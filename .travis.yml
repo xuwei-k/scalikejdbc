@@ -1,7 +1,6 @@
 language: scala
 
 scala:
-  - 2.11.12
   - 2.12.6
 
 jdk:
@@ -40,32 +39,10 @@ before_cache:
 env:
   matrix:
     - SCALIKEJDBC_DATABASE="mysql"
-    - SCALIKEJDBC_DATABASE="postgresql"
 
 matrix:
   include:
-    - scala: scripted-test
-      env: SCALIKEJDBC_DATABASE="mysql"
-    - scala: scripted-test
-      env: SCALIKEJDBC_DATABASE="postgresql"
-    - scala: scripted-test
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.12.6
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.12.6
-      env: SCALIKEJDBC_DATABASE="hsqldb"
     - scala: 2.12.6
       env: SCALIKEJDBC_DATABASE="mysql"
       jdk: oraclejdk11
-    - scala: 2.13.0-M4
-      env: SCALIKEJDBC_DATABASE="mysql"
-    - scala: 2.13.0-M5
-      env: SCALIKEJDBC_DATABASE="mysql"
-      script:
-      - sbt
-        "++ ${TRAVIS_SCALA_VERSION}! -v"
-        config/compile
-        syntax-support-macro/compile
-        streams/compile
-        mapper-generator-core/compile
-        joda-time/compile
+
