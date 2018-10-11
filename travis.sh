@@ -17,6 +17,6 @@ if [[ ${TRAVIS_SCALA_VERSION} = "scripted-test" ]]; then
   "project mapper-generator" \
   scripted
 else
-  sbt "project root211" "++ ${TRAVIS_SCALA_VERSION}! -v" test:compile checkScalariform testSequential
+  sbt "project root211" "++ ${TRAVIS_SCALA_VERSION}! -v" "core/testOnly scalikejdbc.jsr310.StatementExecutorSpec"
 fi
 

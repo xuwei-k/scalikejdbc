@@ -15,6 +15,7 @@ trait UnixTimeInMillisConverterImplicits {
 
   implicit def convertJavaSqlTimeToConverter(t: sqlTime): UnixTimeInMillisConverter = new UnixTimeInMillisConverter(t.getTime)
 
+  @deprecated("This method truncate nano seconds", "3.3.2")
   implicit def convertJavaSqlTimestampToConverter(t: sqlTimestamp): UnixTimeInMillisConverter = new UnixTimeInMillisConverter(t.getTime)
 
 }
