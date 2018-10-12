@@ -25,11 +25,7 @@ class StatementExecutorSpec extends FunSpec with Matchers with Settings {
             .execute.apply()
 
           val birthday = LocalDate.now
-          val alertTime = if (Set("org.hsqldb.jdbc.JDBCDriver", "com.mysql.jdbc.Driver") contains driverClassName) {
-            LocalTime.now.truncatedTo(ChronoUnit.SECONDS)
-          } else {
-            LocalTime.now.truncatedTo(ChronoUnit.MILLIS)
-          }
+          val alertTime = LocalTime.now.plusNanos(555000)
           val localCreatedAt = LocalDateTime.now.plusNanos(111000)
           val createdAt = ZonedDateTime.now.plusNanos(222000)
           val updatedAt = Instant.now.plusNanos(333000)
