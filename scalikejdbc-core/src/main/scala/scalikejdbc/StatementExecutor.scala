@@ -21,7 +21,7 @@ object StatementExecutor {
     override def apply[A](execute: () => A): A = execute()
   }
 
-  private val LocalDateEpoch = java.time.LocalDate.ofEpochDay(0)
+  private[scalikejdbc] val LocalDateEpoch = java.time.LocalDate.ofEpochDay(0)
 
   object PrintableQueryBuilder extends PrintableQueryBuilder {
     // Find ? placeholders, but ignore ?? because that's an escaped question mark.
@@ -207,9 +207,9 @@ case class StatementExecutor(
       case p: java.time.LocalDate =>
         underlying.setDate(i, java.sql.Date.valueOf(p))
       case p: java.time.LocalTime =>
-        val millis = p.atDate(StatementExecutor.LocalDateEpoch).atZone(java.time.ZoneId.systemDefault).toInstant.toEpochMilli
-        val time = new java.sql.Time(millis)
-        underlying.setTime(i, time)
+        val instant = p.atDate(StatementExecutor.LocalDateEpoch).atZone(java.time.ZoneId.systemDefault).toInstant
+        val time = java.sql.Timestamp.from(instant)
+        underlying.setTimestamp(i, time)
       case p: java.io.InputStream => underlying.setBinaryStream(i, p)
       case p =>
         param.getClass.getCanonicalName match {

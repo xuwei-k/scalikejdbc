@@ -76,6 +76,8 @@ object Binders {
     nullThrough(x => java.time.OffsetDateTime.ofInstant(x.toInstant, z))
   private[scalikejdbc] def convertJavaTimeLocalDateTime(z: ZoneId): java.sql.Timestamp => java.time.LocalDateTime =
     nullThrough(x => java.time.LocalDateTime.ofInstant(x.toInstant, z))
+  private[scalikejdbc] def convertJavaTimeLocalTime(z: ZoneId): java.sql.Timestamp => java.time.LocalTime =
+    nullThrough(_.toLocalDateTime.toLocalTime)
 
   // --------------------------------------------------------------------------------------------
   // Built-in Binders
@@ -175,11 +177,11 @@ object Binders {
   val javaTimeLocalDateTime: Binders[java.time.LocalDateTime] =
     sqlTimestamp.xmap(convertJavaTimeLocalDateTime(java.time.ZoneId.systemDefault()), v => java.sql.Timestamp.from(v.atZone(java.time.ZoneId.systemDefault()).toInstant))
   val javaTimeLocalDate: Binders[java.time.LocalDate] = sqlDate.xmap(nullThrough(_.toLocalDate), java.sql.Date.valueOf)
-  val javaTimeLocalTime: Binders[java.time.LocalTime] = sqlTime.xmap(nullThrough(v => {
-    // java.sql.Time#toLocalTime drops its millisecond value
-    val millis: Long = v.getTime
-    new java.util.Date(millis).toLocalTime
-  }), java.sql.Time.valueOf)
+  val javaTimeLocalTime: Binders[java.time.LocalTime] =
+    sqlTimestamp.xmap(convertJavaTimeLocalTime(ZoneId.systemDefault()), v => {
+      val instant = v.atDate(StatementExecutor.LocalDateEpoch).atZone(java.time.ZoneId.systemDefault).toInstant
+      java.sql.Timestamp.from(instant)
+    })
 
   val binaryStream: Binders[InputStream] = Binders(_ getBinaryStream _)(_ getBinaryStream _)(v => (ps, idx) => ps.setBinaryStream(idx, v))
   val blob: Binders[java.sql.Blob] = Binders(_ getBlob _)(_ getBlob _)(v => (ps, idx) => ps.setBlob(idx, v))
