@@ -15,7 +15,7 @@ trait UnixTimeInMillisConverterImplicits {
 
   implicit def convertJavaSqlTimeToConverter(t: sqlTime): UnixTimeInMillisConverter = new UnixTimeInMillisConverter(t.getTime)
 
-  implicit def convertJavaSqlTimestampToConverter(t: sqlTimestamp): UnixTimeInMillisConverter = new UnixTimeInMillisConverter(t.getTime)
+  implicit def convertJavaSqlTimestampToConverter(t: sqlTimestamp): InstantConverter = new InstantConverter(t.toInstant)
 
 }
 
