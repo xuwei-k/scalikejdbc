@@ -28,8 +28,33 @@ TaskKey[Unit]("createTestDatabase") := {
   Class.forName(setting.driver)
   ConnectionPool.singleton(setting.url, setting.username, setting.password)
   DB.autoCommit { implicit s =>
-    sql"create table if not exists programmers (id SERIAL PRIMARY KEY, name varchar(128), t1 timestamp not null, t2 date, t3 time, type int, to_string int, hash_code int, wait int, get_class int, notify int, notify_all int, product_arity int, product_iterator int, product_prefix int, copy int)"
-      .execute.apply()
+    val reserved = setting.driver match {
+      case "com.mysql.jdbc.Driver" =>
+        "`create`"
+      case _ =>
+        "\"create\""
+    }
+    SQL(s"""
+      create table if not exists programmers (
+        id SERIAL PRIMARY KEY,
+        name varchar(128),
+        t1 timestamp not null,
+        t2 date,
+        t3 time,
+        type int,
+        to_string int,
+        hash_code int,
+        wait int,
+        get_class int,
+        notify int,
+        notify_all int,
+        product_arity int,
+        product_iterator int,
+        product_prefix int,
+        copy int,
+        $reserved int
+      )
+    """).execute.apply()
     sql"create view programmers_view as (select * from programmers)"
       .execute.apply()
     // https://github.com/scalikejdbc/scalikejdbc/issues/810
