@@ -53,6 +53,7 @@ lazy val baseSettings = Seq(
   //scalaVersion := "2.11.12",
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-encoding", "UTF-8", "-Xlint:-options"),
   javacOptions in doc := Seq("-source", "1.8"),
+  fork in Test := true,
   scalacOptions ++= _scalacOptions,
   scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)) {
     case Some((2, v)) if v <= 12 =>
