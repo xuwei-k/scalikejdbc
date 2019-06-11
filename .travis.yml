@@ -5,10 +5,6 @@ dist: xenial
 services:
   - mysql
 
-scala:
-  - 2.11.12
-  - 2.12.8
-
 # The project supports OpenJDK 8+ / Oracle JDK 8,9,10
 jdk:
   - openjdk8
@@ -43,11 +39,6 @@ before_cache:
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
 
-env:
-  matrix:
-    - SCALIKEJDBC_DATABASE="mysql"
-    - SCALIKEJDBC_DATABASE="postgresql"
-
 matrix:
   include:
     # scripted test
@@ -57,27 +48,4 @@ matrix:
       env: SCALIKEJDBC_DATABASE="postgresql"
     - scala: scripted-test
       env: SCALIKEJDBC_DATABASE="h2"
-    # h2, hsqldb
-    - scala: 2.12.8
-      env: SCALIKEJDBC_DATABASE="h2"
-    - scala: 2.12.8
-      env: SCALIKEJDBC_DATABASE="hsqldb"
-    # Oracle JDK 8,9,10 / OpenJDK 8,9,10,11+
-    - scala: 2.12.8
-      env: SCALIKEJDBC_DATABASE="mysql"
-      jdk: openjdk9
-    - scala: 2.12.8
-      env: SCALIKEJDBC_DATABASE="mysql"
-      jdk: openjdk8
-    # Disabled because the sbt initialization with OpenJDK9/10 are somehow unstable
-    #- scala: 2.12.8
-    #  env: SCALIKEJDBC_DATABASE="mysql"
-    #  jdk: openjdk9
-    #- scala: 2.12.8
-    #  env: SCALIKEJDBC_DATABASE="mysql"
-    #  jdk: openjdk10
-    - scala: 2.12.8
-      env: SCALIKEJDBC_DATABASE="mysql"
-      jdk: openjdk11
-    - scala: 2.13.0
-      env: SCALIKEJDBC_DATABASE="mysql"
+
