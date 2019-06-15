@@ -28,9 +28,9 @@ class DB_SQLOperationSpec extends FlatSpec with Matchers with BeforeAndAfter wit
         implicit session =>
           GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
             enabled = true,
-            logLevel = Symbol("info"))
+            logLevel = "info")
           val result = SQL("select * from " + tableName + " where name = 'name1' and id = /*'id*/123;")
-            .bindByName(Symbol("id") -> 1)
+            .bindByName("id" -> 1)
             .map(rs => Some(rs.string("name"))).toList.apply()
           result.size should equal(1)
           GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(enabled = false)
@@ -449,11 +449,11 @@ class DB_SQLOperationSpec extends FlatSpec with Matchers with BeforeAndAfter wit
             // https://github.com/scalikejdbc/scalikejdbc/issues/481
             SQL("insert into " + tableName + " (id, name) values ({id}, {name})").batchByName(Nil: _*).apply()
 
-            val params: Seq[Seq[(Symbol, Any)]] = (2001 to 3000).map {
+            val params: Seq[Seq[(String, Any)]] = (2001 to 3000).map {
               i =>
-                Seq[(Symbol, Any)](
-                  Symbol("id") -> i,
-                  Symbol("name") -> ("name" + i.toString))
+                Seq[(String, Any)](
+                  "id" -> i,
+                  "name" -> ("name" + i.toString))
             }
             SQL("insert into " + tableName + " (id, name) values ({id}, {name})").batchByName(params: _*).apply()
         }
@@ -479,8 +479,8 @@ class DB_SQLOperationSpec extends FlatSpec with Matchers with BeforeAndAfter wit
         val count1 = SQL("insert into " + tableName + " (id, name) values (?, ?)").batch(params1: _*).apply()
         count1.size should equal(1000)
 
-        val params2: Seq[Seq[(Symbol, Any)]] = (2001 to 2003).map {
-          i => Seq[(Symbol, Any)](Symbol("id") -> i, Symbol("name") -> ("name" + i.toString))
+        val params2: Seq[Seq[(String, Any)]] = (2001 to 2003).map {
+          i => Seq[(String, Any)]("id" -> i, "name" -> ("name" + i.toString))
         }
         try {
           val count2 = SQL("insert into " + tableName + " (id, name) values (?, {name})").batchByName(params2: _*).apply()
@@ -542,7 +542,7 @@ class DB_SQLOperationSpec extends FlatSpec with Matchers with BeforeAndAfter wit
   it should "solve issue #30" in {
     GlobalSettings.loggingSQLAndTime = new LoggingSQLAndTimeSettings(
       enabled = true,
-      logLevel = Symbol("info"))
+      logLevel = "info")
     try {
       DB autoCommit { implicit session =>
         try {

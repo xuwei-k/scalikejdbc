@@ -415,7 +415,7 @@ class DBSpec extends FlatSpec with Matchers with BeforeAndAfter with Settings wi
           allCatch.either(s.update("update " + tableName + " set name = ? where id = ?", "foo", 1))
             .right.flatMap(_ => allCatch.either(s.update("update foo should be rolled back")))
         }
-        failure should be(Symbol("left"))
+        failure should be("left")
         val res = DB readOnly (s => s.single("select name from " + tableName + " where id = ?", 1)(rs => rs.string("name")))
         res.get should not be (Some("foo"))
       }
@@ -553,14 +553,14 @@ class DBSpec extends FlatSpec with Matchers with BeforeAndAfter with Settings wi
       }
       GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
         enabled = true,
-        logLevel = Symbol("info"))
+        logLevel = "info")
       DB readOnly { implicit s =>
         val res1 = SQL("select * from " + tableName + " where name =  /* why? */ 'so what?' and id = ? /* really? */ -- line?")
           .bind(3)
           .map(rs => rs.string("name")).list.apply()
         res1.size should equal(1)
         val res2 = SQL("select * from " + tableName + " where name = /* why? */ 'so what?' and id = /*'id*/123 /* really? */ -- line?")
-          .bindByName(Symbol("id") -> 3)
+          .bindByName("id" -> 3)
           .map(rs => rs.string("name")).list.apply()
         res2.size should equal(1)
       }
