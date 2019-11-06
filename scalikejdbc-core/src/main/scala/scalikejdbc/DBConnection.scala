@@ -519,7 +519,7 @@ trait DBConnection extends LogSupport with LoanPattern with AutoCloseable {
                     val index: Index = map.get(indexName) match {
                       case Some(idx) =>
                         rs.stringOpt("COLUMN_NAME") match {
-                          case Some(columnName) => idx.copy(columnNames = idx.columnNames :+ columnName)
+                          case Some(columnName) => idx.copy(columnNames = columnName :: idx.columnNames)
                           case _ => idx
                         }
                       case _ =>
@@ -541,7 +541,7 @@ trait DBConnection extends LogSupport with LoanPattern with AutoCloseable {
                           filterCondition = rs.stringOpt("FILTER_CONDITION"))
                     }
                     map.updated(indexName, index)
-                }.map { case (k, v) => v }.toList.distinct
+                }.map { case (k, v) => v.copy(columnNames = v.columnNames.reverse) }.toList.distinct
             } catch {
               case e: ResultSetExtractorException =>
                 log.error("Failed to fetch index information", e)
