@@ -15,7 +15,7 @@ import org.scalatest.matchers.should.Matchers
 
 class NamedDBSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings with LoanPattern with ScalaFutures {
 
-  val tableNamePrefix = "emp_NamedDBSpec" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_NamedDBSpec" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "NamedDB"
 
@@ -270,7 +270,7 @@ class NamedDBSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Set
   // --------------------
   // futureLocalTx
 
-  implicit val patienceTimeout = PatienceConfig(10.seconds)
+  implicit val patienceTimeout: PatienceConfig = PatienceConfig(10.seconds)
 
   it should "execute single in futureLocalTx block" in {
     val tableName = tableNamePrefix + "_singleInFutureLocalTx"
@@ -355,7 +355,7 @@ class NamedDBSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Set
     val tableName = tableNamePrefix + "_singleInIOLocalTx"
     ultimately(TestUtils.deleteTable(tableName)) {
       TestUtils.initialize(tableName)
-      val myIOResult = NamedDB(Symbol("named")).localTx[MyIO[Option[String]]]{ s =>
+      val myIOResult = NamedDB(Symbol("named")).localTx[MyIO[Option[String]]] { s =>
         MyIO(s.single("select id from " + tableName + " where id = ?", 1)(rs => rs.string("id")))
       }(MyIO.myIOTxBoundary)
       myIOResult.run() should equal(Some("1"))
@@ -396,7 +396,7 @@ class NamedDBSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Set
     ultimately(TestUtils.deleteTable(tableName)) {
       TestUtils.initialize(tableName)
       futureUsing(DB(ConnectionPool(Symbol("named")).borrow())) { db =>
-        val myIOCount = NamedDB(Symbol("named"))localTx[MyIO[Int]] { s =>
+        val myIOCount = NamedDB(Symbol("named")).localTx[MyIO[Int]] { s =>
           MyIO(s.update("update " + tableName + " set name = ? where id = ?", "foo", 1))
         }
         myIOCount.run() should equal(1)

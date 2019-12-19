@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 class ThreadLocalDBSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings with LoanPattern {
 
-  val tableNamePrefix = "emp_ThreadLocalDBSpec" + System.currentTimeMillis()
+  val tableNamePrefix: String = "emp_ThreadLocalDBSpec" + System.currentTimeMillis()
 
   behavior of "ThreadLocalDB"
 

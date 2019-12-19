@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DBsSpec extends AnyFunSpec with Matchers {
 
-  def fixture = new {
+  def fixture: AnyRef = new {
 
   }
 
@@ -16,7 +16,7 @@ class DBsSpec extends AnyFunSpec with Matchers {
       it("should setup default connection with no argument") {
         DBs.setup()
         val res = DB readOnly { implicit session =>
-          SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+          SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
         }
         res should be(Some(1))
         DBs.close()
@@ -24,7 +24,7 @@ class DBsSpec extends AnyFunSpec with Matchers {
       it("should setup a connection pool") {
         DBs.setup(Symbol("foo"))
         val res = NamedDB(Symbol("foo")) readOnly { implicit session =>
-          SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+          SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
         }
         res should be(Some(1))
         DBs.close(Symbol("foo"))
@@ -32,7 +32,7 @@ class DBsSpec extends AnyFunSpec with Matchers {
       it("should setup env & top level config") {
         DBs.setup(Symbol("topLevelDefaults"))
         val res = NamedDB(Symbol("topLevelDefaults")) readOnly { implicit session =>
-          SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+          SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
         }
         res should be(Some(1))
         DBs.close(Symbol("topLevelDefaults"))
@@ -50,11 +50,11 @@ class DBsSpec extends AnyFunSpec with Matchers {
       it("should read application.conf and setup all connection pool") {
         DBs.setupAll()
         val res = NamedDB(Symbol("foo")) readOnly { implicit session =>
-          SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+          SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
         }
         res should be(Some(1))
         val res2 = NamedDB(Symbol("bar")) readOnly { implicit session =>
-          SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+          SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
         }
         res2 should be(Some(1))
         DBs.closeAll()
@@ -62,7 +62,7 @@ class DBsSpec extends AnyFunSpec with Matchers {
       it("should read application.conf with env (dev)") {
         DBsWithEnv("dev").setupAll()
         val res = DB readOnly { implicit session =>
-          SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+          SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
         }
         res should be(Some(1))
         DBs.closeAll()
@@ -70,7 +70,7 @@ class DBsSpec extends AnyFunSpec with Matchers {
       it("should read application.conf with env (dev2)") {
         DBsWithEnv("dev2").setupAll()
         val res = NamedDB(Symbol("hocon")) readOnly { implicit session =>
-          SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+          SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
         }
         res should be(Some(1))
         DBs.closeAll()
@@ -85,11 +85,11 @@ class DBsSpec extends AnyFunSpec with Matchers {
           DBs.close()
           intercept[IllegalStateException] {
             DB readOnly { implicit session =>
-              SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+              SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
             }
           }
           val res = NamedDB(Symbol("foo")) readOnly { implicit session =>
-            SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+            SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
           }
           res should be(Some(1))
           DBs.close(Symbol("foo"))
@@ -101,7 +101,7 @@ class DBsSpec extends AnyFunSpec with Matchers {
         DBs.close(Symbol("foo"))
         intercept[IllegalStateException] {
           NamedDB(Symbol("foo")) readOnly { implicit session =>
-            SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+            SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
           }
         }
       }
@@ -114,12 +114,12 @@ class DBsSpec extends AnyFunSpec with Matchers {
         DBs.closeAll()
         intercept[IllegalStateException] {
           NamedDB(Symbol("foo")) readOnly { implicit session =>
-            SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+            SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
           }
         }
         intercept[IllegalStateException] {
           NamedDB(Symbol("bar")) readOnly { implicit session =>
-            SQL("SELECT 1 as one").map(rs => rs.int("one")).single.apply()
+            SQL("SELECT 1 as one").map(rs => rs.int("one")).single().apply()
           }
         }
       }

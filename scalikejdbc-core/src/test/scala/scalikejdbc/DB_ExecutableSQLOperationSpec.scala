@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DB_ExecutableSQLOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings {
 
-  val tableNamePrefix = "emp_DB_ExecSQLOp" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_DB_ExecSQLOp" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "DB(Executable SQL Operation)"
 

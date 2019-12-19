@@ -35,9 +35,9 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with DBSettings wit
 
     // Both of columns and columnNames are OK
     //override val columns = Seq("id", "first_name", "group_id")
-    override val columnNames = Seq("id", "first_name", "group_id")
+    override val columnNames: Seq[String] = Seq("id", "first_name", "group_id")
 
-    override val nameConverters = Map("uid" -> "id")
+    override val nameConverters: Map[String,String] = Map("uid" -> "id")
     override val delimiterForResultName = "_Z_"
     override val forceUpperCase = true
 
@@ -54,14 +54,14 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with DBSettings wit
 
   object Group extends SQLSyntaxSupport[Group] {
     override val tableName = "groups"
-    override val columns = Seq("id", "website_url")
+    override val columns: Seq[String] = Seq("id", "website_url")
     def apply(rs: WrappedResultSet, g: ResultName[Group]): Group = Group(id = rs.int(g.id), websiteUrl = rs.stringOpt(g.field("websiteUrl")))
   }
   case class Group(id: Int, websiteUrl: Option[String], members: collection.Seq[User] = Nil)
 
   object GroupMember extends SQLSyntaxSupport[GroupMember] {
     override val tableName = "group_members"
-    override val columns = Seq("user_id", "group_id")
+    override val columns: Seq[String] = Seq("user_id", "group_id")
   }
   // case class GroupMember(userId: Int, groupId: Int) // works!
   class GroupMember(val userId: Int, val groupId: Int)
@@ -73,7 +73,7 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with DBSettings wit
 
   case class NamedDBEntity(id: Long)
   object NamedDBEntity extends SQLSyntaxSupport[NamedDBEntity] {
-    override def connectionPoolName = Symbol("yetanother")
+    override def connectionPoolName: Symbol = Symbol("yetanother")
   }
 
   it should "throw exception if table not found" in {
@@ -400,7 +400,7 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with DBSettings wit
 
   case class IssueSummary(count: Long, sum: Long)
   object IssueSummary extends SQLSyntaxSupport[IssueSummary] {
-    override val columns = Seq("count", "sum")
+    override val columns: Seq[String] = Seq("count", "sum")
     def apply(is: ResultName[IssueSummary])(rs: WrappedResultSet) = new IssueSummary(rs.long(is.count), rs.long(is.sum))
   }
 
@@ -541,7 +541,7 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with DBSettings wit
 
   object Order extends SQLSyntaxSupport[Order] {
     override val tableName = "orders"
-    override val columns = Seq("id", "customer_id", "product_id", "ordered_at")
+    override val columns: Seq[String] = Seq("id", "customer_id", "product_id", "ordered_at")
   }
   case class Order(customerId: Int, productId: Int, orderedAt: LocalDateTime)
 
@@ -766,7 +766,7 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with DBSettings wit
 
   case class XNames(x1: String, x2: String)
   object XNames extends SQLSyntaxSupport[XNames] {
-    override val columns = Seq("x1", "x2")
+    override val columns: Seq[String] = Seq("x1", "x2")
     def apply(xn: ResultName[XNames])(rs: WrappedResultSet) = new XNames(
       x1 = rs.string(xn.x1), x2 = rs.string(xn.x2))
   }
@@ -798,7 +798,7 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with DBSettings wit
 
   case class Names(fullName: String, firstName: String, lastName: String)
   object Names extends SQLSyntaxSupport[Names] {
-    override val columns = Seq("full_name", "first_name", "last_name")
+    override val columns: Seq[String] = Seq("full_name", "first_name", "last_name")
     def apply(n: ResultName[Names])(rs: WrappedResultSet) = new Names(
       fullName = rs.string(n.fullName), firstName = rs.string(n.firstName), lastName = rs.string(n.lastName))
   }

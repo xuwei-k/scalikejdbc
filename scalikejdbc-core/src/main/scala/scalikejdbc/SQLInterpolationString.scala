@@ -1,6 +1,7 @@
 package scalikejdbc
 
 import scala.collection.JavaConverters._
+import scala.language.implicitConversions
 
 private[scalikejdbc] object LastParameter
 

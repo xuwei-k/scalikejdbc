@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 
 class SQLSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings with LoanPattern {
 
-  val tableNamePrefix = "emp_SQLSpec" + System.currentTimeMillis()
+  val tableNamePrefix: String = "emp_SQLSpec" + System.currentTimeMillis()
 
   behavior of "SQL"
 

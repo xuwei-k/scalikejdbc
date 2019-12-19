@@ -26,7 +26,7 @@ object Member extends JavaUtilDateConverterImplicits {
     val description = "DESCRIPTION"
     val birthday = "BIRTHDAY"
     val createdAt = "CREATED_AT"
-    val all = Seq(id, name, description, birthday, createdAt)
+    val all: Seq[String] = Seq(id, name, description, birthday, createdAt)
   }
 
   val * = {
@@ -148,7 +148,7 @@ object NamedMember {
     val description = "DESCRIPTION"
     val birthday = "BIRTHDAY"
     val createdAt = "CREATED_AT"
-    val all = Seq(id, name, description, birthday, createdAt)
+    val all: Seq[String] = Seq(id, name, description, birthday, createdAt)
   }
 
   val * = {

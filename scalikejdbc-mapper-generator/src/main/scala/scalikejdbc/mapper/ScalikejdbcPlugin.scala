@@ -4,6 +4,7 @@ import sbt._
 import sbt.Keys._
 import sbt.complete.EditDistance
 import scala.language.reflectiveCalls
+import scala.reflect.Selectable.reflectiveSelectable
 import scala.util.control.Exception._
 import java.io.FileNotFoundException
 import java.util.Locale.{ ENGLISH => en }
@@ -12,17 +13,17 @@ import java.util.Properties
 object ScalikejdbcPlugin extends AutoPlugin {
 
   object autoImport {
-    val scalikejdbcGen = inputKey[Unit]("Generates a model for a specified table")
-    val scalikejdbcGenForce = inputKey[Unit]("Generates and overwrites a model for a specified table")
-    val scalikejdbcGenAll = inputKey[Unit]("Generates models for all tables")
-    val scalikejdbcGenAllForce = inputKey[Unit]("Generates and overwrites models for all tables")
-    val scalikejdbcGenEcho = inputKey[Unit]("Prints a model for a specified table")
+    val scalikejdbcGen: InputKey[Unit] = inputKey[Unit]("Generates a model for a specified table")
+    val scalikejdbcGenForce: InputKey[Unit] = inputKey[Unit]("Generates and overwrites a model for a specified table")
+    val scalikejdbcGenAll: InputKey[Unit] = inputKey[Unit]("Generates models for all tables")
+    val scalikejdbcGenAllForce: InputKey[Unit] = inputKey[Unit]("Generates and overwrites models for all tables")
+    val scalikejdbcGenEcho: InputKey[Unit] = inputKey[Unit]("Prints a model for a specified table")
 
-    val scalikejdbcJDBCSettings = taskKey[JDBCSettings]("")
-    val scalikejdbcGeneratorSettings = taskKey[GeneratorSettings]("")
+    val scalikejdbcJDBCSettings: TaskKey[JDBCSettings] = taskKey[JDBCSettings]("")
+    val scalikejdbcGeneratorSettings: TaskKey[GeneratorSettings] = taskKey[GeneratorSettings]("")
 
-    val scalikejdbcCodeGeneratorSingle = taskKey[(String, Option[String], JDBCSettings, GeneratorSettings) => Option[Generator]]("")
-    val scalikejdbcCodeGeneratorAll = taskKey[(JDBCSettings, GeneratorSettings) => Seq[Generator]]("")
+    val scalikejdbcCodeGeneratorSingle: TaskKey[(String, Option[String], JDBCSettings, GeneratorSettings) => Option[Generator]] = taskKey[(String, Option[String], JDBCSettings, GeneratorSettings) => Option[Generator]]("")
+    val scalikejdbcCodeGeneratorAll: TaskKey[(JDBCSettings, GeneratorSettings) => Seq[Generator]] = taskKey[(JDBCSettings, GeneratorSettings) => Seq[Generator]]("")
 
     case class JDBCSettings(driver: String, url: String, username: String, password: String, schema: String)
 

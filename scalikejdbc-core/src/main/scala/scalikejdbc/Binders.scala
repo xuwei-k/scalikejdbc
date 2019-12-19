@@ -4,6 +4,7 @@ import java.io.InputStream
 import java.sql.{ PreparedStatement, ResultSet }
 import java.time.ZoneId
 import JavaUtilDateConverterImplicits._
+import scala.language.implicitConversions
 
 /**
  * Provides both of TypeBinder and ParameterBinderFactory for the specified type A.

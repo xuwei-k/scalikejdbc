@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DB_SessionOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings {
 
-  val tableNamePrefix = "emp_DB_SesOp" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_DB_SesOp" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "DB(Session operation)"
 
@@ -66,7 +66,7 @@ class DB_SessionOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAf
       TestUtils.initialize(tableName)
       using(ConnectionPool.borrow()) { conn =>
         val db = DB(conn)
-        val result = db readOnly {
+        val result = db.readOnly {
           session =>
             session.list("select * from " + tableName + "")(rs => Some(rs.string("name")))
         }
@@ -214,13 +214,13 @@ class DB_SessionOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAf
     val tableName = tableNamePrefix + "_updateInAutoCommitBlock"
     ultimately(TestUtils.deleteTable(tableName)) {
       TestUtils.initialize(tableName)
-      val count = DB autoCommit {
+      val count = DB.autoCommit {
         _.update("update " + tableName + " set name = ? where id = ?", "foo", 1)
       }
       count should equal(1)
-      val name = (DB autoCommit {
+      val name = DB.autoCommit {
         _.single("select name from " + tableName + " where id = ?", 1)(rs => rs.string("name"))
-      }).get
+      }.get
       name should equal("foo")
     }
   }
@@ -229,11 +229,11 @@ class DB_SessionOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAf
     val tableName = tableNamePrefix + "_updateAfterReadOnly"
     ultimately(TestUtils.deleteTable(tableName)) {
       TestUtils.initialize(tableName)
-      val name = (DB readOnly {
+      val name = DB.readOnly {
         _.single("select name from " + tableName + " where id = ?", 1)(_.string("name"))
-      }).get
+      }.get
       name should equal("name1")
-      val count = DB autoCommit {
+      val count = DB.autoCommit {
         _.update("update " + tableName + " set name = ? where id = ?", "foo", 1)
       }
       count should equal(1)

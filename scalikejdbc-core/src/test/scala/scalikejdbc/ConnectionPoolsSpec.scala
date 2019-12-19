@@ -13,11 +13,11 @@ class ConnectionPoolsSpec extends AnyFlatSpec with Matchers {
   val props = new Properties
   props.load(classOf[Settings].getClassLoader.getResourceAsStream("jdbc.properties"))
 
-  val driverClassName = props.getProperty("driverClassName")
-  val url = props.getProperty("url")
-  val user = props.getProperty("user")
-  val password = props.getProperty("password")
-  val dataSourceClassName = props.getProperty("dataSourceClassName")
+  val driverClassName: String = props.getProperty("driverClassName")
+  val url: String = props.getProperty("url")
+  val user: String = props.getProperty("user")
+  val password: String = props.getProperty("password")
+  val dataSourceClassName: String = props.getProperty("dataSourceClassName")
 
   Class.forName(driverClassName)
 

@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DBSessionWrapperSpec extends AnyFlatSpec with Matchers {
 
-  val tableName = "emp_DBSessionWrapperSpec" + System.currentTimeMillis().toString.substring(8)
+  val tableName: String = "emp_DBSessionWrapperSpec" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "DBSessionWrapper"
 

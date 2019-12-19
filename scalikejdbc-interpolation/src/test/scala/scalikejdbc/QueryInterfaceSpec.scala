@@ -54,7 +54,7 @@ class QueryInterfaceSpec extends AnyFlatSpec with Matchers with DBSettings with 
     def opt(a: SyntaxProvider[Account])(rs: WrappedResultSet): Option[Account] = rs.intOpt(a.resultName.id).map(_ => apply(a)(rs))
   }
   object SchemaExample extends SQLSyntaxSupport[SchemaExample] {
-    override val schemaName = Some("public")
+    override val schemaName: Some[String] = Some("public")
     override val tableName = "qi_schema_example"
   }
   object TimeHolder extends SQLSyntaxSupport[TimeHolder] {

@@ -11,10 +11,10 @@ class SQLInterpolationSpec extends AnyFlatSpec with Matchers with LogSupport wit
 
   val props = new java.util.Properties
   using(new java.io.FileInputStream("scalikejdbc-core/src/test/resources/jdbc.properties")) { in => props.load(in) }
-  val driverClassName = props.getProperty("driverClassName")
-  val url = props.getProperty("url")
-  val user = props.getProperty("user")
-  val password = props.getProperty("password")
+  val driverClassName: String = props.getProperty("driverClassName")
+  val url: String = props.getProperty("url")
+  val user: String = props.getProperty("user")
+  val password: String = props.getProperty("password")
 
   Class.forName(driverClassName)
   val poolSettings = new ConnectionPoolSettings(initialSize = 50, maxSize = 50)

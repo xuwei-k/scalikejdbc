@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 class OneToManies6SQLSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings {
 
-  val tableNamePrefix = "emp_OneToManies6SQLSpec" + System.currentTimeMillis()
+  val tableNamePrefix: String = "emp_OneToManies6SQLSpec" + System.currentTimeMillis()
 
   behavior of "OneToManies6SQL"
 

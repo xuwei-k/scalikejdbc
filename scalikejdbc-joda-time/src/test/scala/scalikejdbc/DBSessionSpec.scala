@@ -17,7 +17,7 @@ class DBSessionSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with S
 
   def opt[A](v: Any): Option[A] = Option(v.asInstanceOf[A])
 
-  val tableNamePrefix = "emp_DBSessionSpec" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_DBSessionSpec" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "DBSession"
 

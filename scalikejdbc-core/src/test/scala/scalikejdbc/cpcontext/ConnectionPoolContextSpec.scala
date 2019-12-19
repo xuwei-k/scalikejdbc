@@ -9,7 +9,7 @@ class ConnectionPoolContextSpec extends AnyFlatSpec with Matchers with Settings 
 
   import ConnectionPoolContextSpecUtils._
 
-  val tableNamePrefix = "emp_CPContextSpec" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_CPContextSpec" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "DB with ConnectionPoolContext"
 
@@ -46,8 +46,8 @@ class ConnectionPoolContextSpec extends AnyFlatSpec with Matchers with Settings 
   it should "work with NamedConnectionPoolContext" in {
     val tableName = tableNamePrefix + "_withNamedCPContext"
     implicit val context = MultipleConnectionPoolContext(
-      ConnectionPool.DEFAULT_NAME -> ConnectionPool.get(),
-      Symbol("ConnectionPoolContextSpec") -> ConnectionPool.get())
+      ConnectionPool.DEFAULT_NAME.asInstanceOf[Any] -> ConnectionPool.get(),
+      Symbol("ConnectionPoolContextSpec").asInstanceOf[Any] -> ConnectionPool.get())
     try {
       createTable(tableName)(ConnectionPool.DEFAULT_NAME)
       createTable(tableName)(Symbol("ConnectionPoolContextSpec"))
@@ -83,7 +83,7 @@ object ConnectionPoolContextSpecUtils {
   Class.forName("org.h2.Driver")
   ConnectionPool.add(Symbol("ConnectionPoolContextSpec"), "jdbc:h2:mem:ConnectionPoolContextSpec", "", "")
 
-  def createTable(tableName: String)(name: Any) = {
+  def createTable(tableName: String)(name: Any): Boolean = {
     NamedDB(name)(NoConnectionPoolContext) autoCommit { implicit s =>
       try {
         SQL("drop table " + tableName).execute.apply()
@@ -92,7 +92,7 @@ object ConnectionPoolContextSpecUtils {
     }
   }
 
-  def insertData(tableName: String, num: Int)(name: Any) = {
+  def insertData(tableName: String, num: Int)(name: Any): Unit = {
     NamedDB(name)(NoConnectionPoolContext) localTx { implicit s =>
       (1 to num).foreach { n =>
         SQL("insert into " + tableName + " (id, name) values (?, ?)").bind(n, "name" + n).update.apply()
@@ -100,7 +100,7 @@ object ConnectionPoolContextSpecUtils {
     }
   }
 
-  def dropTable(tableName: String)(name: Any) = {
+  def dropTable(tableName: String)(name: Any): AnyVal = {
     try {
       NamedDB(name)(NoConnectionPoolContext) autoCommit { implicit s =>
         SQL("drop table " + tableName).execute.apply()
@@ -111,7 +111,7 @@ object ConnectionPoolContextSpecUtils {
 }
 
 trait NamedCPContextAsDefault {
-  implicit lazy val context = MultipleConnectionPoolContext(
+  implicit lazy val context: MultipleConnectionPoolContext = MultipleConnectionPoolContext(
     ConnectionPool.DEFAULT_NAME -> ConnectionPool.get(),
     Symbol("ConnectionPoolContextSpec") -> ConnectionPool.get())
 }
@@ -120,7 +120,7 @@ class ConnectionPoolContextMixinSpec extends AnyFlatSpec with Matchers with Sett
 
   import ConnectionPoolContextSpecUtils._
 
-  val tableNamePrefix = "emp_CPContextSpec" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_CPContextSpec" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "DB with ConnectionPoolContext(mixin)"
 

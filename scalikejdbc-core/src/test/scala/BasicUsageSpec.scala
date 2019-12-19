@@ -17,14 +17,14 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
   private val props = new java.util.Properties
   props.load(classOf[Settings].getClassLoader.getResourceAsStream("jdbc.properties"))
   // loading JDBC driver
-  val driverClassName = props.getProperty("driverClassName")
+  val driverClassName: String = props.getProperty("driverClassName")
   Class.forName(driverClassName)
   // preparing the connection pool settings
   val poolSettings = new ConnectionPoolSettings(initialSize = 100, maxSize = 100)
   // JDBC settings
-  val url = props.getProperty("url")
-  val user = props.getProperty("user")
-  val password = props.getProperty("password")
+  val url: String = props.getProperty("url")
+  val user: String = props.getProperty("user")
+  val password: String = props.getProperty("password")
 
   // create singleton(default) connection pool
   ConnectionPool.singleton(url, user, password, poolSettings)
@@ -77,7 +77,7 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
   // Working with DBSession
   // ---------------------------
 
-  val tableNamePrefix = "emp_BasicUsageSpec" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_BasicUsageSpec" + System.currentTimeMillis().toString.substring(8)
 
   "autoCommit" should "excute without a transaction" in {
     val tableName = tableNamePrefix + "_autoCommit"
@@ -132,7 +132,7 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
     try {
       TestUtils.initialize(tableName)
 
-      DB localTx { session =>
+      DB.localTx { session =>
         val emp: Option[Emp] = session.single("select * from " + tableName + " where id = ?", 1) { rs => Emp(rs.int("id"), rs.string("name")) }
         val emps: List[Emp] = session.list("select * from " + tableName) { rs => Emp(rs.int("id"), rs.string("name")) }
       }
@@ -170,7 +170,7 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
 
         val eopt: Option[Emp] = DB readOnly { implicit session =>
           SQL("select * from emp_BasicUsageSpec_SQL where id = ?").bind(1)
-            .map(rs => Emp(rs.int("id"), rs.string("name"))).single.apply()
+            .map(rs => Emp(rs.int("id"), rs.string("name"))).single().apply()
         }
         eopt.isDefined should be(true)
 
@@ -241,7 +241,7 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
         firstEmp.isDefined should be(true)
 
         // expects single result or nothing, when mutiple results are returned, Exception will be thrown.
-        val single: Option[Emp] = SQL("select * from emp where id = ?").bind(1).map(empMapper).single.apply() // or #toOption
+        val single: Option[Emp] = SQL("select * from emp where id = ?").bind(1).map(empMapper).single().apply() // or #toOption
         single.isDefined should be(true)
 
         // Execute DDL
@@ -337,7 +337,7 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
     try {
       TestUtils.initialize(tableName)
 
-      DB localTx { implicit session =>
+      DB.localTx { implicit session =>
 
         val params1: Seq[Seq[Any]] = (1001 to 2000).map { i => Seq(i, "name" + i) }
         session.batch("insert into " + tableName + " (id, name) values (?, ?)", params1: _*)
@@ -362,7 +362,7 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
     val tableName = tableNamePrefix + "_batch_with_empty_params"
     try {
       TestUtils.initialize(tableName)
-      DB localTx { implicit session =>
+      DB.localTx { implicit session =>
         SQL("insert into " + tableName + " (id, name) values (999, 'Alice')").batchByName(Seq.empty[Seq[(String, Any)]]: _*).apply()
       }
     } finally { TestUtils.deleteTable(tableName) }

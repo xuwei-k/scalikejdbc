@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory
 import scala.util.control.NonFatal
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import org.slf4j.Logger
 
 class PostgreSQL_JSON_Objects_Spec extends AnyFlatSpec with Matchers with DBSettings with SQLInterpolation {
 
   behavior of "Handling of PostgreSQL JSON objects"
 
-  val logger = LoggerFactory.getLogger(classOf[PostgreSQL_JSON_Objects_Spec])
+  val logger: Logger = LoggerFactory.getLogger(classOf[PostgreSQL_JSON_Objects_Spec])
 
   private def isTestWithPostgreSQL(): Boolean = {
     driverClassName == "org.postgresql.Driver"

@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 
 class ResultSetIteratorSpec extends AnyFlatSpec with Matchers with Settings {
 
-  val tableNamePrefix = "emp_ResultSetIteratorSpec" + System.currentTimeMillis()
+  val tableNamePrefix: String = "emp_ResultSetIteratorSpec" + System.currentTimeMillis()
 
   behavior of "ResultSetIterator"
 

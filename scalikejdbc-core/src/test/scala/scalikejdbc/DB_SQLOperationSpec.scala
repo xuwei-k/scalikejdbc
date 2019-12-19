@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DB_SQLOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings with LoanPattern {
 
-  val tableNamePrefix = "emp_DB_SQLOp" + System.currentTimeMillis().toString.substring(8)
+  val tableNamePrefix: String = "emp_DB_SQLOp" + System.currentTimeMillis().toString.substring(8)
 
   behavior of "DB(SQL Operation)"
 

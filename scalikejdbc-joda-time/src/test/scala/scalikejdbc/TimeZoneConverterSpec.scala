@@ -10,16 +10,16 @@ class TimeZoneConverterSpec extends AnyFlatSpec with Matchers {
 
   behavior of "TimeZoneConverter"
 
-  val jst = TimeZone.getTimeZone("Asia/Tokyo") // UTC+9
-  val ast = TimeZone.getTimeZone("AST") // UTC-9 with DST
-  val converter = TimeZoneConverter.from(jst).to(ast)
+  val jst: TimeZone = TimeZone.getTimeZone("Asia/Tokyo") // UTC+9
+  val ast: TimeZone = TimeZone.getTimeZone("AST") // UTC-9 with DST
+  val converter: TimeZoneConverter = TimeZoneConverter.from(jst).to(ast)
 
-  val date = new DateTime(2016, 1, 3, 12, 0).toDate.getTime
-  val dstDate = new DateTime(2016, 7, 3, 12, 0).toDate.getTime
+  val date: Long = new DateTime(2016, 1, 3, 12, 0).toDate.getTime
+  val dstDate: Long = new DateTime(2016, 7, 3, 12, 0).toDate.getTime
 
-  val jstOffset = jst.getOffset(date)
-  val astOffset = ast.getOffset(date)
-  val astOffsetWithDst = ast.getOffset(dstDate)
+  val jstOffset: Int = jst.getOffset(date)
+  val astOffset: Int = ast.getOffset(date)
+  val astOffsetWithDst: Int = ast.getOffset(dstDate)
 
   it should "convert timeZone of java.sql.Timestamp" in {
     val sqlTimestamp = new java.sql.Timestamp(date)

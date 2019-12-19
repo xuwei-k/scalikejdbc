@@ -4,7 +4,6 @@ import java.util.Locale.{ ENGLISH => en }
 import scalikejdbc.interpolation.SQLSyntax
 
 import scala.collection.concurrent.TrieMap
-import scala.language.experimental.macros
 import scala.language.dynamics
 
 /**
@@ -281,7 +280,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
   /**
    * SQLSyntax Provider
    */
-  trait SQLSyntaxProvider[A] extends Dynamic {
+  trait SQLSyntaxProvider[A] extends Dynamic with SelectDynamicMacro {
     import SQLSyntaxProvider._
 
     /**
@@ -324,11 +323,6 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
       }
       c(columnName)
     }
-
-    /**
-     * Returns [[scalikejdbc.interpolation.SQLSyntax]] value for the column which is referred by the field.
-     */
-    def selectDynamic(name: String): SQLSyntax = macro scalikejdbc.SQLInterpolationMacro.selectDynamic[A]
 
   }
 
@@ -591,7 +585,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
       s"${name}${delimiterForResultName}${tableAliasName}"
     }.mkString(", "))
 
-    lazy val namedColumns: collection.Seq[SQLSyntax] = support.columns.map { columnName: String =>
+    lazy val namedColumns: collection.Seq[SQLSyntax] = support.columns.map { (columnName: String) =>
       val name = toAliasName(columnName, support)
       SQLSyntax(s"${name}${delimiterForResultName}${tableAliasName}")
     }
@@ -850,7 +844,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
     }
 
     def column(name: String): SQLSyntax = cachedColumns.getOrElseUpdate(name, {
-      underlying.columns.find(_.value.equalsIgnoreCase(name)).map { original: SQLSyntax =>
+      underlying.columns.find(_.value.equalsIgnoreCase(name)).map { (original: SQLSyntax) =>
         val name = toAliasName(original.value, underlying.support)
         SQLSyntax(s"${name}${delimiterForResultName}${underlying.tableAliasName}${delimiterForResultName}${aliasName}")
       }.getOrElse {
@@ -858,7 +852,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
       }
     })
 
-    lazy val namedColumns: collection.Seq[SQLSyntax] = underlying.namedColumns.map { nc: SQLSyntax =>
+    lazy val namedColumns: collection.Seq[SQLSyntax] = underlying.namedColumns.map { (nc: SQLSyntax) =>
       SQLSyntax(s"${nc.value}${delimiterForResultName}${aliasName}")
     }
 

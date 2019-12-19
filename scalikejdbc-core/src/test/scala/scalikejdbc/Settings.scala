@@ -12,7 +12,7 @@ trait Settings extends BeforeAndAfter { self: Suite =>
   val user: String = props.getProperty("user")
   val password: String = props.getProperty("password")
 
-  def initializeConnectionPools() = {
+  def initializeConnectionPools(): Any = {
     if (!ConnectionPool.isInitialized()) {
       Class.forName(driverClassName)
       val poolSettings = new ConnectionPoolSettings(initialSize = 1, maxSize = 100)

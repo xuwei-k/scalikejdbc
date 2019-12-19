@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 class RelationalSQLSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings {
 
-  val tableNamePrefix = "emp_RelationalSQLSpec" + System.currentTimeMillis()
+  val tableNamePrefix: String = "emp_RelationalSQLSpec" + System.currentTimeMillis()
 
   behavior of "RelationalSQL"
 

@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 class AutoSpec extends AnyFlatSpec with Matchers with DBSettings {
 
   case class Issue(id: Long, firstName: String, groupId: Long)
-  val IssueTable = SQLSyntaxSupportFactory[Issue]()
+  val IssueTable: SQLSyntaxSupportImpl[Issue] = SQLSyntaxSupportFactory[Issue]()
 
   class Organization(val id: Long, val websiteUrl: String)
   object Organization extends SQLSyntaxSupport[Organization] {
@@ -18,7 +18,7 @@ class AutoSpec extends AnyFlatSpec with Matchers with DBSettings {
   case class Person(id: Long, name: String, organizationId: Option[Long], organization: Option[Organization] = None, groupId: Long = 0)
   object Person extends SQLSyntaxSupport[Person] {
     def apply(s: SyntaxProvider[Person])(rs: WrappedResultSet): Person = autoConstruct(rs, s, "organization")
-    override lazy val columns = autoColumns[Person]("organization")
+    override lazy val columns: Seq[String] = autoColumns[Person]("organization")
   }
 
   behavior of "autoConstruct"
