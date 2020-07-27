@@ -1,5 +1,7 @@
 import MimaSettings.mimaSettings
 
+ThisBuild / useSuperShell := false
+
 lazy val _version = "4.0.0-SNAPSHOT"
 val dottySetting = {
   val groupIds = Set(
@@ -46,7 +48,7 @@ def gitHash: String = try {
 lazy val baseSettings = Def.settings(
   organization := _organization,
   version := _version,
-  scalaVersion := "0.24.0-RC1",
+  scalaVersion := "0.26.0-RC1",
   publishTo := _publishTo(version.value),
   publishMavenStyle := true,
   resolvers ++= _resolvers,
