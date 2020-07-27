@@ -8,7 +8,7 @@ val dottySetting = {
     "org.scalatest"
   )
   libraryDependencies := libraryDependencies.value.map{ lib =>
-    if (groupIds(lib.organization))
+    if (groupIds(lib.organization) && scalaVersion.value == "0.24.0-RC1")
       lib
     else
       lib.withDottyCompat(scalaVersion.value)
@@ -272,6 +272,7 @@ lazy val scalikejdbcMapperGeneratorCore = Project(
 ).dependsOn(scalikejdbcLibrary)
 
 // mapper-generator sbt plugin
+/*
 lazy val scalikejdbcMapperGenerator = Project(
   id = "mapper-generator",
   base = file("scalikejdbc-mapper-generator")
@@ -307,6 +308,7 @@ lazy val scalikejdbcMapperGenerator = Project(
   },
   dottySetting
 ).dependsOn(scalikejdbcCore, scalikejdbcMapperGeneratorCore).enablePlugins(SbtPlugin)
+*/
 
 // scalikejdbc-test
 lazy val scalikejdbcTest = Project(

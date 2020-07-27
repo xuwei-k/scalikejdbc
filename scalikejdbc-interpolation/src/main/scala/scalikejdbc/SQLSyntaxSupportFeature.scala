@@ -280,7 +280,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
   /**
    * SQLSyntax Provider
    */
-  trait SQLSyntaxProvider[A] extends Dynamic with SelectDynamicMacro {
+  trait SQLSyntaxProvider[A] extends Dynamic with SelectDynamicMacro[A] {
     import SQLSyntaxProvider._
 
     /**

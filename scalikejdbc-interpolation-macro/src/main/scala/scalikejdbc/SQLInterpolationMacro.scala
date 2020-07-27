@@ -1,20 +1,33 @@
 package scalikejdbc
 
-import scala.reflect.macros.blackbox.Context
+import scalikejdbc.interpolation.SQLSyntax
+import scala.quoted._
 
 /**
  * Macros for dynamic fields validation
  */
 object SQLInterpolationMacro {
 
-  def selectDynamic[E: c.WeakTypeTag](c: Context)(name: c.Tree): c.Tree = {
-    import c.universe._
+  def selectDynamic[E: Type](name: Expr[String])(implicit qctx: QuoteContext): Expr[SQLSyntax] = {
+    println("aaa")
+    import qctx.tasty._
 
     val nameOpt: Option[String] = name match {
-      case Literal(Constant(value: String)) => Some(value)
+      case Const(value: String) => Some(value)
       case _ => None
     }
 
+    println(typeOf[E].show)
+
+    /*
+    typeOf[E] match {
+      case a: Product =>
+        a.productElementNames
+    }
+
+     */
+
+    /*
     // primary constructor args of type E
     val expectedNames = c.weakTypeOf[E].decls.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
@@ -29,6 +42,8 @@ object SQLInterpolationMacro {
     }
 
     Apply(Select(c.prefix.tree, TermName("field")), List(name))
+*/
+    ???
   }
 
 }
