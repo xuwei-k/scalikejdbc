@@ -9,7 +9,7 @@ import scalikejdbc.SQLSyntaxSupportFeature
  */
 object SQLInterpolationMacro {
 
-  def selectDynamicImpl(name: Expr[String], self: Expr[SQLSyntaxSupportFeature#SQLSyntaxProvider[_]])(implicit qctx: QuoteContext): Expr[SQLSyntax] = {
+  def selectDynamicImpl(name: Expr[String], self: Expr[SQLSyntaxProvider[_]])(implicit qctx: QuoteContext): Expr[SQLSyntax] = {
     import qctx.tasty._
     val n: String = name.unliftOrError
 
@@ -30,19 +30,19 @@ object SQLInterpolationMacro {
     val clazz = getClassDef(rootContext.owner)
     val parents = clazz.parents
     val List(typeParam) = parents.map(_.asInstanceOf[TypeTree].tpe).collect {
-      case AppliedType(a, List(x)) if a.classSymbol.map(_.fullName) == Some("scalikejdbc.SQLSyntaxSupportFeature.SQLSyntaxSupport") =>
+      case AppliedType(a, List(x)) if a.classSymbol.map(_.fullName) == Some("scalikejdbc.SQLSyntaxSupport") =>
         x
     }.collect{
       case x @ TypeRef(_, _) => x
     }
     val expectedNames = typeParam.classSymbol.get.caseFields.map(_.name).toSet
     
-    println(expectedNames)
+    //println(expectedNames)
     if (expectedNames(n)) {
-      '{ ${self}.field(${Expr(n)}) }
+      '{ ${self}.field(${name}) }
     } else {
       error(s"${typeParam}#${name} not found. Expected fields are ${expectedNames.mkString("#", ", #", "")}.", name.unseal.pos)
-      ???
+      '{???}
     }
 
     /*

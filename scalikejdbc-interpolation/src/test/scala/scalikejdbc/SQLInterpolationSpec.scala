@@ -1,16 +1,15 @@
 package hoge
 
 import java.time._
+
 import org.slf4j._
+import scalikejdbc.SQLSyntaxSupportFeature.ResultName
+import scalikejdbc._
 
 import scala.collection.concurrent.TrieMap
 import scala.util.control.NonFatal
-
-object Hogehoge extends scalikejdbc.SQLInterpolation with scalikejdbc.ScalaBigDecimalConverterImplicits with scalikejdbc.JavaUtilDateConverterImplicits
-
-import Hogehoge.SQLSyntaxSupport
-import Hogehoge.ResultName
-import scalikejdbc._
+import scala.language.implicitConversions
+import scalikejdbc.interpolation.Implicits.scalikejdbcSQLSyntaxToStringImplicitDef
 
 object User extends SQLSyntaxSupport[User] {
 

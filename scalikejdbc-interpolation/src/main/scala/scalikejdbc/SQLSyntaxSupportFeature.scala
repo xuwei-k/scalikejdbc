@@ -2,7 +2,9 @@ package scalikejdbc
 
 import java.util.Locale.{ENGLISH => en}
 
-import scalikejdbc.interpolation.SQLSyntax
+import scalikejdbc.SQLSyntaxSupportFeature.ColumnName
+import scalikejdbc.interpolation.Implicits.scalikejdbcSQLInterpolationImplicitDef
+import scalikejdbc.interpolation.{AsteriskProvider, ResultAllProvider, SQLSyntax}
 
 import scala.collection.concurrent.TrieMap
 import scala.language.dynamics
@@ -11,6 +13,16 @@ import scala.language.dynamics
  * SQLSyntaxSupport feature
  */
 object SQLSyntaxSupportFeature extends LogSupport {
+
+  // ---------------------------------
+  // Type aliases for this trait elements
+  // ---------------------------------
+
+  type ColumnName[A] = ColumnSQLSyntaxProvider[SQLSyntaxSupport[A], A]
+  type ResultName[A] = ResultNameSQLSyntaxProvider[SQLSyntaxSupport[A], A]
+  type SubQueryResultName = SubQueryResultNameSQLSyntaxProvider
+  type SyntaxProvider[A] = QuerySQLSyntaxProvider[SQLSyntaxSupport[A], A]
+  type SubQuerySyntaxProvider = SubQuerySQLSyntaxProvider
 
   /**
    * Loaded columns for tables.
@@ -44,10 +56,6 @@ object SQLSyntaxSupportFeature extends LogSupport {
 
 }
 
-/**
- * SQLSyntaxSupport feature
- */
-trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
 
   object SQLSyntaxSupport {
 
@@ -883,15 +891,5 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
 
   }
 
-  // ---------------------------------
-  // Type aliases for this trait elements
-  // ---------------------------------
-
-  type ColumnName[A] = ColumnSQLSyntaxProvider[SQLSyntaxSupport[A], A]
-  type ResultName[A] = ResultNameSQLSyntaxProvider[SQLSyntaxSupport[A], A]
-  type SubQueryResultName = SubQueryResultNameSQLSyntaxProvider
-  type SyntaxProvider[A] = QuerySQLSyntaxProvider[SQLSyntaxSupport[A], A]
-  type SubQuerySyntaxProvider = SubQuerySQLSyntaxProvider
-
-}
-
+@deprecated("will be removed", "4.0.0")
+trait SQLSyntaxSupportFeature
