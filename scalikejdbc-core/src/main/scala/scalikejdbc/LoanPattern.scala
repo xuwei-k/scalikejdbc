@@ -3,6 +3,7 @@ package scalikejdbc
 import org.slf4j.LoggerFactory
 
 import scala.language.reflectiveCalls
+import scala.reflect.Selectable.reflectiveSelectable
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.control.NonFatal
 
