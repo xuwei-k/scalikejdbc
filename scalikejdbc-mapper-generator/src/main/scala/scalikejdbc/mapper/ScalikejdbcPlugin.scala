@@ -4,6 +4,7 @@ import sbt._
 import sbt.Keys._
 import sbt.complete.EditDistance
 import scala.language.reflectiveCalls
+import scala.reflect.Selectable.reflectiveSelectable
 import scala.util.control.Exception._
 import java.io.FileNotFoundException
 import java.util.Locale.{ ENGLISH => en }

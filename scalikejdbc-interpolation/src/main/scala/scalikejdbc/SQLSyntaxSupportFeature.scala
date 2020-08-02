@@ -1,16 +1,28 @@
 package scalikejdbc
 
-import java.util.Locale.{ ENGLISH => en }
-import scalikejdbc.interpolation.SQLSyntax
+import java.util.Locale.{ENGLISH => en}
+
+import scalikejdbc.SQLSyntaxSupportFeature.ColumnName
+import scalikejdbc.interpolation.Implicits.scalikejdbcSQLInterpolationImplicitDef
+import scalikejdbc.interpolation.{AsteriskProvider, ResultAllProvider, SQLSyntax}
 
 import scala.collection.concurrent.TrieMap
-import scala.language.experimental.macros
 import scala.language.dynamics
 
 /**
  * SQLSyntaxSupport feature
  */
 object SQLSyntaxSupportFeature extends LogSupport {
+
+  // ---------------------------------
+  // Type aliases for this trait elements
+  // ---------------------------------
+
+  type ColumnName[A] = ColumnSQLSyntaxProvider[SQLSyntaxSupport[A], A]
+  type ResultName[A] = ResultNameSQLSyntaxProvider[SQLSyntaxSupport[A], A]
+  type SubQueryResultName = SubQueryResultNameSQLSyntaxProvider
+  type SyntaxProvider[A] = QuerySQLSyntaxProvider[SQLSyntaxSupport[A], A]
+  type SubQuerySyntaxProvider = SubQuerySQLSyntaxProvider
 
   /**
    * Loaded columns for tables.
@@ -44,10 +56,6 @@ object SQLSyntaxSupportFeature extends LogSupport {
 
 }
 
-/**
- * SQLSyntaxSupport feature
- */
-trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
 
   object SQLSyntaxSupport {
 
@@ -92,7 +100,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    *   object Member extends SQLSyntaxSupport[Member]
    * }}}
    */
-  trait SQLSyntaxSupport[A] {
+  trait SQLSyntaxSupport[A]{
 
     protected[this] def settings: SettingsProvider =
       SettingsProvider.default
@@ -281,8 +289,11 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
   /**
    * SQLSyntax Provider
    */
-  trait SQLSyntaxProvider[A] extends Dynamic {
+  trait SQLSyntaxProvider[A] extends Dynamic with SelectDynamicMacro {
     import SQLSyntaxProvider._
+
+    inline def selectDynamic(name: String): SQLSyntax =
+      ${ scalikejdbc.SQLInterpolationMacro.selectDynamicImpl('{name}, '{this}, '[A]) }
 
     /**
      * Rule to convert field names to column names.
@@ -317,18 +328,13 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
     /**
      * Returns [[scalikejdbc.interpolation.SQLSyntax]] value for the column which is referred by the field.
      */
-    def field(name: String): SQLSyntax = {
+    def field(name: String): scalikejdbc.interpolation.SQLSyntax = {
       val columnName = {
         if (forceUpperCase) toColumnName(name, nameConverters, useSnakeCaseColumnName).toUpperCase(en)
         else toColumnName(name, nameConverters, useSnakeCaseColumnName)
       }
       c(columnName)
     }
-
-    /**
-     * Returns [[scalikejdbc.interpolation.SQLSyntax]] value for the column which is referred by the field.
-     */
-    def selectDynamic(name: String): SQLSyntax = macro scalikejdbc.SQLInterpolationMacro.selectDynamic[A]
 
   }
 
@@ -885,15 +891,5 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
 
   }
 
-  // ---------------------------------
-  // Type aliases for this trait elements
-  // ---------------------------------
-
-  type ColumnName[A] = ColumnSQLSyntaxProvider[SQLSyntaxSupport[A], A]
-  type ResultName[A] = ResultNameSQLSyntaxProvider[SQLSyntaxSupport[A], A]
-  type SubQueryResultName = SubQueryResultNameSQLSyntaxProvider
-  type SyntaxProvider[A] = QuerySQLSyntaxProvider[SQLSyntaxSupport[A], A]
-  type SubQuerySyntaxProvider = SubQuerySQLSyntaxProvider
-
-}
-
+@deprecated("will be removed", "4.0.0")
+trait SQLSyntaxSupportFeature
