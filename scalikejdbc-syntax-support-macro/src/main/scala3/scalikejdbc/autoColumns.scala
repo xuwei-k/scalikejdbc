@@ -4,34 +4,41 @@ import scala.quoted._
 
 object autoColumns {
 
-  def apply_impl[A](excludes: Expr[String]*)(implicit qctx: QuoteContext, tpe: Type[A]): Expr[Seq[String]] = {
+  def apply_impl[A](
+    nameConverters: Expr[Map[String, String]],
+    useSnakeCase: Expr[Boolean],
+    excludes: Expr[String]*
+  )(implicit qctx: QuoteContext, tpe: Type[A]): Expr[Seq[String]] = {
     import qctx.tasty._
     
-    val nameConverters: Symbol = rootContext.owner.field("nameConverters")
+//    val nameConverters: Symbol = rootContext.owner.field("nameConverters")
     val columns = EntityUtil.constructorParams[A]("autoColumns", excludes: _*).map { field =>
-     '{
+      '{
         scalikejdbc.autoColumns.camelToSnake(
           field.name,
-          ${nameConverters.tree}.cast[Map[String, String]],
-          ${Ident(bb).seal.cast[Boolean]},
+          $nameConverters,
+          $useSnakeCase,
         ) 
       }
     }
-    columns
+    sequence(columns)
   }
 
+  private def sequence[X: Type](xs: Seq[Expr[X]])(using quoteContext: QuoteContext): Expr[Seq[X]] = {
+    xs match {
+      case h +: t  =>
+        '{ $h +: ${ sequence(t) }  }
+      case _ =>
+        '{ Seq.empty[X] }
+    }
+  }
+  
+  
   def camelToSnake(fieldName: String, nameConverters: Map[String, String], useSnakeCase: Boolean): String = {
     SQLSyntaxProvider.toColumnName(fieldName, nameConverters, useSnakeCase)
   }
 
-  def debug_impl[A](excludes: Expr[String]*)(using qctx: QuoteContext, tpe: Type[A]): Expr[Seq[String]] = {
-    val expr = apply_impl[A](excludes: _*)
-    println(expr.show)
-    expr
-  }
-
-  inline def apply[A](inline excludes: String*): collection.Seq[String] = '{ autoColumns.apply_impl[A] }
-
-  inline def debug[A](inline excludes: String*): collection.Seq[String] = '{ autoColumns.debug_impl[A] }
+//  inline def apply[A](excludes: String*): collection.Seq[String] =
+ //   ${ autoColumns.apply_impl[A](nameConverters, useSnakeCase, '{excludes}) }
 
 }
