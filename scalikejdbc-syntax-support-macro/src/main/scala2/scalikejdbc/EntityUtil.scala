@@ -4,7 +4,7 @@ import scala.reflect.macros.blackbox.Context
 
 private[scalikejdbc] object EntityUtil {
 
-  private[scalikejdbc] def constructorParams[A: c.WeakTypeTag](c: Context)(macroName: String, excludes: c.Expr[String]*) = {
+  private[scalikejdbc] def constructorParams[A: c.WeakTypeTag](c: Context)(macroName: String, excludes: c.Expr[String]*): Set[String] = {
     import c.universe._
     val A = weakTypeTag[A].tpe
     val declarations = A.decls

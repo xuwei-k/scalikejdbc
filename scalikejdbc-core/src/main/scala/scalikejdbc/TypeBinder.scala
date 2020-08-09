@@ -28,7 +28,7 @@ object TypeBinder extends LowPriorityTypeBinderImplicits {
    *   TypeBinder.of[Long]
    * }}}
    */
-  @inline def of[A](implicit a: TypeBinder[A]): TypeBinder[A] = a
+  @`inline` def of[A](implicit a: TypeBinder[A]): TypeBinder[A] = a
 
   def apply[A](index: (ResultSet, Int) => A)(label: (ResultSet, String) => A): TypeBinder[A] = new TypeBinder[A] {
     def apply(rs: ResultSet, columnIndex: Int): A = index(rs, columnIndex)
