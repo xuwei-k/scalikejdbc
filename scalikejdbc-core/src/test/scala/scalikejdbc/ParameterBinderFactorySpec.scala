@@ -7,6 +7,18 @@ import scalikejdbc.JavaUtilDateConverterImplicits._
 import scalikejdbc.interpolation.SQLSyntax
 import org.scalatest.flatspec.AnyFlatSpec
 
+sealed trait EnumLike
+object EnumLike {
+
+  case object Foo extends EnumLike
+  case object Bar extends EnumLike
+
+  implicit def FooEnumParameterBinderFactory[A <: EnumLike]: ParameterBinderFactory[A] = {
+    ParameterBinderFactory.stringParameterBinderFactory.contramap(_.toString)
+  }
+
+}
+
 class ParameterBinderFactorySpec extends AnyFlatSpec with MockitoSugar {
 
   behavior of "ParameterBinderFactory"
@@ -300,14 +312,6 @@ class ParameterBinderFactorySpec extends AnyFlatSpec with MockitoSugar {
     verify(stmt).setObject(1, null)
   }
 
-  it should "have instance for None.type" in {
-    val stmt = mock[PreparedStatement]
-    implicitly[ParameterBinderFactory[None.type]].apply(None)(stmt, 1)
-    implicitly[ParameterBinderFactory[None.type]].apply(null)(stmt, 2)
-    verify(stmt).setObject(1, null)
-    verify(stmt).setObject(2, null)
-  }
-
   it should "have instance for SQLSyntax" in {
     val stmt = mock[PreparedStatement]
     implicitly[ParameterBinderFactory[SQLSyntax]].apply(SQLSyntax.empty)(stmt, 1)
@@ -345,14 +349,3 @@ class ParameterBinderFactorySpec extends AnyFlatSpec with MockitoSugar {
   }
 }
 
-sealed trait EnumLike
-object EnumLike {
-
-  case object Foo extends EnumLike
-  case object Bar extends EnumLike
-
-  implicit def FooEnumParameterBinderFactory[A <: EnumLike]: ParameterBinderFactory[A] = {
-    ParameterBinderFactory.stringParameterBinderFactory.contramap(_.toString)
-  }
-
-}

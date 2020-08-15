@@ -692,52 +692,52 @@ class RelationalSQLSpec extends AnyFlatSpec with Matchers with BeforeAndAfter wi
 
   it should "execute one-to-manies5 queries" in {
     val suffix = "_onetomanies5_" + System.currentTimeMillis()
+    DB autoCommit {
+      implicit s =>
+
+        SQL("create table groups_" + suffix + " (id int not null, owner_id int not null)").execute.apply()
+        SQL("create table owners_" + suffix + " (id int not null)").execute.apply()
+        SQL("create table events_" + suffix + " (id int not null, group_id int not null)").execute.apply()
+        SQL("create table news_" + suffix + " (id int not null, group_id int not null)").execute.apply()
+        SQL("create table members_" + suffix + " (id int not null, group_id int not null)").execute.apply()
+        SQL("create table sponsors_" + suffix + " (id int not null, group_id int not null)").execute.apply()
+
+        SQL("insert into groups_" + suffix + " values (1, 2)").update.apply()
+        SQL("insert into groups_" + suffix + " values (2, 2)").update.apply()
+        SQL("insert into groups_" + suffix + " values (3, 1)").update.apply()
+        SQL("insert into groups_" + suffix + " values (4, 2)").update.apply()
+
+        SQL("insert into owners_" + suffix + " values (1)").update.apply()
+        SQL("insert into owners_" + suffix + " values (2)").update.apply()
+
+        SQL("insert into events_" + suffix + " values (1, 2)").update.apply()
+        SQL("insert into events_" + suffix + " values (2, 1)").update.apply()
+        SQL("insert into events_" + suffix + " values (3, 1)").update.apply()
+
+        SQL("insert into news_" + suffix + " values (1, 2)").update.apply()
+        SQL("insert into news_" + suffix + " values (2, 1)").update.apply()
+        SQL("insert into news_" + suffix + " values (3, 2)").update.apply()
+        SQL("insert into news_" + suffix + " values (4, 2)").update.apply()
+        SQL("insert into news_" + suffix + " values (5, 3)").update.apply()
+        SQL("insert into news_" + suffix + " values (6, 2)").update.apply()
+        SQL("insert into news_" + suffix + " values (7, 1)").update.apply()
+        SQL("insert into news_" + suffix + " values (8, 1)").update.apply()
+
+        SQL("insert into members_" + suffix + " values (1, 2)").update.apply()
+        SQL("insert into members_" + suffix + " values (2, 1)").update.apply()
+        SQL("insert into members_" + suffix + " values (3, 1)").update.apply()
+        SQL("insert into members_" + suffix + " values (4, 2)").update.apply()
+        SQL("insert into members_" + suffix + " values (5, 1)").update.apply()
+
+        SQL("insert into sponsors_" + suffix + " values (1, 1)").update.apply()
+        SQL("insert into sponsors_" + suffix + " values (2, 2)").update.apply()
+        SQL("insert into sponsors_" + suffix + " values (3, 3)").update.apply()
+        SQL("insert into sponsors_" + suffix + " values (4, 2)").update.apply()
+        SQL("insert into sponsors_" + suffix + " values (5, 3)").update.apply()
+    }
+
     try {
-      DB autoCommit {
-        implicit s =>
-
-          SQL("create table groups_" + suffix + " (id int not null, owner_id int not null)").execute.apply()
-          SQL("create table owners_" + suffix + " (id int not null)").execute.apply()
-          SQL("create table events_" + suffix + " (id int not null, group_id int not null)").execute.apply()
-          SQL("create table news_" + suffix + " (id int not null, group_id int not null)").execute.apply()
-          SQL("create table members_" + suffix + " (id int not null, group_id int not null)").execute.apply()
-          SQL("create table sponsors_" + suffix + " (id int not null, group_id int not null)").execute.apply()
-
-          SQL("insert into groups_" + suffix + " values (1, 2)").update.apply()
-          SQL("insert into groups_" + suffix + " values (2, 2)").update.apply()
-          SQL("insert into groups_" + suffix + " values (3, 1)").update.apply()
-          SQL("insert into groups_" + suffix + " values (4, 2)").update.apply()
-
-          SQL("insert into owners_" + suffix + " values (1)").update.apply()
-          SQL("insert into owners_" + suffix + " values (2)").update.apply()
-
-          SQL("insert into events_" + suffix + " values (1, 2)").update.apply()
-          SQL("insert into events_" + suffix + " values (2, 1)").update.apply()
-          SQL("insert into events_" + suffix + " values (3, 1)").update.apply()
-
-          SQL("insert into news_" + suffix + " values (1, 2)").update.apply()
-          SQL("insert into news_" + suffix + " values (2, 1)").update.apply()
-          SQL("insert into news_" + suffix + " values (3, 2)").update.apply()
-          SQL("insert into news_" + suffix + " values (4, 2)").update.apply()
-          SQL("insert into news_" + suffix + " values (5, 3)").update.apply()
-          SQL("insert into news_" + suffix + " values (6, 2)").update.apply()
-          SQL("insert into news_" + suffix + " values (7, 1)").update.apply()
-          SQL("insert into news_" + suffix + " values (8, 1)").update.apply()
-
-          SQL("insert into members_" + suffix + " values (1, 2)").update.apply()
-          SQL("insert into members_" + suffix + " values (2, 1)").update.apply()
-          SQL("insert into members_" + suffix + " values (3, 1)").update.apply()
-          SQL("insert into members_" + suffix + " values (4, 2)").update.apply()
-          SQL("insert into members_" + suffix + " values (5, 1)").update.apply()
-
-          SQL("insert into sponsors_" + suffix + " values (1, 1)").update.apply()
-          SQL("insert into sponsors_" + suffix + " values (2, 2)").update.apply()
-          SQL("insert into sponsors_" + suffix + " values (3, 3)").update.apply()
-          SQL("insert into sponsors_" + suffix + " values (4, 2)").update.apply()
-          SQL("insert into sponsors_" + suffix + " values (5, 3)").update.apply()
-      }
-
-      implicit val session = ReadOnlyAutoSession
+      implicit val session: DBSession = ReadOnlyAutoSession
 
       case class GroupEntity(id: Int, ownerId: Int)
       case class Group(id: Int, ownerId: Int, owner: Owner,
