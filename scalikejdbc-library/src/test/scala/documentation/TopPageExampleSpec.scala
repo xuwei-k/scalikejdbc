@@ -34,11 +34,11 @@ create table members (
   name varchar(64),
   created_at timestamp not null
 )
-""".execute().apply()
+""".execute.apply()
 
     // insert initial data
     Seq("Alice", "Bob", "Chris") foreach { name =>
-      sql"insert into members (name, created_at) values (${name}, current_timestamp)".update().apply()
+      sql"insert into members (name, created_at) values (${name}, current_timestamp)".update.apply()
     }
 
     // for now, retrieves all data as Map value
