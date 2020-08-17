@@ -15,7 +15,7 @@ case object ReadOnlyAutoSession extends DBSession {
   override def tags(tags: String*): this.type = unexpectedInvocation
   override def queryTimeout(seconds: Int): this.type = unexpectedInvocation
   override def queryTimeout(seconds: Option[Int]): this.type = unexpectedInvocation
-  override private[scalikejdbc] lazy val connectionAttributes: DBConnectionAttributes = unexpectedInvocation
+  override private[scalikejdbc] def connectionAttributes: DBConnectionAttributes = unexpectedInvocation
 
   override protected[scalikejdbc] def settings = SettingsProvider.default
 }

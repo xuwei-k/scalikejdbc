@@ -22,7 +22,7 @@ trait Implicits {
    *   sql"select * from members ${whereClause}"
    * }}}
    */
-  @inline implicit def scalikejdbcSQLInterpolationImplicitDef(s: StringContext): SQLInterpolationString = new SQLInterpolationString(s)
+  @`inline` implicit def scalikejdbcSQLInterpolationImplicitDef(s: StringContext): SQLInterpolationString = new SQLInterpolationString(s)
 
   /**
    * Returns String value when String type is expected for [[scalikejdbc.WrappedResultSet]].
@@ -32,7 +32,7 @@ trait Implicits {
    *   rs.string(c.name)
    * }}}
    */
-  @inline implicit def scalikejdbcSQLSyntaxToStringImplicitDef(syntax: scalikejdbc.interpolation.SQLSyntax): String = syntax.value
+  @`inline` implicit def scalikejdbcSQLSyntaxToStringImplicitDef(syntax: scalikejdbc.interpolation.SQLSyntax): String = syntax.value
 
 }
 

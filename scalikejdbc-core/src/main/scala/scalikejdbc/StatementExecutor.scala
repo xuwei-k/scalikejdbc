@@ -5,6 +5,7 @@ import java.sql.PreparedStatement
 import org.slf4j.LoggerFactory
 
 import scala.language.reflectiveCalls
+import scala.reflect.Selectable.reflectiveSelectable
 import scala.util.control.NonFatal
 import JavaUtilDateConverterImplicits._
 

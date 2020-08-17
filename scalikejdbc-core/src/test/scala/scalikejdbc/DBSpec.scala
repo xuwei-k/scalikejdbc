@@ -171,7 +171,7 @@ class DBSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings
       count should equal(1)
       val name = (DB.autoCommit {
         _.single("select name from " + tableName + " where id = ?", 1)(rs => rs.string("name"))
-      }).get
+      }).asInstanceOf[Option[String]].get // TODO dotty bug?
       name should equal("foo")
     }
   }
@@ -182,7 +182,7 @@ class DBSpec extends AnyFlatSpec with Matchers with BeforeAndAfter with Settings
       TestUtils.initialize(tableName)
       val name = (DB.readOnly {
         _.single("select name from " + tableName + " where id = ?", 1)(_.string("name"))
-      }).get
+      }).asInstanceOf[Option[String]].get // TODO dotty bug?
       name should equal("name1")
       val count = DB.autoCommit {
         _.update("update " + tableName + " set name = ? where id = ?", "foo", 1)

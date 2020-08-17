@@ -220,7 +220,7 @@ class DB_SessionOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAf
       count should equal(1)
       val name = (DB autoCommit {
         _.single("select name from " + tableName + " where id = ?", 1)(rs => rs.string("name"))
-      }).get
+      }).asInstanceOf[Option[String]].get // TODO dotty bug?
       name should equal("foo")
     }
   }
@@ -231,7 +231,7 @@ class DB_SessionOperationSpec extends AnyFlatSpec with Matchers with BeforeAndAf
       TestUtils.initialize(tableName)
       val name = (DB readOnly {
         _.single("select name from " + tableName + " where id = ?", 1)(_.string("name"))
-      }).get
+      }).asInstanceOf[Option[String]].get // TODO dotty bug?
       name should equal("name1")
       val count = DB autoCommit {
         _.update("update " + tableName + " set name = ? where id = ?", "foo", 1)
