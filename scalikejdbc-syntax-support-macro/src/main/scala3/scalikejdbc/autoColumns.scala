@@ -15,7 +15,7 @@ object autoColumns {
      */
 //    EntityUtil.summonLabels[A1.MirroredElemLabels]
     val excludeSet = excludes.toSet
-    constValueTuple[A1.MirroredElemLabels].toList.asInstanceOf[List[String]].filterNot(excludeSet).map{ field =>
+    EntityUtil.cast(constValueTuple[A1.MirroredElemLabels].toList).filterNot(excludeSet).map{ field =>
       SQLSyntaxProvider.toColumnName(field, companion.nameConverters, companion.useSnakeCaseColumnName)
     }
   }

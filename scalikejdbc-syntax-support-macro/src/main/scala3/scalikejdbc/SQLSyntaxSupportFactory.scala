@@ -34,7 +34,7 @@ object SQLSyntaxSupportFactory {
       def apply(rn: ResultName[A])(rs: WrappedResultSet): A = {
         val values = labels.zip(typeBinders).map{
           (label, typeBinder) =>
-            rs.get[AnyRef](rn.field(label))(typeBinder.asInstanceOf[TypeBinder[AnyRef]])
+            rs.get[AnyRef](rn.field(label))(EntityUtil.cast(typeBinder))
         }
         A.fromProduct(new ArrayProduct(values.toArray))
       }

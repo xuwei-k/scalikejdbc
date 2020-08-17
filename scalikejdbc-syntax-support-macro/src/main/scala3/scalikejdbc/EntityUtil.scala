@@ -4,6 +4,7 @@ import scala.quoted._
 import scala.compiletime.{constValue, erasedValue, summonFrom}
 
 object EntityUtil {
+  inline def cast[F[_], A, B](a: F[A]): F[B] = a.asInstanceOf[F[B]]
 
   inline def summonLabels[T <: Tuple]: Array[String] =
     summonLabelsRec[T].toArray

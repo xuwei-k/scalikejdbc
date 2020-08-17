@@ -33,12 +33,12 @@ object autoNamedValues {
   )(using inline E: Mirror.ProductOf[E]): Map[SQLSyntax, ParameterBinder] = {
     val excludesSet = excludes.toSet
     val xxx = constValue[E.MirroredLabel]
-    val labels: List[String] = constValueTuple[E.MirroredElemLabels].toList.asInstanceOf[List[String]].filterNot(excludes.toSet)
+    val labels: List[String] = EntityUtil.cast(constValueTuple[E.MirroredElemLabels].toList).filterNot(excludes.toSet)
     val parameterBinderFactories = summonParameterBinderFactoryRec[E.MirroredElemTypes]
     labels.zip(parameterBinderFactories).map{ case (label, f) =>
       Tuple2(
         column.field(label),
-        f.asInstanceOf[ParameterBinderFactory[Any]].apply(
+        EntityUtil.cast(f).apply(
           entity.selectDynamic(label).asInstanceOf[Any]
         )
       )

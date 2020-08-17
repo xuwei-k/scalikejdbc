@@ -13,12 +13,12 @@ object autoConstruct {
 
   inline def applyImpl[A](rs: WrappedResultSet, rn: ResultName[A], inline excludes: String*)(using inline A: Mirror.ProductOf[A]): A = {
     // TODO exclude
-    val labels = constValueTuple[A.MirroredElemLabels].toArray.asInstanceOf[Array[String]]
+    val labels: Array[String] = EntityUtil.cast(constValueTuple[A.MirroredElemLabels].toArray)
     val binders = EntityUtil.summonTypeBinders[A.MirroredElemTypes].toArray
     val values = labels.zip(binders).map{
-        case (label, t) =>
-          rs.get[AnyRef](rn.field(label))(t.asInstanceOf[TypeBinder[AnyRef]])
-      }
+      case (label, t) =>
+        rs.get[AnyRef](rn.field(label))(EntityUtil.cast(t))
+    }
 
     A.fromProduct(new ArrayProduct(values))
   }
