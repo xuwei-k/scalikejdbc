@@ -1,6 +1,6 @@
 package scalikejdbc
 
-import scala.compiletime.{constValue, constValueTuple, erasedValue, summonFrom, summonInline}
+import scala.compiletime.{constValue, erasedValue, summonFrom, summonInline}
 import scala.deriving._
 
 object autoConstruct {
@@ -13,7 +13,7 @@ object autoConstruct {
 
   inline def applyImpl[A](rs: WrappedResultSet, rn: ResultName[A], inline excludes: String*)(using inline A: Mirror.ProductOf[A]): A = {
     // TODO exclude
-    val labels: Array[String] = EntityUtil.cast(constValueTuple[A.MirroredElemLabels].toArray)
+    val labels: Array[String] = EntityUtil.summonLabels[A.MirroredElemLabels].toArray
     val binders = EntityUtil.summonTypeBinders[A.MirroredElemTypes].toArray
     val values = labels.zip(binders).map{
       case (label, t) =>
