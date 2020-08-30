@@ -93,6 +93,8 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    * }}}
    */
   trait SQLSyntaxSupport[A] {
+    
+    implicit val selfInstance: SQLSyntaxSupport[A] = this
 
     protected[this] def settings: SettingsProvider =
       SettingsProvider.default
@@ -281,8 +283,11 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
   /**
    * SQLSyntax Provider
    */
-  trait SQLSyntaxProvider[A] extends Dynamic {
+  trait SQLSyntaxProvider[A] extends Dynamic with SelectDynamicMacro {
     import SQLSyntaxProvider._
+
+    inline def selectDynamic(name: String): SQLSyntax =
+      ${ scalikejdbc.SQLInterpolationMacro.selectDynamicImpl('{name}, '{this}) }
 
     /**
      * Rule to convert field names to column names.
@@ -317,18 +322,13 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
     /**
      * Returns [[scalikejdbc.interpolation.SQLSyntax]] value for the column which is referred by the field.
      */
-    def field(name: String): SQLSyntax = {
+    def field(name: String): scalikejdbc.interpolation.SQLSyntax = {
       val columnName = {
         if (forceUpperCase) toColumnName(name, nameConverters, useSnakeCaseColumnName).toUpperCase(en)
         else toColumnName(name, nameConverters, useSnakeCaseColumnName)
       }
       c(columnName)
     }
-
-    /**
-     * Returns [[scalikejdbc.interpolation.SQLSyntax]] value for the column which is referred by the field.
-     */
-    def selectDynamic(name: String): SQLSyntax = macro scalikejdbc.SQLInterpolationMacro.selectDynamic[A]
 
   }
 
