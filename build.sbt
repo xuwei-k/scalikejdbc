@@ -1,5 +1,7 @@
 import MimaSettings.mimaSettings
 
+ThisBuild / useSuperShell := false
+
 lazy val _version = "4.0.0-SNAPSHOT"
 val dottySetting = {
   val groupIds = Set(
@@ -47,6 +49,7 @@ def gitHash: String = try {
 lazy val baseSettings = Def.settings(
   organization := _organization,
   version := _version,
+  scalaVersion := "0.27.0-RC1",
   publishTo := _publishTo(version.value),
   publishMavenStyle := true,
   resolvers ++= _resolvers,
@@ -277,6 +280,7 @@ lazy val scalikejdbcMapperGeneratorCore = Project(
 ).dependsOn(scalikejdbcLibrary)
 
 // mapper-generator sbt plugin
+/*
 lazy val scalikejdbcMapperGenerator = Project(
   id = "mapper-generator",
   base = file("scalikejdbc-mapper-generator")
@@ -312,6 +316,7 @@ lazy val scalikejdbcMapperGenerator = Project(
   },
   dottySetting
 ).dependsOn(scalikejdbcCore, scalikejdbcMapperGeneratorCore).enablePlugins(SbtPlugin)
+*/
 
 // scalikejdbc-test
 lazy val scalikejdbcTest = Project(

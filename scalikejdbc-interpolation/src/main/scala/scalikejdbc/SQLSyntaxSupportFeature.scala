@@ -94,6 +94,8 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    */
   trait SQLSyntaxSupport[A] {
 
+    implicit val selfInstance: SQLSyntaxSupport[A] = this
+
     protected[this] def settings: SettingsProvider =
       SettingsProvider.default
 
@@ -317,7 +319,7 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
     /**
      * Returns [[scalikejdbc.interpolation.SQLSyntax]] value for the column which is referred by the field.
      */
-    def field(name: String): SQLSyntax = {
+    def field(name: String): scalikejdbc.interpolation.SQLSyntax = {
       val columnName = {
         if (forceUpperCase) toColumnName(name, nameConverters, useSnakeCaseColumnName).toUpperCase(en)
         else toColumnName(name, nameConverters, useSnakeCaseColumnName)

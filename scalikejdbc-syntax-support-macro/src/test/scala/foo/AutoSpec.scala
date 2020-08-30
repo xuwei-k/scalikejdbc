@@ -9,15 +9,15 @@ class AutoSpec extends AnyFlatSpec with Matchers with DBSettings {
   case class Issue(id: Long, firstName: String, groupId: Long)
   val IssueTable = SQLSyntaxSupportFactory[Issue]()
 
-  class Organization(val id: Long, val websiteUrl: String)
+  case class Organization(id: Long, websiteUrl: String)
   object Organization extends SQLSyntaxSupport[Organization] {
-    def apply(s: SyntaxProvider[Organization])(rs: WrappedResultSet): Organization = autoConstruct(rs, s)
-    def apply(r: ResultName[Organization])(rs: WrappedResultSet): Organization = autoConstruct(rs, r)
+    def apply(s: SyntaxProvider[Organization])(rs: WrappedResultSet): Organization = autoConstruct[Organization](rs, s)
+    def apply(r: ResultName[Organization])(rs: WrappedResultSet): Organization = autoConstruct[Organization](rs, r)
   }
 
   case class Person(id: Long, name: String, organizationId: Option[Long], organization: Option[Organization] = None, groupId: Long = 0)
   object Person extends SQLSyntaxSupport[Person] {
-    def apply(s: SyntaxProvider[Person])(rs: WrappedResultSet): Person = autoConstruct(rs, s, "organization")
+    def apply(s: SyntaxProvider[Person])(rs: WrappedResultSet): Person = autoConstruct[Person](rs, s, "organization")
     override lazy val columns = autoColumns[Person]("organization")
   }
 
@@ -69,6 +69,10 @@ class AutoSpec extends AnyFlatSpec with Matchers with DBSettings {
         val p1 = withSQL { select.from(Person as p).leftJoin(Organization as o).on(p.organizationId, o.id).where.eq(p.id, 1) }.map(Person(p)).single.apply()
         p1.flatMap(_.organizationId) should equal(Some(1L))
 
+      } catch {
+        case e =>
+          e.printStackTrace()
+          throw e
       } finally {
         try sql"drop table issue".execute.apply() catch { case ignore: Exception => }
         try sql"drop table organization".execute.apply() catch { case ignore: Exception => }
