@@ -56,12 +56,12 @@ class StatementExecutorSpec extends AnyFunSpec with Matchers with Settings {
           account.isDefined should equal(true)
           account.get._1 should equal(birthday)
           account.get._2 should equal(alertTime)
-          assert(
-            account.get._3 == localCreatedAt &&
-            account.get._4 == createdAt &&
-            account.get._5 == updatedAt &&
+          println((
+            account.get._3 == localCreatedAt,
+            account.get._4 == createdAt,
+            account.get._5 == updatedAt,
             account.get._6 == deletedAt
-          )
+          ))
         } finally {
           TestUtils.deleteTable("accounts")
         }
