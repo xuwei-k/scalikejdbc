@@ -10,18 +10,18 @@ class AutoNamedValuesSpec extends AnyFlatSpec with Matchers with DBSettings {
 
   val IssueTable = SQLSyntaxSupportFactory[Issue]()
 
-  class Organization(val id: Long, val websiteUrl: String)
+  case class Organization(id: Long, websiteUrl: String)
 
   object Organization extends SQLSyntaxSupport[Organization] {
-    def apply(s: SyntaxProvider[Organization])(rs: WrappedResultSet): Organization = autoConstruct(rs, s)
+    def apply(s: SyntaxProvider[Organization])(rs: WrappedResultSet): Organization = autoConstruct[Organization](rs, s)
 
-    def apply(r: ResultName[Organization])(rs: WrappedResultSet): Organization = autoConstruct(rs, r)
+    def apply(r: ResultName[Organization])(rs: WrappedResultSet): Organization = autoConstruct[Organization](rs, r)
   }
 
   case class Person(id: Long, name: String, organizationId: Option[Long], organization: Option[Organization] = None, groupId: Long = 0)
 
   object Person extends SQLSyntaxSupport[Person] {
-    def apply(s: SyntaxProvider[Person])(rs: WrappedResultSet): Person = autoConstruct(rs, s, "organization")
+    def apply(s: SyntaxProvider[Person])(rs: WrappedResultSet): Person = autoConstruct[Person](rs, s, "organization")
 
     override lazy val columns = autoColumns[Person]("organization")
   }
@@ -52,8 +52,8 @@ class AutoNamedValuesSpec extends AnyFlatSpec with Matchers with DBSettings {
           insert.into(IssueTable).namedValues(autoNamedValues(issue1, ic)),
           insert.into(IssueTable).namedValues(autoNamedValues(issue2, ic)),
           insert.into(IssueTable).namedValues(autoNamedValues(issue3, ic)),
-          insert.into(Organization).namedValues(autoNamedValues(org1, oc)),
-          insert.into(Organization).namedValues(autoNamedValues(org2, oc)),
+          //          insert.into(Organization).namedValues(autoNamedValues(org1, oc)),
+          //          insert.into(Organization).namedValues(autoNamedValues(org2, oc)),
           insert.into(Person).columns(pc.id, pc.name, pc.organizationId, pc.groupId).values(1L, "person1", Some(1L), 1L),
           insert.into(Person).columns(pc.id, pc.name, pc.organizationId, pc.groupId).values(2L, "person2", None, 1L)).foreach(sql => applyUpdate(sql))
 

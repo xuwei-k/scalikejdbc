@@ -94,6 +94,8 @@ trait SQLSyntaxSupportFeature { self: SQLInterpolationFeature =>
    */
   trait SQLSyntaxSupport[A] {
 
+    implicit val selfInstance: SQLSyntaxSupport[A] = this
+
     protected[this] def settings: SettingsProvider =
       SettingsProvider.default
 

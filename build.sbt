@@ -53,6 +53,7 @@ def gitHash: String = try {
 lazy val baseSettings = Def.settings(
   organization := _organization,
   publishTo := sonatypePublishToBundle.value,
+  scalaVersion := Scala3,
   publishMavenStyle := true,
   Seq(Compile, Test).map { x =>
     (x / unmanagedSourceDirectories) += {
