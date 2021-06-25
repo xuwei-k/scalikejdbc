@@ -1,5 +1,4 @@
 val excludeTests = Set(
-  "scalikejdbc.specs2.mutable.AutoRollbackSpec",
   "scalikejdbc.TxBoundaryMissingImplicitsSpec",
 )
 

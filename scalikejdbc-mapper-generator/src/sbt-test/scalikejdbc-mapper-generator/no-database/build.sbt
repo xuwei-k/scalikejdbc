@@ -8,14 +8,6 @@ crossScalaVersions := List("2.13.6", "2.12.14", "3.0.1-RC2")
 
 scalacOptions ++= Seq("-Xlint", "-language:higherKinds,implicitConversions,postfixOps", "-deprecation", "-unchecked")
 
-scalacOptions ++= {
-  if (scalaBinaryVersion.value == "3") {
-    Seq("-Xignore-scala2-macros")
-  } else {
-    Nil
-  }
-}
-
 libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc" % scalikejdbcVersion,
   "org.scalikejdbc" %% "scalikejdbc-joda-time" % scalikejdbcVersion,

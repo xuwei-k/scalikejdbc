@@ -63,7 +63,13 @@ lazy val baseSettings = Def.settings(
   fullResolvers ~= { _.filterNot(_.name == "jcenter") },
   Global / transitiveClassifiers := Seq(Artifact.SourceClassifier),
   scalatestVersion := "3.2.9",
-  specs2Version := "4.12.1",
+  specs2Version := {
+    if (scalaBinaryVersion.value == "3") {
+      "SPECS2-5.0.0-RC0"
+    } else {
+      "4.12.1"
+    }
+  },
   parserCombinatorsVersion := "2.0.0",
   collectionCompatVersion := "2.4.4",
   javacOptions ++= Seq(
@@ -326,19 +332,12 @@ lazy val scalikejdbcTest = Project(
   baseSettings,
   mimaSettings,
   name := "scalikejdbc-test",
-  Test / scalacOptions ++= {
-    if (isScala3.value) {
-      Seq("-Xignore-scala2-macros")
-    } else {
-      Nil
-    }
-  },
   libraryDependencies ++= {
     Seq(
       "org.slf4j" % "slf4j-api" % _slf4jApiVersion % "compile",
       "ch.qos.logback" % "logback-classic" % _logbackVersion % "test",
       "org.scalatest" %% "scalatest-core" % scalatestVersion.value % "provided",
-      "org.specs2" %% "specs2-core" % specs2Version.value % "provided" cross CrossVersion.for3Use2_13
+      "org.specs2" %% "specs2-core" % specs2Version.value % "provided"
     ) ++ jdbcDriverDependenciesInTestScope ++ scalaTestDependenciesInTestScope.value
   },
   libraryDependencies := {
