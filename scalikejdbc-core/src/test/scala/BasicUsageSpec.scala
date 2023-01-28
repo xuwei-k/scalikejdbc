@@ -19,7 +19,7 @@ class BasicUsageSpec extends AnyFlatSpec with Matchers with LoanPattern {
   )
   // loading JDBC driver
   val driverClassName = props.getProperty("driverClassName")
-  Class.forName(driverClassName)
+        Class.forName(driverClassName)
   // preparing the connection pool settings
   val poolSettings =
     new ConnectionPoolSettings(initialSize = 100, maxSize = 100)

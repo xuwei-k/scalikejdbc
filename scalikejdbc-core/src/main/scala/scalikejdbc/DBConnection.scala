@@ -2,7 +2,7 @@ package scalikejdbc
 
 import java.sql.{ DatabaseMetaData, Connection, ResultSet }
 import scalikejdbc.metadata._
-import scala.collection.compat._
+   import scala.collection.compat._
 import scala.collection.compat.immutable.LazyList
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.control.Exception._
@@ -12,7 +12,7 @@ import java.util.Locale.{ ENGLISH => en }
 /**
  * Basic Database Accessor which holds a JDBC connection.
  */
-trait DBConnection extends LogSupport with LoanPattern with AutoCloseable {
+trait DBConnection extends LogSupport with LoanPattern with AutoCloseable    {
 
   protected[this] val settingsProvider: SettingsProvider
   private[this] lazy val jtaDataSourceCompatible: Boolean =

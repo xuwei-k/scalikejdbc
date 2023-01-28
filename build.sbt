@@ -9,7 +9,7 @@ def Scala213 = "2.13.10"
 ThisBuild / version := "4.1.0-SNAPSHOT"
 
 val isScala3 = Def.setting(
-  CrossVersion.partialVersion(scalaVersion.value).exists(_._1 == 3)
+          CrossVersion.partialVersion(scalaVersion.value).exists(_._1 == 3)
 )
 
 lazy val _organization = "org.scalikejdbc"
