@@ -205,12 +205,13 @@ class StatementExecutorSpec
   }
 
   it should "get stackTraceInformation" in {
+    val loggingSQLAndTime = LoggingSQLAndTimeSettings()
     val executor = StatementExecutor(
       underlying = mock[PreparedStatement],
       template = "",
       connectionAttributes = DBConnectionAttributes(),
       settingsProvider = SettingsProvider.default.copy(
-        loggingSQLAndTime = Function.const(LoggingSQLAndTimeSettings())
+        loggingSQLAndTime = Function.const(loggingSQLAndTime)
       )
     )
     val Some(method) =
@@ -221,8 +222,16 @@ class StatementExecutorSpec
           (m.getParameterCount == 0) &&
           !Modifier.isStatic(m.getModifiers)
         }
+    val start = System.currentTimeMillis()
     val stackTraceInfo = method.invoke(executor).asInstanceOf[String]
+    println(
+      s"javaVersion = ${scala.util.Properties.javaVersion} time = ${System.currentTimeMillis() - start}"
+    )
+    println(stackTraceInfo)
     assert(stackTraceInfo.contains("  [Stack Trace]"))
+    assert(
+      stackTraceInfo.linesIterator.size == (loggingSQLAndTime.stackTraceDepth + 3)
+    )
   }
 
   object Foo {

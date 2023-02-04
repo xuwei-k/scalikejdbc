@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory
 import scala.collection.compat._
 import scala.language.reflectiveCalls
 import scala.util.control.NonFatal
-import JavaUtilDateConverterImplicits._
+import JavaUtilDateConverterImplicits.*
+
+import java.lang.invoke.{ MethodHandle, MethodHandles, MethodType }
 
 /**
  * Companion object.
@@ -165,6 +167,94 @@ object StatementExecutor {
     }
   }
 
+  private case class MethodHandleValues(
+    stackWalkerGetInstance: MethodHandle,
+    stackWalkerWalk: MethodHandle,
+    stackFrameGetClassName: MethodHandle,
+    stackFrameToStackTraceElement: MethodHandle,
+  )
+
+  private object MethodHandleValues {
+    private[this] def getVirtualMethodHandle(
+      className: String,
+      methodName: String,
+    ): MethodHandle = {
+      val lookup = MethodHandles.lookup()
+      val clazz = Class.forName(className)
+      val Array(method) = clazz.getMethods.filter(_.getName == methodName)
+      lookup.unreflect(method)
+    }
+
+    val value: Option[MethodHandleValues] =
+      try {
+        Some(
+          MethodHandleValues(
+            stackWalkerGetInstance = {
+              val clazz = Class.forName("java.lang.StackWalker")
+              MethodHandles
+                .lookup()
+                .findStatic(
+                  clazz,
+                  "getInstance",
+                  MethodType.methodType(clazz)
+                )
+            },
+            stackWalkerWalk = getVirtualMethodHandle(
+              className = "java.lang.StackWalker",
+              methodName = "walk",
+            ),
+            stackFrameGetClassName = getVirtualMethodHandle(
+              className = "java.lang.StackWalker$StackFrame",
+              methodName = "getClassName",
+            ),
+            stackFrameToStackTraceElement = getVirtualMethodHandle(
+              className = "java.lang.StackWalker$StackFrame",
+              methodName = "toStackTraceElement",
+            )
+          )
+        )
+      } catch {
+        case _: NoSuchMethodException | _: ClassNotFoundException =>
+          None
+      }
+  }
+
+  private trait StackFrame {
+    def getClassName(): String
+    def toStackTraceElement(): StackTraceElement
+  }
+
+  private def getStackFrame(
+    collect: Iterator[StackFrame] => List[StackTraceElement],
+  ): Option[List[StackTraceElement]] = {
+    import scala.jdk.StreamConverters._
+    MethodHandleValues.value.map { methodHandleValues =>
+      val function: java.util.function.Function[java.util.stream.Stream[
+        AnyRef
+      ], List[StackTraceElement]] = stream => {
+        collect(
+          stream
+            .map(javaStackFrame =>
+              new StackFrame {
+                override def getClassName(): String =
+                  methodHandleValues.stackFrameGetClassName
+                    .invoke(javaStackFrame)
+                override def toStackTraceElement(): StackTraceElement =
+                  methodHandleValues.stackFrameToStackTraceElement
+                    .invoke(javaStackFrame)
+              }
+            )
+            .toScala(Iterator)
+        )
+      }
+
+      methodHandleValues.stackWalkerWalk
+        .invoke(
+          methodHandleValues.stackWalkerGetInstance.invoke(),
+          function
+        )
+    }
+  }
 }
 
 /**
@@ -355,17 +445,35 @@ case class StatementExecutor(
     val loggingSQLAndTime =
       settingsProvider.loggingSQLAndTime(GlobalSettings.loggingSQLAndTime)
 
-    val stackTrace = Thread.currentThread.getStackTrace
-    val lines = (if (loggingSQLAndTime.printUnprocessedStackTrace) {
-                   stackTrace.tail
-                 } else {
-                   stackTrace.dropWhile { trace =>
-                     val className = trace.getClassName
-                     className != getClass.toString &&
-                     (className.startsWith("java.lang.") || className
-                       .startsWith("scalikejdbc."))
-                   }
-                 }).take(loggingSQLAndTime.stackTraceDepth).map { trace =>
+    val lines = {
+      getStackFrame(stackTrace =>
+        (if (loggingSQLAndTime.printUnprocessedStackTrace) {
+           stackTrace.drop(1)
+         } else {
+           stackTrace.dropWhile { trace =>
+             val className = trace.getClassName()
+             className != getClass.toString &&
+             (className.startsWith("java.lang.") || className
+               .startsWith("scalikejdbc."))
+           }
+         })
+          .take(loggingSQLAndTime.stackTraceDepth)
+          .map(_.toStackTraceElement())
+          .toList
+      ).getOrElse {
+        val stackTrace = Thread.currentThread.getStackTrace.toList
+        (if (loggingSQLAndTime.printUnprocessedStackTrace) {
+           stackTrace.tail
+         } else {
+           stackTrace.dropWhile { trace =>
+             val className = trace.getClassName
+             className != getClass.toString &&
+             (className.startsWith("java.lang.") || className
+               .startsWith("scalikejdbc."))
+           }
+         }).take(loggingSQLAndTime.stackTraceDepth)
+      }
+    }.map { trace =>
       "    " + trace.toString
     }
 
