@@ -8,6 +8,8 @@ import scala.language.reflectiveCalls
 import scala.util.control.NonFatal
 import JavaUtilDateConverterImplicits._
 
+import java.lang.invoke.{ MethodHandles, MethodType }
+
 /**
  * Companion object.
  */
@@ -267,22 +269,31 @@ case class StatementExecutor(
         underlying.setTime(i, time)
       case p: java.io.InputStream => underlying.setBinaryStream(i, p)
       case p =>
-        ClassNameUtil.getClassName(param.getClass) match {
-          case "org.joda.time.DateTime" =>
-            val t = p
-              .asInstanceOf[{ def toDate: java.util.Date }]
-              .toDate
-              .toSqlTimestamp
-            underlying.setTimestamp(i, t)
-          case "org.joda.time.LocalDateTime" =>
-            val t = p
-              .asInstanceOf[{ def toDate: java.util.Date }]
-              .toDate
-              .toSqlTimestamp
+        val clazz = param.getClass
+        ClassNameUtil.getClassName(clazz) match {
+          case "org.joda.time.DateTime" | "org.joda.time.LocalDateTime" =>
+            val t = (
+              MethodHandles
+                .publicLookup()
+                .findVirtual(
+                  clazz,
+                  "toDate",
+                  MethodType.methodType(classOf[java.util.Date])
+                )
+                .invoke(p): java.util.Date
+            ).toSqlTimestamp
             underlying.setTimestamp(i, t)
           case "org.joda.time.LocalDate" =>
-            val t =
-              p.asInstanceOf[{ def toDate: java.util.Date }].toDate.toSqlDate
+            val t = (
+              MethodHandles
+                .publicLookup()
+                .findVirtual(
+                  clazz,
+                  "toDate",
+                  MethodType.methodType(classOf[java.util.Date])
+                )
+                .invoke(p): java.util.Date
+            ).toSqlDate
             underlying.setDate(i, t)
           case "org.joda.time.LocalTime" =>
             val millis = p
