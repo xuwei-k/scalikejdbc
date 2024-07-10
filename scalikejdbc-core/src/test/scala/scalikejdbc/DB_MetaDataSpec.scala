@@ -140,41 +140,44 @@ class DB_MetaDataSpec
 
       // describe table
       for (
-        act <- Seq(
+        tables <- Seq(
           DB.getTable("META_MEMBERS"),
           DB.getTable("meta_members"),
           NamedDB("default").getTable("META_MEMBERS"),
           NamedDB("default").getTable("meta_members")
         )
       ) {
+        val Seq(act) = tables
         if (isMySQLDriverName) {
-          lower(act.value.schema) should equal(null)
+          lower(act.schema) should equal(null)
         } else {
-          lower(act.value.schema) should equal("public")
+          lower(act.schema) should equal("public")
         }
-        lower(act.value.name) should equal("meta_members")
+        lower(act.name) should equal("meta_members")
 
-        act.value.columns should have size (6)
-        act.value.foreignKeys should have size (1)
+        act.columns should have size (6)
+        act.foreignKeys should have size (1)
 
         if (url.startsWith("jdbc:postgresql")) {
-          act.value.indices should have size (3)
+          act.indices should have size (3)
         } else {
-          act.value.indices should have size (4) // contain foreign key
+          act.indices should have size (4) // contain foreign key
         }
       }
 
-      DB.getTable("dummy").isDefined should be(false)
-      NamedDB("default").getTable("dummy").isDefined should be(false)
+      DB.getTable("dummy").nonEmpty should be(false)
+      NamedDB("default").getTable("dummy").nonEmpty should be(false)
 
       // describe returns string value
-      lower(DB.describe("meta_members")) should include("meta_members")
-      lower(NamedDB("default").describe("meta_members")) should include(
+      val Seq(members1) = DB.describe("meta_members")
+      lower(members1) should include("meta_members")
+      val Seq(members2) = NamedDB("default").describe("meta_members")
+      lower(members2) should include(
         "meta_members"
       )
 
-      DB.describe("dummy") should be("Not found.")
-      NamedDB("default").describe("dummy") should be("Not found.")
+      DB.describe("dummy") should be(Nil)
+      NamedDB("default").describe("dummy") should be(Nil)
 
       // get column names
       val exp =
@@ -398,29 +401,31 @@ class DB_MetaDataSpec
 
         // describe table
         for (
-          (act, i) <- Seq(
+          (tables, i) <- Seq(
             DB.getTable("public.meta_members"),
             DB.getTable("PUBLIC.META_MEMBERS"),
             NamedDB("default").getTable("public.meta_members"),
             NamedDB("default").getTable("PUBLIC.META_MEMBERS")
           ).zipWithIndex
         ) withClue(s"No. ${i}") {
-          lower(act.value.schema) should equal("public")
-          lower(act.value.name) should equal("meta_members")
-          act.value.columns should have size (4)
+          val Seq(act) = tables
+          lower(act.schema) should equal("public")
+          lower(act.name) should equal("meta_members")
+          act.columns should have size (4)
         }
 
         for (
-          (act, i) <- Seq(
+          (tables, i) <- Seq(
             DB.getTable("other.meta_members"),
             DB.getTable("OTHER.META_MEMBERS"),
             NamedDB("default").getTable("other.meta_members"),
             NamedDB("default").getTable("OTHER.META_MEMBERS")
           ).zipWithIndex
         ) withClue(s"No. ${i}") {
-          lower(act.value.schema) should equal("other")
-          lower(act.value.name) should equal("meta_members")
-          act.value.columns should have size (6)
+          val Seq(act) = tables
+          lower(act.schema) should equal("other")
+          lower(act.name) should equal("meta_members")
+          act.columns should have size (6)
         }
 
         DB.getTable("dummy.*") should be(empty)
@@ -428,22 +433,24 @@ class DB_MetaDataSpec
 
         // describe returns string value
         for (
-          act <- Seq(
+          tables <- Seq(
             DB.describe("public.meta_members"),
             NamedDB("default").describe("public.meta_members")
           )
         ) {
+          val Seq(act) = tables
           lower(act) should (include(
             "public.meta_members"
           ) and not include ("other.meta_members"))
         }
 
         for (
-          act <- Seq(
+          tables <- Seq(
             DB.describe("other.meta_members"),
             NamedDB("default").describe("other.meta_members")
           )
         ) {
+          val Seq(act) = tables
           lower(act) should (not include ("public.meta_members") and include(
             "other.meta_members"
           ))
@@ -535,8 +542,12 @@ class DB_MetaDataSpec
 
         // describe table
         for (
-          act <- Seq(DB.getTable("users"), NamedDB("default").getTable("users"))
+          tables <- Seq(
+            DB.getTable("users"),
+            NamedDB("default").getTable("users")
+          )
         ) {
+          val Seq(act) = tables
           lower(act.value.schema) should equal("public")
           lower(act.value.name) should equal("users")
 

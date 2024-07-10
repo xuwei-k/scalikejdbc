@@ -416,7 +416,7 @@ object DB extends LoanPattern {
   def getTable(
     table: String,
     settings: SettingsProvider = SettingsProvider.default
-  )(implicit context: CPContext = NoCPContext): Option[Table] = {
+  )(implicit context: CPContext = NoCPContext): Seq[Table] = {
     val cp = connectionPool(context)
     DB(cp.borrow(), cp.connectionAttributes, settings).getTable(table)
   }
@@ -460,7 +460,7 @@ object DB extends LoanPattern {
   def describe(
     table: String,
     settings: SettingsProvider = SettingsProvider.default
-  )(implicit context: CPContext = NoCPContext): String = {
+  )(implicit context: CPContext = NoCPContext): Seq[String] = {
     val cp = connectionPool(context)
     DB(cp.borrow(), cp.connectionAttributes, settings).describe(table)
   }

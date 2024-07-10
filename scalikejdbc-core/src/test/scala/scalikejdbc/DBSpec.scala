@@ -949,8 +949,8 @@ class DBSpec
             s"create table `${tableName}` (some_setting tinyint(1) NOT NULL DEFAULT '1')"
           ).execute.apply()
         }
-        val table = DB.getTable(tableName)
-        table.isDefined should equal(true)
+        val tables = DB.getTable(tableName)
+        tables.size should be(1)
       } finally {
         try
           DB.autoCommit { implicit s =>
