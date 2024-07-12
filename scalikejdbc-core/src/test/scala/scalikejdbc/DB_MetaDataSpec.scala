@@ -589,7 +589,7 @@ class DB_MetaDataSpec
           execute(
             s"""|create table ${db1}.${tableName}(
                 |  id integer primary key,
-                |  name varchar(10) primary key
+                |  name varchar(10)
                 ||);""".stripMargin
           )
           execute(
