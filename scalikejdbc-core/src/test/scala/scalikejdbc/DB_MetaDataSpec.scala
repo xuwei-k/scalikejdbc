@@ -606,13 +606,10 @@ class DB_MetaDataSpec
         tables.toSet should be(
           Set(
             Table(
-              "same_name_table_test",
-              "other_db_1",
-              null,
-              "",
-              Nil,
-              Nil,
-              List(
+              name = "same_name_table_test",
+              catalog = "other_db_1",
+              description = "",
+              indices = List(
                 Index(
                   "index_1",
                   List("id", "name"),
@@ -642,11 +639,8 @@ class DB_MetaDataSpec
             Table(
               "same_name_table_test",
               "other_db_2",
-              null,
-              "",
-              Nil,
-              Nil,
-              List(
+              description = "",
+              indices = List(
                 Index(
                   "PRIMARY",
                   List("id"),
