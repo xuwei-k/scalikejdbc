@@ -630,7 +630,7 @@ class DB_MetaDataSpec
                   List("id"),
                   true,
                   None,
-                  "tableIndexOther",
+                  IndexType.tableIndexOther,
                   Some(1),
                   Some("A"),
                   Some(0),
