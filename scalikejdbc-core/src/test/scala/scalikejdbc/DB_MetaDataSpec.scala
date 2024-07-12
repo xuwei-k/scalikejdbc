@@ -1,10 +1,11 @@
 package scalikejdbc
 
 import org.scalatest.OptionValues._
+
 import java.util.Locale.{ ENGLISH => en }
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import scalikejdbc.metadata.Table
+import scalikejdbc.metadata.{ Index, IndexType, Table }
 
 class DB_MetaDataSpec
   extends AnyFlatSpec
@@ -605,15 +606,61 @@ class DB_MetaDataSpec
         tables.toSet should be(
           Set(
             Table(
-              name = "same_name_table_test",
-              catalog = "other_db_1",
-              description = "",
+              "same_name_table_test",
+              "other_db_1",
+              null,
+              "",
+              Nil,
+              Nil,
+              List(
+                Index(
+                  "index_1",
+                  List("id", "name"),
+                  true,
+                  None,
+                  IndexType.tableIndexOther,
+                  Some(1),
+                  Some("A"),
+                  Some(0),
+                  Some(0),
+                  None
+                ),
+                Index(
+                  "PRIMARY",
+                  List("id"),
+                  true,
+                  None,
+                  "tableIndexOther",
+                  Some(1),
+                  Some("A"),
+                  Some(0),
+                  Some(0),
+                  None
+                )
+              )
             ),
             Table(
-              name = "same_name_table_test",
-              catalog = "other_db_2",
-              description = "",
-            ),
+              "same_name_table_test",
+              "other_db_2",
+              null,
+              "",
+              Nil,
+              Nil,
+              List(
+                Index(
+                  "PRIMARY",
+                  List("id"),
+                  true,
+                  None,
+                  IndexType.tableIndexOther,
+                  Some(1),
+                  Some("A"),
+                  Some(0),
+                  Some(0),
+                  None
+                )
+              )
+            )
           )
         )
       } finally {
