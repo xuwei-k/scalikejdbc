@@ -590,7 +590,7 @@ class DB_MetaDataSpec
             s"""|create table ${db1}.${tableName}(
                 |  id integer primary key,
                 |  name varchar(10)
-                ||);""".stripMargin
+                |);""".stripMargin
           )
           execute(
             s"""|create table ${db2}.${tableName}(
