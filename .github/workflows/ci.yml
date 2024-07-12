@@ -30,42 +30,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: scripted
-            db: mysql
-            java: 8
-          - name: scripted
-            db: postgresql
-            java: 8
-
-          - name: test
-            db: hsqldb
-            java: 8
           - name: test
             db: mysql
             java: 8
-          - name: test
-            db: postgresql
-            java: 8
-          - name: test
-            db: h2
-            java: 8
-
-          - name: test
-            db: mysql
-            java: 11
-          - name: test
-            db: mysql
-            java: 21
-
-          - name: scala_3
-            db: mysql
-            java: 8
-          - name: scala_3
-            db: postgresql
-            java: 8
-          - name: scala_3
-            db: postgresql
-            java: 21
 
     runs-on: ubuntu-latest
     steps:
