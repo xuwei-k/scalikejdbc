@@ -413,6 +413,7 @@ lazy val scalikejdbcSyntaxSupportMacro = Project(
   name := "scalikejdbc-syntax-support-macro",
   libraryDependencies ++= {
     Seq(
+      "org.scalatestplus" %% "scalacheck-1-18" % "3.2.19.0" % "test",
       "ch.qos.logback" % "logback-classic" % _logbackVersion % "test",
       "org.hibernate" % "hibernate-core" % _hibernateVersion % "test"
     ) ++ scalaTestDependenciesInTestScope.value ++ jdbcDriverDependenciesInTestScope

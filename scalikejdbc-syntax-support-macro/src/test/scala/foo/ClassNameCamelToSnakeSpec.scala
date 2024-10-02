@@ -1,12 +1,17 @@
 package foo
 
+import org.scalacheck.Gen
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 import scala.language.postfixOps
 import scala.util.matching.Regex
 
-class ClassNameCamelToSnakeSpec extends AnyFlatSpec with Matchers {
+class ClassNameCamelToSnakeSpec
+  extends AnyFlatSpec
+  with Matchers
+  with ScalaCheckDrivenPropertyChecks {
 
   // This regex removes trailing $, as well as anything until the first $ or .
   val classNameRegExp: Regex = "\\$$|^.*[.$](?=.+)".r
@@ -46,6 +51,15 @@ class ClassNameCamelToSnakeSpec extends AnyFlatSpec with Matchers {
     inputs.map(name => {
       newImplementation(name) shouldBe oldImplementation(name)
     })
+  }
+
+  it should "match test 2" in forAll(
+    Gen.stringOf(
+      Gen.asciiPrintableChar,
+    ),
+    minSuccessful(10000)
+  ) { (name: String) =>
+    newImplementation(name) shouldBe oldImplementation(name)
   }
 
 }
